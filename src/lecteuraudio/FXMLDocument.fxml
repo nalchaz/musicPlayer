@@ -1,97 +1,153 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane id="AnchorPane" minHeight="700.0" minWidth="700.0" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-   <top>
-      <MenuBar maxHeight="30.0" minHeight="29.0" prefHeight="30.0" prefWidth="800.0" style="-fx-border-width: 0;" BorderPane.alignment="CENTER">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Exit" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-   </top>
+<BorderPane id="AnchorPane" minHeight="900.0" minWidth="1200.0" prefHeight="900.0" prefWidth="1200.0" stylesheets="@MediaPlayer.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <GridPane minHeight="700.0" minWidth="700.0" prefHeight="750.0" prefWidth="800.0" style="-fx-background-color: snow; -fx-border-width: 0;" BorderPane.alignment="CENTER">
+      <GridPane minHeight="700.0" minWidth="700.0" prefHeight="750.0" prefWidth="800.0" BorderPane.alignment="CENTER">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="248.0" minWidth="10.0" percentWidth="25" prefWidth="200.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="361.0" minWidth="10.0" percentWidth="45" prefWidth="361.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="290.0" minWidth="10.0" percentWidth="30" prefWidth="239.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="248.0" minWidth="10.0" percentWidth="22.0" prefWidth="200.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="248.0" minWidth="10.0" percentWidth="22.0" prefWidth="200.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="361.0" minWidth="10.0" percentWidth="54.0" prefWidth="361.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="290.0" minWidth="10.0" percentWidth="24.0" prefWidth="239.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints maxHeight="200.0" minHeight="70.0" percentHeight="25.0" prefHeight="150.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="564.0" minHeight="10.0" percentHeight="75.0" prefHeight="564.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
+          <RowConstraints maxHeight="100.0" minHeight="100.0" prefHeight="100.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="616.0" minHeight="10.0" percentHeight="80.0" prefHeight="602.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <ListView prefHeight="200.0" prefWidth="200.0" style="-fx-border-width: 1; -fx-background-color: snow; -fx-border-color: green;" GridPane.rowIndex="1" />
-            <ListView prefHeight="200.0" prefWidth="200.0" style="-fx-border-width: 1; -fx-background-color: snow; -fx-border-color: linear-gradient(blue,red);" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: snow; -fx-border-color: linear-gradient(blue,red); -fx-border-width: 1;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(white,blue);" GridPane.columnSpan="2">
+            <ListView prefHeight="530.0" prefWidth="220.0" style="-fx-border-width: 1;" GridPane.rowIndex="2" />
+            <ListView prefHeight="200.0" prefWidth="200.0" style="-fx-border-width: 1;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+            <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-border-width: 1;" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.rowIndex="1">
                <children>
-                  <TextField>
+                    <Button id="play" fx:id="play" mnemonicParsing="false" StackPane.alignment="CENTER">
                      <StackPane.margin>
-                        <Insets right="20.0" />
+                        <Insets />
+                     </StackPane.margin></Button>
+                  <Button id="previous" fx:id="previous" mnemonicParsing="false" StackPane.alignment="CENTER">
+                     <StackPane.margin>
+                        <Insets right="115.0" />
                      </StackPane.margin>
-                  </TextField>
-                  <TextField text="Musique en cours" StackPane.alignment="TOP_CENTER">
+                  </Button>
+                  <Button id="next" fx:id="next" mnemonicParsing="false" StackPane.alignment="CENTER">
                      <StackPane.margin>
-                        <Insets right="20.0" top="20.0" />
+                        <Insets left="100.0" />
+                     </StackPane.margin>
+                  </Button>
+               </children></StackPane>
+            <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+               <children>
+                  <Button mnemonicParsing="false" text="Rech" StackPane.alignment="CENTER_LEFT">
+                     <StackPane.margin>
+                        <Insets left="10.0" />
+                     </StackPane.margin>
+                  </Button>
+                  <TextField alignment="CENTER" maxWidth="150.0" prefHeight="31.0" prefWidth="151.0" StackPane.alignment="CENTER_LEFT">
+                     <StackPane.margin>
+                        <Insets left="80.0" />
                      </StackPane.margin>
                   </TextField>
                </children>
             </StackPane>
-            <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(white,blue);" GridPane.columnIndex="2">
+            <StackPane GridPane.columnIndex="2" GridPane.rowIndex="1">
                <children>
-                  <Button mnemonicParsing="false" text="Rechercher" StackPane.alignment="CENTER_LEFT">
+                  <Label text="Musique en cours" StackPane.alignment="CENTER">
                      <StackPane.margin>
-                        <Insets right="190.0" />
+                        <Insets bottom="40.0" right="50.0" />
                      </StackPane.margin>
-                  </Button>
-                  <TextField alignment="CENTER" prefHeight="13.0" prefWidth="190.0">
+                  </Label>
+                  <ProgressBar maxHeight="10.0" minHeight="10.0" prefHeight="10.0" prefWidth="360.0" progress="0.0" StackPane.alignment="BOTTOM_CENTER">
                      <StackPane.margin>
-                        <Insets left="50.0" />
+                        <Insets bottom="25.0" right="65.0" />
                      </StackPane.margin>
-                  </TextField>
+                  </ProgressBar>
+                  <Label text="Temps" StackPane.alignment="BOTTOM_LEFT">
+                     <StackPane.margin>
+                        <Insets bottom="25.0" left="15.0" />
+                     </StackPane.margin>
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Label>
+                  <Label text="Temps restant" StackPane.alignment="BOTTOM_RIGHT">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                     <StackPane.margin>
+                        <Insets bottom="25.0" right="45.0" />
+                     </StackPane.margin>
+                  </Label>
+                  <Label text="Auteur" StackPane.alignment="CENTER">
+                     <StackPane.margin>
+                        <Insets bottom="5.0" right="50.0" />
+                     </StackPane.margin>
+                  </Label>
+               </children>
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+            </StackPane>
+            <MenuBar maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="800.0" style="-fx-border-width: 0;" GridPane.columnSpan="4">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Exit" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <StackPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <Slider maxWidth="120.0" minWidth="120.0" prefWidth="120.0" />
                </children>
             </StackPane>
          </children>
       </GridPane>
    </center>
    <bottom>
-      <StackPane alignment="CENTER_RIGHT" prefHeight="56.0" prefWidth="800.0" style="-fx-background-color: linear-gradient(white,red);" BorderPane.alignment="CENTER">
+      <StackPane alignment="CENTER_RIGHT" prefHeight="56.0" prefWidth="800.0" BorderPane.alignment="CENTER">
          <children>
-            <Button alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" style="-fx-alignment: right; -fx-background-color: darkgray;" text="Importer" textFill="#f5f2f2">
+            <Button alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" style="-fx-alignment: right; -fx-background-color: darkgray;" text="Importer" textFill="#f5f2f2" StackPane.alignment="CENTER_RIGHT">
                <StackPane.margin>
-                  <Insets />
+                  <Insets right="10.0" />
                </StackPane.margin>
             </Button>
             <Button mnemonicParsing="false" style="-fx-background-color: darkgray;" text="Youtube" textFill="#d01010" StackPane.alignment="CENTER_RIGHT">
                <StackPane.margin>
-                  <Insets right="90.0" />
+                  <Insets right="100.0" />
                </StackPane.margin>
             </Button>
          </children>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
       </StackPane>
    </bottom>
 </BorderPane>

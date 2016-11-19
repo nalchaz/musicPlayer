@@ -1,0 +1,58 @@
+#play {
+	
+	-fx-graphic: url("icon-play.png");
+	-fx-background-repeat: no-repeat;
+ 	 -fx-background-position: center;
+ 	 -fx-padding: 3px;
+         -fx-background-color: transparent; 
+         
+}
+#play:hover {
+	
+	-fx-graphic: url("icon-hover-play.png");
+	-fx-background-repeat: no-repeat;
+ 	 -fx-background-position: center;
+ 	 -fx-padding: 3px;
+         -fx-background-color: transparent; 
+}
+
+#next {
+	
+	-fx-graphic: url("icon-next.png");
+	-fx-background-repeat: no-repeat;
+ 	-fx-background-position: center;
+ 	-fx-padding: 3px;
+        -fx-background-color: transparent; 
+}
+#next:hover {
+	
+	-fx-graphic: url("icon-hover-next.png");
+	-fx-background-repeat: no-repeat;
+ 	-fx-background-position: center;
+ 	-fx-padding: 3px;
+        -fx-background-color: transparent; 
+}
+#previous {
+	
+	-fx-graphic: url("icon-previous.png");
+	-fx-background-repeat: no-repeat;
+ 	 -fx-background-position: center;
+ 	 -fx-padding: 3px;
+         -fx-background-color: transparent; 
+}
+#previous:hover {
+	
+	-fx-graphic: url("icon-hover-previous.png");
+	-fx-background-repeat: no-repeat;
+ 	 -fx-background-position: center;
+ 	 -fx-padding: 3px;
+         -fx-background-color: transparent; 
+}
+#pause {
+	
+	-fx-graphic: url("icon-pause.png");
+	-fx-background-repeat: no-repeat;
+ 	 -fx-background-position: center;
+ 	 -fx-padding: 3px;
+         -fx-background-color: transparent; 
+}
