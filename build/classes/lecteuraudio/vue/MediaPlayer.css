@@ -56,3 +56,12 @@
  	 -fx-padding: 3px;
          -fx-background-color: transparent; 
 }
+
+#pause:hover {
+	
+	-fx-graphic: url("icon-hover-pause.png");
+	-fx-background-repeat: no-repeat;
+ 	 -fx-background-position: center;
+ 	 -fx-padding: 3px;
+         -fx-background-color: transparent; 
+}

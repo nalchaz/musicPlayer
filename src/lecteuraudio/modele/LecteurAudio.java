@@ -19,8 +19,7 @@ public class LecteurAudio extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
-        
+        Parent root = FXMLLoader.load(getClass().getResource("/lecteuraudio/vue/FXMLDocument.fxml"));
         Scene scene = new Scene(root);
         
         stage.setScene(scene);

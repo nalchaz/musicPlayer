@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lecteuraudio.vue;
+package lecteuraudio.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -12,6 +12,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import lecteuraudio.modele.Lecteur;
+import lecteuraudio.modele.Musique;
+import lecteuraudio.modele.MusiqueWav;
 
 /**
  *
@@ -19,16 +22,11 @@ import javafx.scene.control.Label;
  */
 public class FXMLDocumentController implements Initializable {
     
-    private Label label;
     @FXML
     private Button play;
-
     
-    
-    private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
+    Lecteur lec=new Lecteur();
+    Musique musique=new MusiqueWav("Auteur", "Titre", "/lecteuraudio/vue/RustedRoot.wav");
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -37,7 +35,17 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void playPressed(ActionEvent event) {
-        //play. ("icon-pause.png");
+        if("play".equals(play.getId())){
+            
+            lec.play(musique);
+            
+            play.setId("pause");
+        }
+        else {
+            play.setId("play");
+            lec.stop();
+        }
     }
+    
     
 }
