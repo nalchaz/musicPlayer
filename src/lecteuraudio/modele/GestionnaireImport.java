@@ -24,15 +24,16 @@ public class GestionnaireImport {
         JFileChooser dialogue = new JFileChooser(new File(".."));
 	File fichier;
 	
-	if (dialogue.showOpenDialog(null)== 
-	    JFileChooser.APPROVE_OPTION) {
+	if (dialogue.showOpenDialog(null)== JFileChooser.APPROVE_OPTION) {
 	    fichier = dialogue.getSelectedFile();
             GestionnaireImport.ajouterMusique(fichier);
         }    
     }
     
-    public static void ajouterMusique(File f) { 
-        
+    private static void ajouterMusique(File f) { 
+        int taille = (int)f.getName().length()-4; 
+        Musique m= new MusiqueWav("auteur",f.getName().substring(0,taille)  ,f.getAbsolutePath());      
+        tout.ajouter(m);
     }
     
 }
