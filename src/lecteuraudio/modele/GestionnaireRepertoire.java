@@ -27,8 +27,6 @@ public class GestionnaireRepertoire {
     private static void creerRepertoire() { 
         new File(System.getProperty("user.dir")+"/Musiques").mkdir();
     }
-    public static void ajouterMusique() { 
-        
-    }
+    
     
 }

@@ -50,6 +50,11 @@ public class FXMLDocumentController implements Initializable {
             play.setId("play");
             lec.stop();
         }
+    } 
+    
+    @FXML 
+    private void importPressed(ActionEvent event) { 
+        GestionnaireImport.chercherDisqueDur(); 
     }
     
     

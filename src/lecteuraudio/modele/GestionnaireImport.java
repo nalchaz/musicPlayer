@@ -6,6 +6,10 @@
 package lecteuraudio.modele;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import javax.sound.sampled.AudioFileFormat;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -14,16 +18,24 @@ import java.io.File;
 public class GestionnaireImport {
      static PlayList tout= new PlayList("Tout");
     public static void importerRepertoireMusiques (File repertoire){ 
-        for( String s : repertoire.list()){ 
-           
-            
-                Musique m=new MusiqueWav("auteur",s,s);  
-            
-            
-            tout.ajouter(m); 
+        for( File f : repertoire.listFiles()){ 
+           GestionnaireImport.ajouterMusique(f); 
         }
         
     }
+    public static void chercherDisqueDur () {
+        JFileChooser dialogue = new JFileChooser(new File(".."));
+	File fichier;
+	
+	if (dialogue.showOpenDialog(null)== 
+	    JFileChooser.APPROVE_OPTION) {
+	    fichier = dialogue.getSelectedFile();
+            GestionnaireImport.ajouterMusique(fichier);
+        }    
+    }
     
+    public static void ajouterMusique(File f) { 
+        
+    }
     
 }
