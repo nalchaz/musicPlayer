@@ -123,7 +123,7 @@
    <bottom>
       <StackPane alignment="CENTER_RIGHT" prefHeight="56.0" prefWidth="800.0" BorderPane.alignment="CENTER">
          <children>
-            <Button alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#importPressed" style="-fx-alignment: right; -fx-background-color: darkgray;" text="Importer" textFill="#f5f2f2" StackPane.alignment="CENTER_RIGHT">
+            <Button alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#importPressed" style="-fx-background-color: darkgray;" text="Importer" textFill="#f5f2f2" StackPane.alignment="CENTER_RIGHT">
                <StackPane.margin>
                   <Insets right="10.0" />
                </StackPane.margin>

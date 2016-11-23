@@ -6,9 +6,6 @@
 package lecteuraudio.modele;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import javax.sound.sampled.AudioFileFormat;
 import javax.swing.JFileChooser;
 
 /**

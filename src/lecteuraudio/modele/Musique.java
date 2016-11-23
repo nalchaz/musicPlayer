@@ -5,7 +5,6 @@
  */
 
 package lecteuraudio.modele;
-import java.net.URL;
 
 
 /**
@@ -16,7 +15,7 @@ public abstract class Musique {
     
     private String auteur;
     private String titre;
-    private URL son;
+    private String path;
 
     
     public void setAuteur(String auteur){
@@ -34,13 +33,13 @@ public abstract class Musique {
     public String getTitre(){
         return titre;
     }
-    public void setSon(String son){
-        URL url=Musique.class.getResource(son);
-        this.son=url;
+    public void setPath(String path){
+        
+        this.path=path;
         
     }
     
-    public URL getSon(){
-        return son;
+    public String getPath(){
+        return path;
     }
 }

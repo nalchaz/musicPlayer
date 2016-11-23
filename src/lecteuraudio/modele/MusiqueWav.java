@@ -12,9 +12,9 @@ package lecteuraudio.modele;
  */
 public class MusiqueWav extends Musique{
     
-    public MusiqueWav(String auteur, String titre, String son){
+    public MusiqueWav(String auteur, String titre, String path){
         super.setAuteur(auteur);
         super.setTitre(titre);
-        super.setSon(son);
+        super.setPath(path);
     }
 }

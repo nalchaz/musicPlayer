@@ -28,7 +28,7 @@ public class FXMLDocumentController implements Initializable {
     private Button play;
     
     Lecteur lec=new Lecteur();
-    Musique musique=new MusiqueWav("Auteur", "Titre", "/lecteuraudio/vue/RustedRoot.wav");
+    Musique musique=new MusiqueWav("Auteur", "Titre", "RustedRoot.wav");
   
    
     @Override
@@ -48,7 +48,7 @@ public class FXMLDocumentController implements Initializable {
         }
         else {
             play.setId("play");
-            lec.stop();
+            lec.pause();
         }
     } 
     

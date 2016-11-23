@@ -4,25 +4,26 @@
  * and open the template in the editor.
  */
 package lecteuraudio.modele;
-import java.applet.Applet;
-import java.applet.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 /**
  *
  * @author nahel
  */
 public class Lecteur {
         
-    private AudioClip ac;
+    private MediaPlayer mediaPlayer;
     
     public void play(Musique musique){
         
-        ac=Applet.newAudioClip(musique.getSon());
-        ac.play();
+        if(mediaPlayer == null)
+         mediaPlayer=new MediaPlayer(new Media("file:///"+System.getProperty("user.dir").replace("\\", "/")+"/Musiques/"+musique.getPath()));
+        mediaPlayer.play();
         
     }
-    public void stop(){
+    public void pause(){
         
-        ac.stop();
+        mediaPlayer.pause();
         
     }
     
