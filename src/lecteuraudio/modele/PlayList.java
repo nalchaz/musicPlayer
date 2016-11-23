@@ -14,4 +14,11 @@ import java.util.List;
 public class PlayList {
     
     private List<Musique> playList;
+    private String nom; 
+    public PlayList(String nom){ 
+        this.nom=nom; 
+    }
+    public void ajouter(Musique m){
+        
+    }
 }

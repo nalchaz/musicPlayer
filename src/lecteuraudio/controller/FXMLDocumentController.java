@@ -12,6 +12,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import lecteuraudio.modele.GestionnaireImport;
+import lecteuraudio.modele.GestionnaireRepertoire;
 import lecteuraudio.modele.Lecteur;
 import lecteuraudio.modele.Musique;
 import lecteuraudio.modele.MusiqueWav;
@@ -27,10 +29,13 @@ public class FXMLDocumentController implements Initializable {
     
     Lecteur lec=new Lecteur();
     Musique musique=new MusiqueWav("Auteur", "Titre", "/lecteuraudio/vue/RustedRoot.wav");
-    
+  
+   
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        GestionnaireRepertoire.ouverture();
+        
+    
     }    
 
     @FXML
