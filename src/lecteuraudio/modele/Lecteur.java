@@ -13,17 +13,43 @@ import javafx.scene.media.MediaPlayer;
 public class Lecteur {
         
     private MediaPlayer mediaPlayer;
+    private int index=0;
+    private PlayList playList;
+    private MediaPlayer.Status status;
+    public Lecteur(PlayList playList){
+        this.playList=playList;
+    }
+    
+    public void play(){
+        if(mediaPlayer==null)
+            play(playList.getPlayList().get(index));
+        else{ 
+            mediaPlayer.play();
+        }
+    }
     
     public void play(Musique musique){
-        
-        if(mediaPlayer == null)
-         mediaPlayer=new MediaPlayer(new Media("file:///"+System.getProperty("user.dir").replace("\\", "/")+"/Musiques/"+musique.getPath()));
+        String chemin;
+
+            
+        chemin="file:///"+System.getProperty("user.dir").replace("\\", "/")+"/Musiques/"+musique.getPath();           
+        mediaPlayer=new MediaPlayer(new Media(chemin.replaceAll(" ","%20"))); //Replace all pour que les espaces ne pausent pas de problème
         mediaPlayer.play();
         
     }
     public void pause(){
         
         mediaPlayer.pause();
+        
+    }
+    
+    public void next(){
+        index++;
+        if(index>=playList.getPlayList().size()){
+            index=0;
+        }
+        mediaPlayer.stop();   
+        play(playList.getPlayList().get(index));
         
     }
     

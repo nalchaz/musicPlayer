@@ -13,7 +13,8 @@ import javax.swing.JFileChooser;
  * @author aldonne
  */
 public class GestionnaireImport {
-     static PlayList tout= new PlayList("Tout");
+    
+    
     public static void importerRepertoireMusiques (File repertoire){ 
         for( File f : repertoire.listFiles()){ 
            GestionnaireImport.ajouterMusique(f); 
@@ -26,14 +27,15 @@ public class GestionnaireImport {
 	
 	if (dialogue.showOpenDialog(null)== JFileChooser.APPROVE_OPTION) {
 	    fichier = dialogue.getSelectedFile();
+            GestionnaireRepertoire.copierDansRepository(fichier);
             GestionnaireImport.ajouterMusique(fichier);
         }    
     }
     
     private static void ajouterMusique(File f) { 
         int taille = (int)f.getName().length()-4; 
-        Musique m= new MusiqueWav("auteur",f.getName().substring(0,taille)  ,f.getAbsolutePath());      
-        tout.ajouter(m);
+        Musique m= new MusiqueWav("auteur",f.getName().substring(0,taille)  , f.getName());      
+        LecteurAudio.tout.ajouter(m);
     }
     
 }

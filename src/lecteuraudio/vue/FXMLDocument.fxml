@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -23,7 +18,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane id="BorderPane" minHeight="900.0" minWidth="1200.0" prefHeight="900.0" prefWidth="1200.0" stylesheets="@MediaPlayer.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lecteuraudio.controller.FXMLDocumentController"> 
+<BorderPane id="BorderPane" minHeight="900.0" minWidth="1200.0" prefHeight="900.0" prefWidth="1200.0" stylesheets="@MediaPlayer.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lecteuraudio.controller.FXMLDocumentController"> 
    <center>
       <GridPane minHeight="700.0" minWidth="700.0" prefHeight="750.0" prefWidth="800.0" BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -38,7 +33,7 @@
         </rowConstraints>
          <children>
             <ListView prefHeight="530.0" prefWidth="220.0" style="-fx-border-width: 1;" GridPane.rowIndex="1" />
-            <ListView prefHeight="200.0" prefWidth="200.0" style="-fx-border-width: 1;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+            <ListView fx:id="listMusique" prefHeight="200.0" prefWidth="200.0" style="-fx-border-width: 1;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
             <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-border-width: 1;" GridPane.columnIndex="3" GridPane.rowIndex="1" />
             <StackPane prefHeight="150.0" prefWidth="200.0">
                <children>
@@ -46,12 +41,12 @@
                      <StackPane.margin>
                         <Insets right="5.0" />
                      </StackPane.margin></Button>
-                  <Button id="previous" fx:id="previous" mnemonicParsing="false" StackPane.alignment="CENTER">
+                  <Button id="previous" fx:id="previous" mnemonicParsing="false" onAction="#previousPressed" StackPane.alignment="CENTER">
                      <StackPane.margin>
                         <Insets right="115.0" />
                      </StackPane.margin>
                   </Button>
-                  <Button id="next" fx:id="next" mnemonicParsing="false" StackPane.alignment="CENTER">
+                  <Button id="next" fx:id="next" mnemonicParsing="false" onAction="#nextPressed" StackPane.alignment="CENTER">
                      <StackPane.margin>
                         <Insets left="100.0" />
                      </StackPane.margin>
@@ -73,14 +68,14 @@
             </StackPane>
             <StackPane GridPane.columnIndex="2">
                <children>
-                  <Label text="Musique en cours" StackPane.alignment="CENTER">
+                  <Label fx:id="titreMusique" text="Musique en cours" StackPane.alignment="CENTER">
                      <StackPane.margin>
                         <Insets bottom="40.0" right="50.0" />
                      </StackPane.margin>
                   </Label>
                   <FlowPane alignment="BOTTOM_CENTER" StackPane.alignment="CENTER">
                      <children>
-                        <Label text="Temps">
+                        <Label fx:id="tempsEcoule" text="Temps">
                            <FlowPane.margin>
                               <Insets bottom="2.0" right="5.0" />
                            </FlowPane.margin>
@@ -89,7 +84,7 @@
                            </font>
                         </Label>
                         <ProgressBar maxHeight="10.0" minHeight="10.0" prefHeight="10.0" prefWidth="360.0" progress="0.0" />
-                        <Label text="Temps restant">
+                        <Label fx:id="tempsRestant" text="Temps restant">
                            <font>
                               <Font size="12.0" />
                            </font>
@@ -102,7 +97,7 @@
                         <Insets bottom="20.0" />
                      </StackPane.margin>
                   </FlowPane>
-                  <Label text="Auteur" StackPane.alignment="CENTER">
+                  <Label fx:id="auteur" text="Auteur" StackPane.alignment="CENTER">
                      <StackPane.margin>
                         <Insets bottom="5.0" right="50.0" />
                      </StackPane.margin>
