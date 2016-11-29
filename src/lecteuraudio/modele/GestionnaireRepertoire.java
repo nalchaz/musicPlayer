@@ -20,20 +20,26 @@ import javax.sound.midi.Patch;
 public class GestionnaireRepertoire {
     private static final String repositoryPath=System.getProperty("user.dir")+"/Musiques";
     
-    public static void ouverture() { 
+    
+    public String getRepositoryPath (){ 
+        return repositoryPath; 
+    }
+    
+    public  boolean ouverture() { 
         if (!new File(repositoryPath).exists()){
             creerRepertoire(); 
+            return true; 
         }
-        GestionnaireImport.importerRepertoireMusiques(new File(repositoryPath));
+        return false; 
             
         
     }
     
-    private static void creerRepertoire() { 
+    private  void creerRepertoire() { 
         new File(System.getProperty("user.dir")+"/Musiques").mkdir();
     }
     
-    public static void copierDansRepository(File source) { 
+    public  void copierDansRepository(File source) { 
        
         try{
             String destination=repositoryPath+"/"+source.getName();

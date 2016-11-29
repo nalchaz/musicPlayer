@@ -16,9 +16,7 @@ public class Lecteur {
     private int index=0;
     private PlayList playList;
     private MediaPlayer.Status status;
-    public Lecteur(PlayList playList){
-        this.playList=playList;
-    }
+    
     
     public void play(){
         if(mediaPlayer==null)
@@ -28,7 +26,7 @@ public class Lecteur {
         }
     }
     
-    public void play(Musique musique){
+    public void play(NoeudMusique musique){
         String chemin;
 
             

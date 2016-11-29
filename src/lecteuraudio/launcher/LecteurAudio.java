@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lecteuraudio.modele;
+package lecteuraudio.launcher;
 
+import java.io.File;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,6 +13,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import lecteuraudio.modele.GestionnaireImport;
+import lecteuraudio.modele.GestionnaireRepertoire;
+import lecteuraudio.modele.PlayList;
+import lecteuraudio.modele.ListePlayLists;
 
 /**
  *
@@ -19,24 +24,19 @@ import javafx.stage.Stage;
  */
 public class LecteurAudio extends Application {
     
-    public static PlayList tout= new PlayList("Tout");
-    private ObservableList<Musique> observablePlayList = FXCollections.observableArrayList();
-    public static Musique musique;
+   ListePlayLists liste=ListePlayLists.getInstance(); 
+   GestionnaireRepertoire gesRep= new GestionnaireRepertoire(); 
+   GestionnaireImport gesImp= new GestionnaireImport(gesRep); 
+    
     
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/lecteuraudio/vue/FXMLDocument.fxml"));
         Scene scene = new Scene(root);
-        
-        GestionnaireRepertoire.ouverture();
-        if(LecteurAudio.tout.getPlayList() != null){
-            for(Musique m : LecteurAudio.tout.getPlayList()) {
-                observablePlayList.add(m);
-            }
-            musique=observablePlayList.get(0);
-        }
-        
-        
+        boolean fichiercree=gesRep.ouverture();
+        if (!fichiercree){ 
+            gesImp.importerRepertoireMusiques(new File(gesRep.getRepositoryPath()));
+        }    
         stage.setScene(scene);
         stage.show();
     }

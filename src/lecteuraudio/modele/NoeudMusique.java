@@ -5,16 +5,10 @@
  */
 package lecteuraudio.modele;
 
-
 /**
  *
- * @author nahel
+ * @author alexd
  */
-public class MusiqueWav extends Musique{
-    
-    public MusiqueWav(String auteur, String titre, String path){
-        super.setAuteur(auteur);
-        super.setTitre(titre);
-        super.setPath(path);
-    }
+public abstract class NoeudMusique {
+    public abstract String getPath();    
 }

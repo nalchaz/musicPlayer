@@ -5,37 +5,44 @@
  */
 package lecteuraudio.modele;
 
+import lecteuraudio.launcher.LecteurAudio;
 import java.io.File;
 import javax.swing.JFileChooser;
+import lecteuraudio.modele.PlayList;
 
 /**
  *
  * @author aldonne
  */
 public class GestionnaireImport {
+    private GestionnaireRepertoire gesRep; 
+    public GestionnaireImport (GestionnaireRepertoire gesRep){ 
+        this.gesRep=gesRep; 
+        
+    }
     
     
-    public static void importerRepertoireMusiques (File repertoire){ 
+    public  void importerRepertoireMusiques (File repertoire){ 
         for( File f : repertoire.listFiles()){ 
-           GestionnaireImport.ajouterMusique(f); 
+           ajouterMusique(f); 
         }
         
     }
-    public static void chercherDisqueDur () {
+    public  void chercherDisqueDur () {
         JFileChooser dialogue = new JFileChooser(new File(".."));
 	File fichier;
 	
 	if (dialogue.showOpenDialog(null)== JFileChooser.APPROVE_OPTION) {
 	    fichier = dialogue.getSelectedFile();
-            GestionnaireRepertoire.copierDansRepository(fichier);
-            GestionnaireImport.ajouterMusique(fichier);
+            gesRep.copierDansRepository(fichier);
+            ajouterMusique(fichier);
         }    
     }
     
-    private static void ajouterMusique(File f) { 
+    private void ajouterMusique(File f) { 
         int taille = (int)f.getName().length()-4; 
-        Musique m= new MusiqueWav("auteur",f.getName().substring(0,taille)  , f.getName());      
-        LecteurAudio.tout.ajouter(m);
+        NoeudMusique m= new Musique("auteur",f.getName().substring(0,taille)  , f.getName());      
+        ListePlayLists.getInstance().getTout().ajouter(m);
     }
     
 }

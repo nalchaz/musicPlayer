@@ -15,12 +15,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
 import lecteuraudio.modele.GestionnaireImport;
 import lecteuraudio.modele.GestionnaireRepertoire;
 import lecteuraudio.modele.Lecteur;
-import lecteuraudio.modele.LecteurAudio;
+import lecteuraudio.modele.ListePlayLists;
 import lecteuraudio.modele.Musique;
-import lecteuraudio.modele.MusiqueWav;
 import lecteuraudio.modele.PlayList;
 
 /**
@@ -35,7 +35,10 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private ListView listMusique;
     
-    Lecteur lec=new Lecteur(LecteurAudio.tout);
+    @FXML 
+    private ListView listeplaylists; 
+    
+    Lecteur lec=new Lecteur();
     @FXML
     private Button previous;
     @FXML
@@ -48,17 +51,19 @@ public class FXMLDocumentController implements Initializable {
     private Label tempsRestant;
     @FXML
     private Label auteur;
+    @FXML
+    ListePlayLists liste= ListePlayLists.getInstance(); 
     
     
-   
+    private GestionnaireRepertoire gesRep= new GestionnaireRepertoire(); 
+    private GestionnaireImport gesImp= new GestionnaireImport(gesRep);
     
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+           liste.ajouterPlayList(new PlayList("tout"));
     }    
 
-    
     
     @FXML
     private void playPressed(ActionEvent event) {
@@ -77,7 +82,9 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML 
     private void importPressed(ActionEvent event) { 
-        GestionnaireImport.chercherDisqueDur(); 
+       gesImp.chercherDisqueDur(); 
+       System.out.println(liste.getTout());
+       liste.getTout(); 
     }
 
     @FXML
@@ -92,6 +99,7 @@ public class FXMLDocumentController implements Initializable {
         }
         lec.next();
     }
+    
     
     
 }

@@ -7,39 +7,61 @@ package lecteuraudio.modele;
 
 import java.util.LinkedList;
 import java.util.List;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import lecteuraudio.modele.Musique; 
 
 /**
  *
  * @author nahel
  */
-public class PlayList {
+public class PlayList extends NoeudMusique{
     
-    private List<Musique> playList;
+    private  ListProperty<NoeudMusique> playlist= new SimpleListProperty<>(FXCollections.observableArrayList()); 
     private String nom; 
     public PlayList(String nom){ 
         this.nom=nom; 
     }
-    public void ajouter(Musique m){
-        if(playList==null){
-            playList=new LinkedList<>();
-        }
-        playList.add(m);
+    
+    public String getNom(){ 
+        return nom;
+    }
+    
+    public void setNom (String nom){ 
+        this.nom=nom; 
+    }
+    
+    public void ajouter(NoeudMusique m){
+        if (m.getClass().equals("Musique")) 
+            playlist.add(m);
         
     }
     
-    public void supprimer(Musique m){
+    public void supprimer(NoeudMusique m){
+        playlist.remove(m);      
+    }
+    
+    public ObservableList<NoeudMusique> getPlayList() {
+        return playlist.get(); 
 
-        playList.remove(m);
-        
     }
     
-    public void setPlayList(List<Musique> list){
-        playList=list;
+    public ListProperty<NoeudMusique> musiquesProperty() { 
+        return playlist ; 
     }
     
-    public List<Musique> getPlayList(){
-        return playList;
+    @Override
+    public String toString() { 
+        return nom; 
     }
+    
+    @Override
+    public String getPath() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+   
     
     
 }

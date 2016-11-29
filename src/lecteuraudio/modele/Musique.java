@@ -11,12 +11,17 @@ package lecteuraudio.modele;
  *
  * @author nahel
  */
-public abstract class Musique {
+public class Musique extends NoeudMusique {
     
     private String auteur;
     private String titre;
     private String path;
 
+    public Musique (String titre, String nom, String path){
+        this.auteur=auteur; 
+        this.titre=titre; 
+        this.path=path; 
+    }
     
     public void setAuteur(String auteur){
         this.auteur=auteur;
@@ -39,6 +44,7 @@ public abstract class Musique {
         
     }
     
+    @Override
     public String getPath(){
         return path;
     }
