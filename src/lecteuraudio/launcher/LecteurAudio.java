@@ -13,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import lecteuraudio.modele.ListePlayLists;
 
 /**
  *
@@ -27,7 +28,8 @@ public class LecteurAudio extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/lecteuraudio/vue/FXMLDocument.fxml"));
-        Scene scene = new Scene(root);          
+        Scene scene = new Scene(root);  
+        ListePlayLists l=ListePlayLists.getInstance(); 
         stage.setScene(scene);
         stage.show();
     }

@@ -14,7 +14,7 @@ public class Lecteur {
         
     private MediaPlayer mediaPlayer;
     private int index=0;
-    private PlayListSimple playList;
+    private PlayList playList;
     private MediaPlayer.Status status;
     
     
@@ -24,6 +24,10 @@ public class Lecteur {
         else{ 
             mediaPlayer.play();
         }
+    }
+    
+    public void setPlaylist(PlayList p){ 
+        this.playList=p; 
     }
     
     public void play(NoeudMusique musique){
