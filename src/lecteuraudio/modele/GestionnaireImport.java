@@ -5,10 +5,8 @@
  */
 package lecteuraudio.modele;
 
-import lecteuraudio.launcher.LecteurAudio;
 import java.io.File;
 import javax.swing.JFileChooser;
-import lecteuraudio.modele.PlayList;
 
 /**
  *

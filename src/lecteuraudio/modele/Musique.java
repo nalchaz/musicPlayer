@@ -38,10 +38,8 @@ public class Musique extends NoeudMusique {
     public String getTitre(){
         return titre;
     }
-    public void setPath(String path){
-        
-        this.path=path;
-        
+    public void setPath(String path){    
+        this.path=path;        
     }
     
     @Override

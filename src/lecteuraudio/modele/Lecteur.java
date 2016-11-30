@@ -14,7 +14,7 @@ public class Lecteur {
         
     private MediaPlayer mediaPlayer;
     private int index=0;
-    private PlayList playList;
+    private PlayListSimple playList;
     private MediaPlayer.Status status;
     
     

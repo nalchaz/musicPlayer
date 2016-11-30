@@ -53,8 +53,9 @@ public class FXMLDocumentController implements Initializable {
     private Label tempsRestant;
     @FXML
     private Label auteur;
+    
     @FXML
-    ListePlayLists liste= ListePlayLists.getInstance(); 
+    private ListePlayLists liste= ListePlayLists.getInstance(); 
     
     
     private GestionnaireRepertoire gesRep= new GestionnaireRepertoire(); 
@@ -102,6 +103,8 @@ public class FXMLDocumentController implements Initializable {
         }
         lec.next();
     }
+    
+   
     
     
     

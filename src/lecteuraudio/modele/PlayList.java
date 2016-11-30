@@ -5,13 +5,11 @@
  */
 package lecteuraudio.modele;
 
-import java.util.LinkedList;
-import java.util.List;
+
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import lecteuraudio.modele.Musique; 
 
 /**
  *

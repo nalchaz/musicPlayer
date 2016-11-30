@@ -13,10 +13,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import lecteuraudio.modele.GestionnaireImport;
-import lecteuraudio.modele.GestionnaireRepertoire;
-import lecteuraudio.modele.PlayList;
-import lecteuraudio.modele.ListePlayLists;
 
 /**
  *

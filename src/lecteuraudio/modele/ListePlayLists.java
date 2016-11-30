@@ -15,17 +15,17 @@ import javafx.collections.ObservableList;
  * @author alexd
  */
 public class ListePlayLists {
-     private static ListePlayLists instance; 
-     private ListProperty<PlayList> listePlaylists= new SimpleListProperty<>(FXCollections.observableArrayList()); 
+    private static ListePlayLists instance; 
+    private ListProperty<PlayList> listePlaylists= new SimpleListProperty<>(FXCollections.observableArrayList()); 
     
-     public static ListePlayLists getInstance (){ 
-         if (instance==null){ 
+    public static ListePlayLists getInstance (){ 
+        if (instance==null){ 
              instance= new ListePlayLists();
-         }
-         return instance;        
-     }
+        }
+        return instance;        
+    }
      
-      public ObservableList<PlayList> getPlayLists() {
+    public ObservableList<PlayList> getPlayLists() {
         return listePlaylists.get(); 
     }
     
@@ -33,10 +33,8 @@ public class ListePlayLists {
         return listePlaylists  ; 
     }
     
-    public void ajouterPlayList (PlayList p){
-        
-        listePlaylists.add(p);
-     
+    public void ajouterPlayList (PlayList p){    
+        listePlaylists.add(p);   
     }
     public PlayList getPlayListTout (){ 
         return listePlaylists.get(0); 
