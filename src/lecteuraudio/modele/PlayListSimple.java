@@ -15,23 +15,21 @@ import javafx.collections.ObservableList;
  * @author aldonne
  */
 public class PlayListSimple extends PlayList{ 
-    private  ListProperty<Musique> playlist= new SimpleListProperty<>(FXCollections.observableArrayList()); 
+    
+    public PlayListSimple (){ 
+    }
+    
     public PlayListSimple (String titre){ 
         super.nom=titre; 
     }
     
     public void ajouterMusique(Musique m){ 
-        playlist.add(m); 
+        super.ajouter(m); 
     }
-    
-    public ObservableList<Musique> getPlayListSimple() {
-        return playlist.get(); 
 
+    @Override
+    public String getPath() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    public ListProperty<Musique> playlistProperty() { 
-        return playlist ; 
-    }
-    
    
 }

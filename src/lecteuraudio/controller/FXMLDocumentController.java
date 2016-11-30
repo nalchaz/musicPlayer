@@ -7,7 +7,9 @@ package lecteuraudio.controller;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.property.ListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,6 +24,7 @@ import lecteuraudio.modele.GestionnaireRepertoire;
 import lecteuraudio.modele.Lecteur;
 import lecteuraudio.modele.ListePlayLists;
 import lecteuraudio.modele.Musique;
+import lecteuraudio.modele.NoeudMusique;
 import lecteuraudio.modele.PlayList;
 import lecteuraudio.modele.PlayListSimple;
 
@@ -63,11 +66,10 @@ public class FXMLDocumentController implements Initializable {
     private GestionnaireRepertoire gesRep= new GestionnaireRepertoire(); 
     private GestionnaireImport gesImp= new GestionnaireImport(gesRep);
     
-    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
       
-        PlayList tout=new PlayListSimple("Tout"); 
+        PlayList tout=new PlayListSimple("Musiques"); 
         liste.ajouterPlayList(tout);
         gesRep.ouverture();
         gesImp.importerRepertoireMusiques(new File(gesRep.getRepositoryPath()),tout);
@@ -78,9 +80,9 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void playPressed(ActionEvent event) {
         
-        if("play".equals(play.getId())){          
-            lec.play();
-            play.setId("pause");
+        if("play".equals(play.getId())){ 
+            if(lec.play()) // Si le lecteur renvoie truc il change l'id, sinon il ne fait rien
+                play.setId("pause");
         }
         else {
             play.setId("play");
@@ -114,12 +116,9 @@ public class FXMLDocumentController implements Initializable {
  
     @FXML 
     private void onPlayListChoisie (MouseEvent event){ 
-        ListView listeV=(ListView) event.getSource(); 
-        PlayList choisie= (PlayList)listeV.getSelectionModel().getSelectedItem();      
-        listemusiques=choisie; 
-        lec.setPlaylist(choisie); 
         
-        
+        listemusiques=(PlayList)listeplaylists.getSelectionModel().getSelectedItem(); 
+        System.out.println(listemusiques.getPlayList().toString()); 
     }
     
    

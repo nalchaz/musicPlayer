@@ -6,6 +6,7 @@
 package lecteuraudio.modele;
 
 
+import java.util.List;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
@@ -15,9 +16,29 @@ import javafx.collections.ObservableList;
  *
  * @author nahel
  */
-public  class PlayList extends NoeudMusique{
+public abstract class PlayList extends NoeudMusique{
     
-    private  ListProperty<NoeudMusique> playlist= new SimpleListProperty<>(FXCollections.observableArrayList()); 
+    private  ListProperty<NoeudMusique> playlist= new SimpleListProperty<>(FXCollections.observableArrayList());
+
+    
+    public void setPlayList(ListProperty<NoeudMusique> playList) {
+        this.playlist = playList;
+    }
+
+    public ObservableList<NoeudMusique> getPlayList() {
+        return playlist.get(); 
+
+    }
+    
+    public void setPlayList(ObservableList<NoeudMusique> value) {
+        playlist.set(value); 
+
+    }
+    
+    public ListProperty<NoeudMusique> playlistProperty() { 
+        return playlist ; 
+    }
+    
     protected String nom; 
     
     
@@ -38,23 +59,15 @@ public  class PlayList extends NoeudMusique{
         playlist.remove(m);      
     }
     
-    public ObservableList<NoeudMusique> getPlayList() {
-        return playlist.get(); 
-
-    }
     
-    public ListProperty<NoeudMusique> musiquesProperty() { 
-        return playlist ; 
+    public boolean isEmpty(){
+        return playlist.isEmpty();
     }
-    
+            
+            
     @Override
     public String toString() { 
         return nom; 
-    }
-    
-    @Override
-    public String getPath() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
    
     

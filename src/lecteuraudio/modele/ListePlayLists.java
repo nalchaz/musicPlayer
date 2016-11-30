@@ -38,7 +38,7 @@ public class ListePlayLists {
     }
     public PlayList getPlayListTout (){ 
         for (PlayList p : listePlaylists){ 
-           if (p.getNom().equals("Tout")){ 
+           if (p.getNom().equals("Musiques")){ 
                return p; 
            }
         }

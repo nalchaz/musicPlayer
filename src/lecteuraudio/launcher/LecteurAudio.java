@@ -5,16 +5,11 @@
  */
 package lecteuraudio.launcher;
 
-import java.io.File;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import lecteuraudio.modele.ListePlayLists;
-import lecteuraudio.modele.PlayListSimple;
 
 /**
  *

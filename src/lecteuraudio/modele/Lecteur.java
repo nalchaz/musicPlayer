@@ -18,12 +18,16 @@ public class Lecteur {
     private MediaPlayer.Status status;
     
     
-    public void play(){
-        if(mediaPlayer==null)
+    public boolean play(){
+        if(mediaPlayer==null){
+            if(playList.isEmpty())
+                return false;
             play(playList.getPlayList().get(index));
+        }
         else{ 
             mediaPlayer.play();
         }
+        return true;
     }
     
     public void setPlaylist(PlayList p){ 
