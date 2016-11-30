@@ -46,4 +46,9 @@ public class Musique extends NoeudMusique {
     public String getPath(){
         return path;
     }
+    
+    @Override 
+    public String toString (){ 
+        return titre; 
+    }
 }

@@ -40,7 +40,6 @@ public class FXMLDocumentController implements Initializable {
     @FXML 
     private ListView listeplaylists; 
     
-    Lecteur lec=new Lecteur();
     @FXML
     private Button previous;
     @FXML
@@ -57,7 +56,10 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private ListePlayLists liste=ListePlayLists.getInstance();
     
+    @FXML 
+    private PlayList listemusiques; 
     
+    Lecteur lec=new Lecteur();
     private GestionnaireRepertoire gesRep= new GestionnaireRepertoire(); 
     private GestionnaireImport gesImp= new GestionnaireImport(gesRep);
     
@@ -95,7 +97,10 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void previousPressed(ActionEvent event) {
-        
+        if("play".equals(play.getId())){
+            play.setId("pause");
+        }
+        lec.precedent();
     }
 
     @FXML
@@ -104,6 +109,17 @@ public class FXMLDocumentController implements Initializable {
             play.setId("pause");
         }
         lec.next();
+    }
+    
+ 
+    @FXML 
+    private void onPlayListChoisie (MouseEvent event){ 
+        ListView listeV=(ListView) event.getSource(); 
+        PlayList choisie= (PlayList)listeV.getSelectionModel().getSelectedItem();      
+        listemusiques=choisie; 
+        lec.setPlaylist(choisie); 
+        
+        
     }
     
    

@@ -15,7 +15,7 @@ import javafx.collections.ObservableList;
  *
  * @author nahel
  */
-public abstract class PlayList extends NoeudMusique{
+public  class PlayList extends NoeudMusique{
     
     private  ListProperty<NoeudMusique> playlist= new SimpleListProperty<>(FXCollections.observableArrayList()); 
     protected String nom; 

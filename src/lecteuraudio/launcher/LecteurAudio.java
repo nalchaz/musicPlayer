@@ -22,9 +22,6 @@ import lecteuraudio.modele.PlayListSimple;
  */
 public class LecteurAudio extends Application {
     
-   
-   
-    
     
     @Override
     public void start(Stage stage) throws Exception {

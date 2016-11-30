@@ -55,6 +55,16 @@ public class Lecteur {
         
     }
     
+    public void precedent(){
+        index--;
+        if(index<0){
+            index=playList.getPlayList().size()-1;
+        }
+        mediaPlayer.stop();   
+        play(playList.getPlayList().get(index));
+        
+    }
+    
     
     
 }
