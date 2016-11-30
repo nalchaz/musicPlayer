@@ -5,6 +5,7 @@
  */
 package lecteuraudio.controller;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -22,6 +23,7 @@ import lecteuraudio.modele.Lecteur;
 import lecteuraudio.modele.ListePlayLists;
 import lecteuraudio.modele.Musique;
 import lecteuraudio.modele.PlayList;
+import lecteuraudio.modele.PlayListSimple;
 
 /**
  *
@@ -61,15 +63,17 @@ public class FXMLDocumentController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-           liste.ajouterPlayList(new PlayList("tout"));
+        liste.ajouterPlayList(new PlayListSimple("tout"));
+        gesRep.ouverture();
+        gesImp.importerRepertoireMusiques(new File(gesRep.getRepositoryPath()));
+        
     }    
 
     
     @FXML
     private void playPressed(ActionEvent event) {
         
-        if("play".equals(play.getId())){
-            
+        if("play".equals(play.getId())){          
             lec.play();
             play.setId("pause");
         }
@@ -83,8 +87,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML 
     private void importPressed(ActionEvent event) { 
        gesImp.chercherDisqueDur(); 
-       System.out.println(liste.getTout());
-       liste.getTout(); 
+        System.out.println(liste.getPlayListTout()); 
     }
 
     @FXML

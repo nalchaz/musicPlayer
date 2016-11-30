@@ -38,9 +38,8 @@ public class ListePlayLists {
         listePlaylists.add(p);
      
     }
-    public PlayList getTout (){ 
+    public PlayList getPlayListTout (){ 
         return listePlaylists.get(0); 
-        
     }
      
 }

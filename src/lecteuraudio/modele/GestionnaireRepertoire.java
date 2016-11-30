@@ -25,14 +25,10 @@ public class GestionnaireRepertoire {
         return repositoryPath; 
     }
     
-    public  boolean ouverture() { 
+    public  void ouverture() { 
         if (!new File(repositoryPath).exists()){
-            creerRepertoire(); 
-            return true; 
-        }
-        return false; 
-            
-        
+            creerRepertoire();    
+        }                      
     }
     
     private  void creerRepertoire() { 
@@ -48,6 +44,6 @@ public class GestionnaireRepertoire {
         catch(IOException e) { 
             e.printStackTrace(); 
         }
-        
+    }
 }
-}
+

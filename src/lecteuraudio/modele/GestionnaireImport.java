@@ -42,7 +42,7 @@ public class GestionnaireImport {
     private void ajouterMusique(File f) { 
         int taille = (int)f.getName().length()-4; 
         NoeudMusique m= new Musique("auteur",f.getName().substring(0,taille)  , f.getName());      
-        ListePlayLists.getInstance().getTout().ajouter(m);
+        ListePlayLists.getInstance().getPlayListTout().ajouter(m);
     }
     
 }

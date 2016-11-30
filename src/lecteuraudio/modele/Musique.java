@@ -17,7 +17,7 @@ public class Musique extends NoeudMusique {
     private String titre;
     private String path;
 
-    public Musique (String titre, String nom, String path){
+    public Musique (String auteur, String titre, String path){
         this.auteur=auteur; 
         this.titre=titre; 
         this.path=path; 

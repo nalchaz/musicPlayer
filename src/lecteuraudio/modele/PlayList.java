@@ -17,13 +17,11 @@ import lecteuraudio.modele.Musique;
  *
  * @author nahel
  */
-public class PlayList extends NoeudMusique{
+public abstract class PlayList extends NoeudMusique{
     
     private  ListProperty<NoeudMusique> playlist= new SimpleListProperty<>(FXCollections.observableArrayList()); 
-    private String nom; 
-    public PlayList(String nom){ 
-        this.nom=nom; 
-    }
+    protected String nom; 
+    
     
     public String getNom(){ 
         return nom;
@@ -33,8 +31,7 @@ public class PlayList extends NoeudMusique{
         this.nom=nom; 
     }
     
-    public void ajouter(NoeudMusique m){
-        if (m.getClass().equals("Musique")) 
+    public void ajouter(NoeudMusique m){ 
             playlist.add(m);
         
     }

@@ -24,19 +24,14 @@ import lecteuraudio.modele.ListePlayLists;
  */
 public class LecteurAudio extends Application {
     
-   ListePlayLists liste=ListePlayLists.getInstance(); 
-   GestionnaireRepertoire gesRep= new GestionnaireRepertoire(); 
-   GestionnaireImport gesImp= new GestionnaireImport(gesRep); 
+   
+   
     
     
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/lecteuraudio/vue/FXMLDocument.fxml"));
-        Scene scene = new Scene(root);
-        boolean fichiercree=gesRep.ouverture();
-        if (!fichiercree){ 
-            gesImp.importerRepertoireMusiques(new File(gesRep.getRepositoryPath()));
-        }    
+        Scene scene = new Scene(root);          
         stage.setScene(scene);
         stage.show();
     }
