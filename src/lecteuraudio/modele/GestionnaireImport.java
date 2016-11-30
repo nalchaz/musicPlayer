@@ -20,27 +20,27 @@ public class GestionnaireImport {
     }
     
     
-    public  void importerRepertoireMusiques (File repertoire){ 
+    public  void importerRepertoireMusiques (File repertoire, PlayList tout){ 
         for( File f : repertoire.listFiles()){ 
-           ajouterMusique(f); 
+           ajouterMusique(f,tout); 
         }
         
     }
-    public  void chercherDisqueDur () {
+    public  void chercherDisqueDur (PlayList tout) {
         JFileChooser dialogue = new JFileChooser(new File(".."));
 	File fichier;
 	
 	if (dialogue.showOpenDialog(null)== JFileChooser.APPROVE_OPTION) {
 	    fichier = dialogue.getSelectedFile();
             gesRep.copierDansRepository(fichier);
-            ajouterMusique(fichier);
+            ajouterMusique(fichier,tout);
         }    
     }
     
-    private void ajouterMusique(File f) { 
+    private void ajouterMusique(File f,PlayList tout) { 
         int taille = (int)f.getName().length()-4; 
-        NoeudMusique m= new Musique("auteur",f.getName().substring(0,taille)  , f.getName());      
-        ListePlayLists.getInstance().getPlayListTout().ajouter(m);
+        NoeudMusique m= new Musique("auteur",f.getName().substring(0,taille)  , f.getName()); 
+        tout.ajouter(m);
     }
     
 }

@@ -37,7 +37,12 @@ public class ListePlayLists {
         listePlaylists.add(p);   
     }
     public PlayList getPlayListTout (){ 
-        return listePlaylists.get(0); 
+        for (PlayList p : listePlaylists){ 
+           if (p.getNom().equals("Tout")){ 
+               return p; 
+           }
+        }
+        return null; 
     }
      
 }

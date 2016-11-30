@@ -55,7 +55,7 @@ public class FXMLDocumentController implements Initializable {
     private Label auteur;
     
     @FXML
-    private ListePlayLists liste;
+    private ListePlayLists liste=ListePlayLists.getInstance();
     
     
     private GestionnaireRepertoire gesRep= new GestionnaireRepertoire(); 
@@ -64,10 +64,11 @@ public class FXMLDocumentController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        liste=ListePlayLists.getInstance();
-        liste.ajouterPlayList(new PlayListSimple("tout")); 
+      
+        PlayList tout=new PlayListSimple("Tout"); 
+        liste.ajouterPlayList(tout);
         gesRep.ouverture();
-        gesImp.importerRepertoireMusiques(new File(gesRep.getRepositoryPath()));
+        gesImp.importerRepertoireMusiques(new File(gesRep.getRepositoryPath()),tout);
         lec.setPlaylist(liste.getPlayListTout());
     }    
 
@@ -88,8 +89,8 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML 
     private void importPressed(ActionEvent event) { 
-       gesImp.chercherDisqueDur(); 
-        System.out.println(liste.getPlayListTout()); 
+       gesImp.chercherDisqueDur(liste.getPlayListTout()); 
+        
     }
 
     @FXML
