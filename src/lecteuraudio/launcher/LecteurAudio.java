@@ -29,7 +29,7 @@ public class LecteurAudio extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/lecteuraudio/vue/FXMLDocument.fxml"));
         Scene scene = new Scene(root);  
-        ListePlayLists l=ListePlayLists.getInstance(); 
+        
         stage.setScene(scene);
         stage.show();
     }

@@ -64,6 +64,7 @@ public class FXMLDocumentController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        liste=ListePlayLists.getInstance();
         liste.ajouterPlayList(new PlayListSimple("tout")); 
         gesRep.ouverture();
         gesImp.importerRepertoireMusiques(new File(gesRep.getRepositoryPath()));
