@@ -10,5 +10,6 @@ package lecteuraudio.modele;
  * @author alexd
  */
 public abstract class NoeudMusique {
-    public abstract String getPath();    
+    
+    String titre;
 }

@@ -17,12 +17,12 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
-<?import lecteuraudio.modele.*?>  
+<?import lecteuraudio.modele.*?>
 
 <BorderPane id="BorderPane" minHeight="900.0" minWidth="1200.0" prefHeight="900.0" prefWidth="1200.0" stylesheets="@MediaPlayer.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lecteuraudio.controller.FXMLDocumentController"> 
     <fx:define>
-        <ListePlayLists fx:id="liste"/> 
-        <PlayListSimple fx:id="listemusiques"/> 
+        <ListePlayLists fx:id="liste" /> 
+        <Musique fx:id="musiqueView"/>
     </fx:define>
    <center>
       <GridPane minHeight="700.0" minWidth="700.0" prefHeight="750.0" prefWidth="800.0" BorderPane.alignment="CENTER">
@@ -37,8 +37,8 @@
           <RowConstraints maxHeight="616.0" minHeight="10.0" percentHeight="80.0" prefHeight="602.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <ListView items="${liste.playLists}" fx:id="listeplaylists" prefHeight="530.0" prefWidth="220.0" style="-fx-border-width: 1;" GridPane.rowIndex="1" onMouseClicked="#onPlayListChoisie"   />
-            <ListView items="${listemusiques.playlist}" fx:id="listMusique" prefHeight="200.0" prefWidth="200.0" style="-fx-border-width: 1;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+            <ListView fx:id="listeplaylists" items="${liste.playLists}" onMouseClicked="#onPlayListChoisie" prefHeight="530.0" prefWidth="220.0" style="-fx-border-width: 1;" GridPane.rowIndex="1" />
+            <ListView fx:id="listMusique" onMouseClicked="#onMusiqueChoisie" prefHeight="200.0" prefWidth="200.0" style="-fx-border-width: 1;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
             <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-border-width: 1;" GridPane.columnIndex="3" GridPane.rowIndex="1" />
             <StackPane prefHeight="150.0" prefWidth="200.0">
                <children>
@@ -73,7 +73,7 @@
             </StackPane>
             <StackPane GridPane.columnIndex="2">
                <children>
-                  <Label fx:id="titreMusique" text="Musique en cours" StackPane.alignment="CENTER">
+                  <Label fx:id="titreMusique" text="${musiqueView.titre}" StackPane.alignment="CENTER">
                      <StackPane.margin>
                         <Insets bottom="40.0" right="50.0" />
                      </StackPane.margin>

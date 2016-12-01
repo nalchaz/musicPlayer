@@ -16,25 +16,33 @@ public class Lecteur {
     private int index=0;
     private PlayList playList;
     private MediaPlayer.Status status;
+    private Musique musiqueCourante;
     
-    
-    public boolean play(){
+    public Musique play(){
         if(mediaPlayer==null){
-            if(playList.isEmpty())
-                return false;
-            play(playList.getPlayList().get(index));
+            if(playList==null || playList.isEmpty())
+                return null;
+            musiqueCourante=playList.getPlayList().get(index);
+            play(musiqueCourante);
         }
         else{ 
             mediaPlayer.play();
         }
-        return true;
+    return musiqueCourante;
+    }
+    
+    public Musique getMusiqueCourante(){ 
+        return musiqueCourante;
+    }
+    public void setMusiqueCourante(Musique musique){ 
+        this.musiqueCourante=musique; 
     }
     
     public void setPlaylist(PlayList p){ 
         this.playList=p; 
     }
     
-    public void play(NoeudMusique musique){
+    public void play(Musique musique){
         String chemin;
 
             
@@ -45,28 +53,32 @@ public class Lecteur {
     }
     public void pause(){
         
-        mediaPlayer.pause();
+        if(mediaPlayer!=null)
+            mediaPlayer.pause();
         
     }
     
-    public void next(){
+    public Musique next(){
         index++;
         if(index>=playList.getPlayList().size()){
             index=0;
         }
-        mediaPlayer.stop();   
-        play(playList.getPlayList().get(index));
+        mediaPlayer.stop(); 
+        musiqueCourante=playList.getPlayList().get(index);
+        play(musiqueCourante);
+        return musiqueCourante;
         
     }
     
-    public void precedent(){
+    public Musique precedent(){
         index--;
         if(index<0){
             index=playList.getPlayList().size()-1;
         }
         mediaPlayer.stop();   
-        play(playList.getPlayList().get(index));
-        
+        musiqueCourante=playList.getPlayList().get(index);
+        play(musiqueCourante);
+        return musiqueCourante;
     }
     
     

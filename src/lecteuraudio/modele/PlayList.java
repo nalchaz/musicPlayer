@@ -18,44 +18,42 @@ import javafx.collections.ObservableList;
  */
 public abstract class PlayList extends NoeudMusique{
     
-    private  ListProperty<NoeudMusique> playlist= new SimpleListProperty<>(FXCollections.observableArrayList());
+    private  ListProperty<Musique> playlist= new SimpleListProperty<>(FXCollections.observableArrayList());
 
     
-    public void setPlayList(ListProperty<NoeudMusique> playList) {
+    public void setPlayList(ListProperty<Musique> playList) {
         this.playlist = playList;
     }
 
-    public ObservableList<NoeudMusique> getPlayList() {
+    public ObservableList<Musique> getPlayList() {
         return playlist.get(); 
 
     }
     
-    public void setPlayList(ObservableList<NoeudMusique> value) {
+    public void setPlayList(ObservableList<Musique> value) {
         playlist.set(value); 
 
     }
     
-    public ListProperty<NoeudMusique> playlistProperty() { 
+    public ListProperty<Musique> playlistProperty() { 
         return playlist ; 
     }
     
-    protected String nom; 
-    
     
     public String getNom(){ 
-        return nom;
+        return titre;
     }
     
     public void setNom (String nom){ 
-        this.nom=nom; 
+        this.titre=nom; 
     }
     
-    public void ajouter(NoeudMusique m){ 
+    public void ajouter(Musique m){ 
             playlist.add(m);
         
     }
     
-    public void supprimer(NoeudMusique m){
+    public void supprimer(Musique m){
         playlist.remove(m);      
     }
     
@@ -67,7 +65,7 @@ public abstract class PlayList extends NoeudMusique{
             
     @Override
     public String toString() { 
-        return nom; 
+        return titre; 
     }
    
     

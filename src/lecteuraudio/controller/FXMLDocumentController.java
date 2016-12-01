@@ -55,13 +55,16 @@ public class FXMLDocumentController implements Initializable {
     private Label tempsRestant;
     @FXML
     private Label auteur;
-    
+   
     @FXML
     private ListePlayLists liste=ListePlayLists.getInstance();
+    @FXML
+    private Musique musiqueView;
     
-    @FXML 
-    private PlayList listemusiques; 
-    
+    private PlayList listemusiques;    
+    private ListProperty<Musique> listProp;
+
+            
     Lecteur lec=new Lecteur();
     private GestionnaireRepertoire gesRep= new GestionnaireRepertoire(); 
     private GestionnaireImport gesImp= new GestionnaireImport(gesRep);
@@ -73,7 +76,7 @@ public class FXMLDocumentController implements Initializable {
         liste.ajouterPlayList(tout);
         gesRep.ouverture();
         gesImp.importerRepertoireMusiques(new File(gesRep.getRepositoryPath()),tout);
-        lec.setPlaylist(liste.getPlayListTout());
+
     }    
 
     
@@ -81,7 +84,7 @@ public class FXMLDocumentController implements Initializable {
     private void playPressed(ActionEvent event) {
         
         if("play".equals(play.getId())){ 
-            if(lec.play()) // Si le lecteur renvoie truc il change l'id, sinon il ne fait rien
+            if(lec.play()!=null) 
                 play.setId("pause");
         }
         else {
@@ -102,7 +105,7 @@ public class FXMLDocumentController implements Initializable {
         if("play".equals(play.getId())){
             play.setId("pause");
         }
-        lec.precedent();
+        musiqueView=(Musique)lec.precedent();
     }
 
     @FXML
@@ -110,7 +113,7 @@ public class FXMLDocumentController implements Initializable {
         if("play".equals(play.getId())){
             play.setId("pause");
         }
-        lec.next();
+        musiqueView=(Musique)lec.next();
     }
     
  
@@ -118,11 +121,22 @@ public class FXMLDocumentController implements Initializable {
     private void onPlayListChoisie (MouseEvent event){ 
         
         listemusiques=(PlayList)listeplaylists.getSelectionModel().getSelectedItem(); 
-        System.out.println(listemusiques.getPlayList().toString()); 
+        listProp=listemusiques.playlistProperty();
+        listMusique.itemsProperty().bind(listProp);
     }
-    
-   
-    
-    
+
+    @FXML
+    private void onMusiqueChoisie(MouseEvent event) {
+        if(event.getClickCount()==2){
+            musiqueView=(Musique)listMusique.getSelectionModel().getSelectedItem();
+            lec.setPlaylist(listemusiques);
+            lec.setMusiqueCourante(musiqueView);
+            lec.pause();
+            if("play".equals(play.getId())){
+                play.setId("pause");
+            }
+            lec.play(musiqueView);
+        }
+    }
     
 }

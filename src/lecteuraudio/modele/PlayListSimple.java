@@ -20,16 +20,11 @@ public class PlayListSimple extends PlayList{
     }
     
     public PlayListSimple (String titre){ 
-        super.nom=titre; 
+        super.titre=titre; 
     }
     
     public void ajouterMusique(Musique m){ 
         super.ajouter(m); 
-    }
-
-    @Override
-    public String getPath() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
    
 }

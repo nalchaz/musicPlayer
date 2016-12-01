@@ -14,9 +14,13 @@ package lecteuraudio.modele;
 public class Musique extends NoeudMusique {
     
     private String auteur;
-    private String titre;
     private String path;
 
+    
+    public Musique(){
+        
+    }
+    
     public Musique (String auteur, String titre, String path){
         this.auteur=auteur; 
         this.titre=titre; 
@@ -42,7 +46,6 @@ public class Musique extends NoeudMusique {
         this.path=path;        
     }
     
-    @Override
     public String getPath(){
         return path;
     }
