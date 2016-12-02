@@ -20,6 +20,7 @@ public abstract class PlayList extends NoeudMusique{
     
     private  ListProperty<Musique> playlist= new SimpleListProperty<>(FXCollections.observableArrayList());
 
+    protected String titre;
     
     public void setPlayList(ListProperty<Musique> playList) {
         this.playlist = playList;

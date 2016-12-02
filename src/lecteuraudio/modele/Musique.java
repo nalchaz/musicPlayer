@@ -6,6 +6,9 @@
 
 package lecteuraudio.modele;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 
 /**
  *
@@ -15,7 +18,7 @@ public class Musique extends NoeudMusique {
     
     private String auteur;
     private String path;
-
+    public StringProperty titreProperty;
     
     public Musique(){
         
@@ -23,9 +26,19 @@ public class Musique extends NoeudMusique {
     
     public Musique (String auteur, String titre, String path){
         this.auteur=auteur; 
-        this.titre=titre; 
+        this.titreProperty=new SimpleStringProperty(titre); 
         this.path=path; 
     }
+
+
+    public StringProperty getTitre() {
+        return titreProperty;
+    }
+
+    public void setTitre(String titre) {
+        this.titreProperty = new SimpleStringProperty(titre);
+    }
+    
     
     public void setAuteur(String auteur){
         this.auteur=auteur;
@@ -35,13 +48,7 @@ public class Musique extends NoeudMusique {
         return auteur;
     }
     
-    public void setTitre(String titre){
-        this.titre=titre;
-    }
-    
-    public String getTitre(){
-        return titre;
-    }
+
     public void setPath(String path){    
         this.path=path;        
     }
@@ -52,6 +59,6 @@ public class Musique extends NoeudMusique {
     
     @Override 
     public String toString (){ 
-        return titre; 
+        return titreProperty.getValue(); 
     }
 }

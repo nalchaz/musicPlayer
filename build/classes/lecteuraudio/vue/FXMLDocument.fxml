@@ -73,7 +73,7 @@
             </StackPane>
             <StackPane GridPane.columnIndex="2">
                <children>
-                  <Label fx:id="titreMusique" text="${musiqueView.titre}" StackPane.alignment="CENTER">
+                  <Label fx:id="titreMusique" StackPane.alignment="CENTER">
                      <StackPane.margin>
                         <Insets bottom="40.0" right="50.0" />
                      </StackPane.margin>

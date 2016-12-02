@@ -106,6 +106,7 @@ public class FXMLDocumentController implements Initializable {
             play.setId("pause");
         }
         musiqueView=(Musique)lec.precedent();
+        titreMusique.textProperty().bind(musiqueView.getTitre());
     }
 
     @FXML
@@ -114,6 +115,7 @@ public class FXMLDocumentController implements Initializable {
             play.setId("pause");
         }
         musiqueView=(Musique)lec.next();
+        titreMusique.textProperty().bind(musiqueView.getTitre());
     }
     
  
@@ -136,6 +138,8 @@ public class FXMLDocumentController implements Initializable {
                 play.setId("pause");
             }
             lec.play(musiqueView);
+            titreMusique.textProperty().bind(musiqueView.getTitre());
+            
         }
     }
     

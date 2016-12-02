@@ -18,6 +18,7 @@ public class Lecteur {
     private MediaPlayer.Status status;
     private Musique musiqueCourante;
     
+    
     public Musique play(){
         if(mediaPlayer==null){
             if(playList==null || playList.isEmpty())
@@ -34,6 +35,7 @@ public class Lecteur {
     public Musique getMusiqueCourante(){ 
         return musiqueCourante;
     }
+    
     public void setMusiqueCourante(Musique musique){ 
         this.musiqueCourante=musique; 
     }
@@ -81,6 +83,9 @@ public class Lecteur {
         return musiqueCourante;
     }
     
+    public void setMute(boolean mute){
+        mediaPlayer.setMute(mute);
+    }
     
     
 }
