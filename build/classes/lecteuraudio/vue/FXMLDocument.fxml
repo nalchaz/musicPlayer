@@ -19,10 +19,11 @@
 <?import javafx.scene.text.Font?>
 <?import lecteuraudio.modele.*?>
 
+
 <BorderPane id="BorderPane" minHeight="900.0" minWidth="1200.0" prefHeight="900.0" prefWidth="1200.0" stylesheets="@MediaPlayer.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lecteuraudio.controller.FXMLDocumentController"> 
     <fx:define>
         <ListePlayLists fx:id="liste" /> 
-        <Musique fx:id="musiqueView"/>
+        <Musique fx:id="musiqueView" />
     </fx:define>
    <center>
       <GridPane minHeight="700.0" minWidth="700.0" prefHeight="750.0" prefWidth="800.0" BorderPane.alignment="CENTER">
@@ -112,9 +113,18 @@
                   <Insets />
                </GridPane.margin>
             </StackPane>
-            <StackPane GridPane.columnIndex="1">
+            <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1">
                <children>
-                  <Slider maxWidth="120.0" minWidth="120.0" prefWidth="120.0" />
+                  <Slider maxHeight="10.0" maxWidth="100.0" minHeight="10.0" minWidth="100.0" prefHeight="10.0" prefWidth="100.0" StackPane.alignment="CENTER_RIGHT">
+                     <StackPane.margin>
+                        <Insets right="30.0" />
+                     </StackPane.margin>
+                  </Slider>
+                  <Button fx:id="muteButton" mnemonicParsing="false" onAction="#onMuteClic" prefWidth="60.0" text="Mute" StackPane.alignment="CENTER_LEFT">
+                     <StackPane.margin>
+                        <Insets left="15.0" />
+                     </StackPane.margin>
+                  </Button>
                </children>
             </StackPane>
          </children>

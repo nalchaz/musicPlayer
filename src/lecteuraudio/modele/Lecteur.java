@@ -87,5 +87,9 @@ public class Lecteur {
         mediaPlayer.setMute(mute);
     }
     
+    public boolean isMute(){
+        return mediaPlayer.isMute();
+    }
+    
     
 }

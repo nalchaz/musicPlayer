@@ -68,6 +68,8 @@ public class FXMLDocumentController implements Initializable {
     Lecteur lec=new Lecteur();
     private GestionnaireRepertoire gesRep= new GestionnaireRepertoire(); 
     private GestionnaireImport gesImp= new GestionnaireImport(gesRep);
+    @FXML
+    private Button muteButton;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -142,5 +144,12 @@ public class FXMLDocumentController implements Initializable {
             
         }
     }
-    
+
+    @FXML
+    private void onMuteClic(ActionEvent event) {
+        if(lec.isMute())
+            lec.setMute(false);
+        else
+            lec.setMute(true);
+    }
 }
