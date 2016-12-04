@@ -17,8 +17,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
-<?import lecteuraudio.modele.*?>
-
+<?import lecteuraudio.modele.* ?> 
 
 <BorderPane id="BorderPane" minHeight="900.0" minWidth="1200.0" prefHeight="900.0" prefWidth="1200.0" stylesheets="@MediaPlayer.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lecteuraudio.controller.FXMLDocumentController"> 
     <fx:define>
@@ -26,7 +25,7 @@
         <Musique fx:id="musiqueView" />
     </fx:define>
    <center>
-      <GridPane minHeight="700.0" minWidth="700.0" prefHeight="750.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+      <GridPane alignment="TOP_CENTER" minHeight="700.0" minWidth="700.0" prefHeight="900.0" prefWidth="800.0" BorderPane.alignment="CENTER">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="248.0" minWidth="10.0" percentWidth="22.0" prefWidth="200.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="248.0" minWidth="10.0" percentWidth="22.0" prefWidth="200.0" />
@@ -34,13 +33,13 @@
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="290.0" minWidth="10.0" percentWidth="24.0" prefWidth="239.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints maxHeight="100.0" minHeight="100.0" prefHeight="100.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="616.0" minHeight="10.0" percentHeight="80.0" prefHeight="602.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="100.0" minHeight="100.0" percentHeight="20.0" prefHeight="100.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="800.0" minHeight="10.0" percentHeight="80.0" prefHeight="602.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <ListView fx:id="listeplaylists" items="${liste.playLists}" onMouseClicked="#onPlayListChoisie" prefHeight="530.0" prefWidth="220.0" style="-fx-border-width: 1;" GridPane.rowIndex="1" />
-            <ListView fx:id="listMusique" onMouseClicked="#onMusiqueChoisie" prefHeight="200.0" prefWidth="200.0" style="-fx-border-width: 1;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-            <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-border-width: 1;" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <ListView fx:id="listMusique" onMouseClicked="#onMusiqueChoisie" prefHeight="530.0" prefWidth="400.0" style="-fx-border-width: 1;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+            <StackPane prefHeight="530.0" prefWidth="200.0" style="-fx-border-width: 1;" GridPane.columnIndex="3" GridPane.rowIndex="1" />
             <StackPane prefHeight="150.0" prefWidth="200.0">
                <children>
                     <Button id="play" fx:id="play" mnemonicParsing="false" onAction="#playPressed" StackPane.alignment="CENTER">
@@ -131,7 +130,7 @@
       </GridPane>
    </center>
    <bottom>
-      <StackPane alignment="CENTER_RIGHT" prefHeight="56.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+      <StackPane alignment="CENTER_RIGHT" prefHeight="72.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
          <children>
             <Button alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#importPressed" style="-fx-background-color: darkgray;" text="Importer" textFill="#f5f2f2" StackPane.alignment="CENTER_RIGHT">
                <StackPane.margin>
@@ -143,6 +142,12 @@
                   <Insets right="100.0" />
                </StackPane.margin>
             </Button>
+            <Button fx:id="ajoutPlayList" mnemonicParsing="false" onAction="#onAjoutPlayList" text="+" StackPane.alignment="TOP_LEFT" />
+            <TextField fx:id="nomPlayListAjout" alignment="TOP_LEFT" maxWidth="190.0" onKeyPressed="#onValidNom" prefWidth="180.0" visible="false" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="32.0" />
+               </StackPane.margin>
+            </TextField>
          </children>
          <BorderPane.margin>
             <Insets />
