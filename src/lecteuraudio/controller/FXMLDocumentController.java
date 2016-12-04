@@ -10,15 +10,20 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.property.ListProperty;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import lecteuraudio.modele.GestionnaireImport;
 import lecteuraudio.modele.GestionnaireRepertoire;
 import lecteuraudio.modele.Lecteur;
@@ -61,17 +66,19 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private ListePlayLists liste=ListePlayLists.getInstance();
     @FXML
-    private Musique musiqueView;
-    
-    private PlayList listemusiques;    
-    private ListProperty<Musique> listProp;
-
-            
-    Lecteur lec=new Lecteur();
-    private GestionnaireRepertoire gesRep= new GestionnaireRepertoire(); 
-    private GestionnaireImport gesImp= new GestionnaireImport(gesRep);
+    private Musique musiqueView;  
     @FXML
     private Button muteButton;
+    @FXML
+    private BorderPane borderPane;
+    @FXML
+    private Button ajoutPlayList;
+    
+    Lecteur lec=new Lecteur();
+    private PlayList listemusiques;    
+    private ListProperty<Musique> listProp;   
+    private GestionnaireRepertoire gesRep= new GestionnaireRepertoire(); 
+    private GestionnaireImport gesImp= new GestionnaireImport(gesRep);
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -80,7 +87,6 @@ public class FXMLDocumentController implements Initializable {
         liste.ajouterPlayList(tout);
         gesRep.ouverture();
         gesImp.importerRepertoireMusiques(new File(gesRep.getRepositoryPath()),tout);
-       
     }    
 
     
@@ -126,18 +132,18 @@ public class FXMLDocumentController implements Initializable {
     @FXML 
     private void onPlayListChoisie (MouseEvent event){ 
         
-        
+        if(listeplaylists.getSelectionModel().getSelectedItem()!=null){
             listemusiques=(PlayList)listeplaylists.getSelectionModel().getSelectedItem(); 
             listProp=listemusiques.playlistProperty();
             listMusique.itemsProperty().bind(listProp);
-       
+        }
         
         
     }
 
     @FXML
     private void onMusiqueChoisie(MouseEvent event) {
-        if(event.getClickCount()==2){
+        if(event.getButton()==MouseButton.PRIMARY && event.getClickCount()==2){  //double clic gauche
             musiqueView=(Musique)listMusique.getSelectionModel().getSelectedItem();
             lec.setPlaylist(listemusiques);
             lec.setMusiqueCourante(musiqueView);
@@ -148,6 +154,25 @@ public class FXMLDocumentController implements Initializable {
             lec.play(musiqueView);
             titreMusique.textProperty().bind(musiqueView.getTitre());
             
+        }
+        if(event.getButton()==MouseButton.SECONDARY){ //clic droit
+         
+            ContextMenu contextMenu = new ContextMenu();
+            MenuItem item1 = new MenuItem("Copier");
+            item1.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                 System.out.println("Copier");
+            }
+            });
+            MenuItem item2 = new MenuItem("Coller");
+            item2.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                System.out.println("Coller");
+            }
+            });
+            contextMenu.getItems().addAll(item1, item2);
+            contextMenu.show(borderPane, event.getScreenX(), event.getScreenY());
+            //contextMenu.setAutoHide(true);   TROUVER COMMENT FERME LE MENU CONTEXTUEL
         }
     }
 
