@@ -19,7 +19,7 @@
 <?import javafx.scene.text.Font?>
 <?import lecteuraudio.modele.*?>
 
-<BorderPane fx:id="borderPane" id="BorderPane" minHeight="900.0" minWidth="1200.0" prefHeight="900.0" prefWidth="1200.0" stylesheets="@MediaPlayer.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lecteuraudio.controller.FXMLDocumentController"> 
+<BorderPane id="BorderPane" fx:id="borderPane" minHeight="900.0" minWidth="1200.0" prefHeight="900.0" prefWidth="1200.0" stylesheets="@MediaPlayer.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lecteuraudio.controller.FXMLDocumentController"> 
     <fx:define>
         <ListePlayLists fx:id="liste" /> 
         <Musique fx:id="musiqueView" />
@@ -148,6 +148,11 @@
                   <Insets left="32.0" />
                </StackPane.margin>
             </TextField>
+            <Button mnemonicParsing="false" onAction="#onSupprimerPlayList" prefWidth="31.0" text="-" StackPane.alignment="BOTTOM_LEFT">
+               <StackPane.margin>
+                  <Insets bottom="5.0" />
+               </StackPane.margin>
+            </Button>
          </children>
          <BorderPane.margin>
             <Insets />
@@ -159,7 +164,10 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Exit" />
+              <MenuItem mnemonicParsing="false" onAction="#importPressed" text="Importer" />
+              <MenuItem mnemonicParsing="false" onAction="#onAjoutPlayList" text="Ajout PlayList" />
+              <MenuItem mnemonicParsing="false" onAction="#onSupprimerPlayList" text="Supprimer PlayList" />
+              <MenuItem mnemonicParsing="false" onAction="#onExit" text="Exit" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">

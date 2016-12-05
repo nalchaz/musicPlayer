@@ -36,6 +36,11 @@ public class ListePlayLists {
     public void ajouterPlayList (PlayList p){    
         listePlaylists.add(p);   
     }
+    
+    public void supprimerPlayList (PlayList p){ 
+        listePlaylists.remove(p);     
+    }
+    
     public PlayList getPlayListTout (){ 
         for (PlayList p : listePlaylists){ 
            if (p.getNom().equals("Musiques")){ 

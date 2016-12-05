@@ -8,6 +8,8 @@ package lecteuraudio.controller;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -197,5 +199,15 @@ public class FXMLDocumentController implements Initializable {
                 nomPlayListAjout.clear();
                 nomPlayListAjout.setVisible(false); 
             } 
+    }
+    
+    @FXML 
+    private void onSupprimerPlayList (ActionEvent event){ 
+        liste.supprimerPlayList(listemusiques);
+    }
+    
+    @FXML 
+    private void onExit (ActionEvent event){ 
+        Platform.exit();
     }
 }
