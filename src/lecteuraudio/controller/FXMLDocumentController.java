@@ -7,6 +7,7 @@ package lecteuraudio.controller;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -15,7 +16,10 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -26,6 +30,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import lecteuraudio.modele.GestionnaireImport;
 import lecteuraudio.modele.GestionnaireRepertoire;
 import lecteuraudio.modele.Lecteur;
@@ -39,22 +44,27 @@ import lecteuraudio.modele.PlayList;
  */
 public class FXMLDocumentController implements Initializable {
     
-    @FXML
-    private Button play;
+    
     
     @FXML 
     private TextField nomPlayListAjout; 
     
     @FXML
     private ListView listMusique;
-    
     @FXML 
     private ListView listeplaylists; 
     
     @FXML
+    private Button play;
+    @FXML   
     private Button previous;
     @FXML
     private Button next;
+    @FXML
+    private Button muteButton;
+    @FXML
+    private Button ajoutPlayList;
+    
     @FXML
     private Label titreMusique;
     @FXML
@@ -68,18 +78,19 @@ public class FXMLDocumentController implements Initializable {
     private ListePlayLists liste=ListePlayLists.getInstance();
     @FXML
     private Musique musiqueView;  
-    @FXML
-    private Button muteButton;
+    
     @FXML
     private BorderPane borderPane;
     @FXML
-    private Button ajoutPlayList;
-   
+    private FlowPane zoneAjout;
+    
+    private Musique pressePapier;
     private PlayList listemusiques; 
     
     Lecteur lec=new Lecteur();
     private GestionnaireRepertoire gesRep= new GestionnaireRepertoire(); 
     private GestionnaireImport gesImp= new GestionnaireImport(gesRep);
+    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -155,25 +166,6 @@ public class FXMLDocumentController implements Initializable {
             titreMusique.textProperty().bind(musiqueView.titreProperty());
             
         }
-        if(event.getButton()==MouseButton.SECONDARY){ //clic droit
-         
-            ContextMenu contextMenu = new ContextMenu();
-            MenuItem item1 = new MenuItem("Copier");
-            item1.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-                 System.out.println("Copier");
-            }
-            });
-            MenuItem item2 = new MenuItem("Coller");
-            item2.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-                System.out.println("Coller");
-            }
-            });
-            contextMenu.getItems().addAll(item1, item2);
-            contextMenu.show(borderPane, event.getScreenX(), event.getScreenY());
-            //contextMenu.setAutoHide(true);   TROUVER COMMENT FERME LE MENU CONTEXTUEL
-        }
     }
 
     @FXML
@@ -186,26 +178,105 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML 
     private void onAjoutPlayList (ActionEvent event){ 
-        nomPlayListAjout.setVisible(true);             
+        zoneAjout.setVisible(true);
+        ajoutPlayList.setVisible(false);
     }
     
-    @FXML 
-    private void onValidNom (KeyEvent key){ 
-            if (key.getCode().equals(KeyCode.ENTER)){
-                PlayList p=new PlayList(nomPlayListAjout.getText()); 
-                liste.ajouterPlayList(p);
-                nomPlayListAjout.clear();
-                nomPlayListAjout.setVisible(false); 
-            } 
+    @FXML
+    private void onAnnulerPlaylist(ActionEvent event) {
+        nomPlayListAjout.clear();
+        zoneAjout.setVisible(false);
+        ajoutPlayList.setVisible(true);
     }
     
     @FXML 
     private void onSupprimerPlayList (ActionEvent event){ 
-        liste.supprimerPlayList(listemusiques);
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText(null);
+        alert.setContentText("Êtes-vous sûr de vouloir supprimer "+listemusiques.getNom()+" ?");
+
+        Optional<ButtonType> result = alert.showAndWait();       
+        if (result.get() == ButtonType.OK){
+            if(!liste.supprimerPlayList(listemusiques)){
+                alert.setAlertType(AlertType.ERROR);
+                alert.setTitle("Erreur");
+                alert.setContentText("Vous ne pouvez pas supprimer la playlist principale.");
+                alert.showAndWait();
+            }
+        }
     }
     
+    private void creerPlaylistDepuisView(){
+        PlayList p=new PlayList(nomPlayListAjout.getText()); 
+        if(!liste.ajouterPlayList(p)){
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Une playlist possède déja le nom \""+p.getNom()+"\".");
+            alert.showAndWait();
+        }
+        nomPlayListAjout.clear();
+        zoneAjout.setVisible(false);
+        ajoutPlayList.setVisible(true);
+    }
+    @FXML 
+    private void onValidNom (KeyEvent key){ 
+            if (key.getCode().equals(KeyCode.ENTER)){
+                creerPlaylistDepuisView();
+            } 
+    } 
+    @FXML
+    private void onValidNomButton(ActionEvent event) {
+        creerPlaylistDepuisView();
+    }
     @FXML 
     private void onExit (ActionEvent event){ 
-        Platform.exit();
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText(null);
+        alert.setContentText("Êtes-vous sûr de vouloir quitter ?");
+
+        Optional<ButtonType> result = alert.showAndWait();       
+        if (result.get() == ButtonType.OK){
+            Platform.exit();
+        } 
+        
     }
+
+    @FXML
+    private void onCopier(ActionEvent event) {
+        pressePapier=(Musique)listMusique.getSelectionModel().getSelectedItem();
+    }
+
+    @FXML
+    private void onColler(ActionEvent event) {
+        if(pressePapier!=null)
+            if(!listemusiques.ajouter(pressePapier)){
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Attention");
+                alert.setHeaderText(null);
+                alert.setContentText("Vous ne pouvez pas ajouter deux fois la même musique dans une playlist.");
+                alert.showAndWait();
+            }
+    }
+    
+    @FXML
+    private void onSuppr(ActionEvent event) {
+        
+        Musique m=(Musique)listMusique.getSelectionModel().getSelectedItem();
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText(null);
+        alert.setContentText("Êtes-vous sûr de vouloir supprimer "+m.getTitre()+" ?");
+
+        Optional<ButtonType> result = alert.showAndWait();       
+        if (result.get() == ButtonType.OK){
+            listemusiques.supprimer(m);
+        }
+        
+    }
+
+    
+    
 }

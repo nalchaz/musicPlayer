@@ -56,10 +56,14 @@ public class PlayList{
     public void setNom (String nom){ 
         this.titre=nom; 
     }
+    // Return true si la musique a été ajouté, false si la musique y était déja
     
-    public void ajouter(Musique m){ 
+    public boolean ajouter(Musique m){ 
+        if(!playlist.contains(m)){
             playlist.add(m);
-        
+            return true;
+        }
+    return false;
     }
     
     public void supprimer(Musique m){

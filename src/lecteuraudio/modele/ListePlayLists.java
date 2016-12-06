@@ -33,12 +33,23 @@ public class ListePlayLists {
         return listePlaylists  ; 
     }
     
-    public void ajouterPlayList (PlayList p){    
+    //Return false si le nom de la playlist existe déja, sinon l'ajoute et return true
+    public boolean ajouterPlayList (PlayList p){  
+        for (PlayList playList : listePlaylists) {
+            if(playList.getNom() == null ? p.getNom() == null : playList.getNom().equals(p.getNom()))
+                return false;
+        }
         listePlaylists.add(p);   
+        return true;
     }
     
-    public void supprimerPlayList (PlayList p){ 
-        listePlaylists.remove(p);     
+    //Return true si la playlist a été supprimé, false si il s'agit de la playlist tout
+    public boolean supprimerPlayList (PlayList p){ 
+        if(p!=getPlayListTout()){
+            listePlaylists.remove(p);  
+            return true;
+        }
+        return false;
     }
     
     public PlayList getPlayListTout (){ 
