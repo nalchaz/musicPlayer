@@ -65,3 +65,35 @@
  	 -fx-padding: 3px;
          -fx-background-color: transparent; 
 }
+
+#mute {
+    -fx-graphic: url("icon-son.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-padding: 3px;
+    -fx-background-color: transparent;
+}
+
+#mute:hover {
+    -fx-graphic: url("icon-hover-son.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-padding: 3px;
+    -fx-background-color: transparent;
+}
+
+#unmute {
+    -fx-graphic: url("icon-noson.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-padding: 3px;
+    -fx-background-color: transparent;
+}
+
+#unmute:hover {
+    -fx-graphic: url("icon-hover-noson.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-padding: 3px;
+    -fx-background-color: transparent;
+}

@@ -54,6 +54,10 @@ public class Lecteur {
         this.playList=p; 
     }
     
+    public MediaPlayer getMediaPlayer(){
+        return mediaPlayer;
+    }
+    
     public void pause(){
         
         if(mediaPlayer!=null)
