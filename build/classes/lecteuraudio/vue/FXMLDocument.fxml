@@ -34,11 +34,11 @@
         </columnConstraints>
         <rowConstraints>
           <RowConstraints percentHeight="12.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="800.0" minHeight="10.0" percentHeight="80.0" prefHeight="602.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="800.0" minHeight="10.0" percentHeight="88.0" prefHeight="602.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <ListView fx:id="listeplaylists" items="${liste.playLists}" onMouseClicked="#onPlayListChoisie" prefHeight="530.0" prefWidth="220.0" style="-fx-border-width: 1;" GridPane.rowIndex="1" />
-            <ListView fx:id="listMusique" onMouseClicked="#onMusiqueChoisie" prefHeight="530.0" prefWidth="400.0" style="-fx-border-width: 1;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+            <ListView fx:id="listMusique" items="${listemusiques.playlist}" onMouseClicked="#onMusiqueChoisie" prefHeight="530.0" prefWidth="400.0" style="-fx-border-width: 1;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
             <StackPane prefHeight="530.0" prefWidth="200.0" style="-fx-border-width: 1;" GridPane.columnIndex="3" GridPane.rowIndex="1" />
             <StackPane prefHeight="150.0" prefWidth="200.0">
                <children>

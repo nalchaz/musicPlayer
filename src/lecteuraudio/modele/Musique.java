@@ -14,11 +14,12 @@ import javafx.beans.property.StringProperty;
  *
  * @author nahel
  */
-public class Musique extends NoeudMusique {
+public class Musique {
     
     private String auteur;
     private String path;
-    public StringProperty titreProperty;
+    private String titre;
+    
     
     public Musique(){
         
@@ -26,17 +27,22 @@ public class Musique extends NoeudMusique {
     
     public Musique (String auteur, String titre, String path){
         this.auteur=auteur; 
-        this.titreProperty=new SimpleStringProperty(titre); 
+        this.titre=titre;
         this.path=path; 
     }
 
-
-    public StringProperty getTitre() {
-        return titreProperty;
+    private StringProperty titreProperty;
+    
+    public StringProperty titreProperty(){
+        return new SimpleStringProperty(titre); 
+    }
+    
+    public String getTitre() {
+        return titre;
     }
 
     public void setTitre(String titre) {
-        this.titreProperty = new SimpleStringProperty(titre);
+        this.titre=titre;
     }
     
     
@@ -59,6 +65,6 @@ public class Musique extends NoeudMusique {
     
     @Override 
     public String toString (){ 
-        return titreProperty.getValue(); 
+        return titre; 
     }
 }

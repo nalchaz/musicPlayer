@@ -32,7 +32,6 @@ import lecteuraudio.modele.Lecteur;
 import lecteuraudio.modele.ListePlayLists;
 import lecteuraudio.modele.Musique;
 import lecteuraudio.modele.PlayList;
-import lecteuraudio.modele.PlayListSimple;
 
 /**
  *
@@ -75,17 +74,17 @@ public class FXMLDocumentController implements Initializable {
     private BorderPane borderPane;
     @FXML
     private Button ajoutPlayList;
+   
+    private PlayList listemusiques; 
     
     Lecteur lec=new Lecteur();
-    private PlayList listemusiques;    
-    private ListProperty<Musique> listProp;   
     private GestionnaireRepertoire gesRep= new GestionnaireRepertoire(); 
     private GestionnaireImport gesImp= new GestionnaireImport(gesRep);
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
       
-        PlayList tout=new PlayListSimple("Musiques"); 
+        PlayList tout=new PlayList("Musiques"); 
         liste.ajouterPlayList(tout);
         gesRep.ouverture();
         gesImp.importerRepertoireMusiques(new File(gesRep.getRepositoryPath()),tout);
@@ -118,7 +117,7 @@ public class FXMLDocumentController implements Initializable {
             play.setId("pause");
         }
         musiqueView=(Musique)lec.precedent();
-        titreMusique.textProperty().bind(musiqueView.getTitre());
+        titreMusique.textProperty().bind(musiqueView.titreProperty());
     }
 
     @FXML
@@ -127,7 +126,7 @@ public class FXMLDocumentController implements Initializable {
             play.setId("pause");
         }
         musiqueView=(Musique)lec.next();
-        titreMusique.textProperty().bind(musiqueView.getTitre());
+        titreMusique.textProperty().bind(musiqueView.titreProperty());
     }
     
  
@@ -136,8 +135,7 @@ public class FXMLDocumentController implements Initializable {
         
         if(listeplaylists.getSelectionModel().getSelectedItem()!=null){
             listemusiques=(PlayList)listeplaylists.getSelectionModel().getSelectedItem(); 
-            listProp=listemusiques.playlistProperty();
-            listMusique.itemsProperty().bind(listProp);
+            listMusique.itemsProperty().bind(listemusiques.playlistProperty());
         }
         
         
@@ -154,7 +152,7 @@ public class FXMLDocumentController implements Initializable {
                 play.setId("pause");
             }
             lec.play(musiqueView);
-            titreMusique.textProperty().bind(musiqueView.getTitre());
+            titreMusique.textProperty().bind(musiqueView.titreProperty());
             
         }
         if(event.getButton()==MouseButton.SECONDARY){ //clic droit
@@ -194,7 +192,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML 
     private void onValidNom (KeyEvent key){ 
             if (key.getCode().equals(KeyCode.ENTER)){
-                PlayList p=new PlayListSimple(nomPlayListAjout.getText()); 
+                PlayList p=new PlayList(nomPlayListAjout.getText()); 
                 liste.ajouterPlayList(p);
                 nomPlayListAjout.clear();
                 nomPlayListAjout.setVisible(false); 

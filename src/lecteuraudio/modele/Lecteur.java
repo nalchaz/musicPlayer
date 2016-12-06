@@ -32,6 +32,16 @@ public class Lecteur {
     return musiqueCourante;
     }
     
+    public void play(Musique musique){
+        String chemin;
+
+            
+        chemin="file:///"+System.getProperty("user.dir").replace("\\", "/")+"/Musiques/"+musique.getPath();           
+        mediaPlayer=new MediaPlayer(new Media(chemin.replaceAll(" ","%20"))); //Replace all pour que les espaces ne pausent pas de problème
+        mediaPlayer.play();
+        
+    }
+    
     public Musique getMusiqueCourante(){ 
         return musiqueCourante;
     }
@@ -44,15 +54,6 @@ public class Lecteur {
         this.playList=p; 
     }
     
-    public void play(Musique musique){
-        String chemin;
-
-            
-        chemin="file:///"+System.getProperty("user.dir").replace("\\", "/")+"/Musiques/"+musique.getPath();           
-        mediaPlayer=new MediaPlayer(new Media(chemin.replaceAll(" ","%20"))); //Replace all pour que les espaces ne pausent pas de problème
-        mediaPlayer.play();
-        
-    }
     public void pause(){
         
         if(mediaPlayer!=null)
