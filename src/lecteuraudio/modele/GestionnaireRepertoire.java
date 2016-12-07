@@ -65,11 +65,11 @@ public class GestionnaireRepertoire {
     
     public void ecrirePlayLists (ListePlayLists liste){ 
         for (PlayList p : liste.getPlayLists()){ 
-            creerPlayList(p); 
+            creerFichierPlayList(p); 
         }
     }
 
-    public void creerPlayList(PlayList p) {
+    public void creerFichierPlayList(PlayList p) {
         if (!p.getNom().equals("Musiques")) {
             File f = new File(repositoryPlayLists+"/."+p.getNom()+".txt");
             try { 

@@ -4,8 +4,12 @@
  * and open the template in the editor.
  */
 package lecteuraudio.modele;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 /**
  *
  * @author nahel
@@ -33,13 +37,23 @@ public class Lecteur {
     }
     
     public void play(Musique musique){
-        String chemin;
-
-            
-        chemin="file:///"+System.getProperty("user.dir").replace("\\", "/")+"/Musiques/"+musique.getPath();           
-        mediaPlayer=new MediaPlayer(new Media(chemin.replaceAll(" ","%20"))); //Replace all pour que les espaces ne pausent pas de problème
+          
+        Media media=new Media(musique.getPath());
+        mediaPlayer=new MediaPlayer(media);
         mediaPlayer.play();
         
+    }
+    
+    public ReadOnlyObjectProperty<Duration> currentTimeProperty(){
+        return mediaPlayer.currentTimeProperty();
+    }
+    
+    public Duration getCurrentTime(){
+        return mediaPlayer.getCurrentTime();
+    }
+    
+    public Duration getTotalDuration(){
+        return mediaPlayer.getTotalDuration();
     }
     
     public Musique getMusiqueCourante(){ 
@@ -53,18 +67,31 @@ public class Lecteur {
     public void setPlaylist(PlayList p){ 
         this.playList=p; 
     }
+  
     
-    public MediaPlayer getMediaPlayer(){
-        return mediaPlayer;
+    public void setVolume(double volume){
+        mediaPlayer.setVolume(volume);
     }
     
-    public void pause(){
+    public void setOnEndOfMedia(Runnable value){
+        mediaPlayer.setOnEndOfMedia(value);
+    }
+    
+    public void seek(Duration newDuration){
+        mediaPlayer.seek(newDuration);
+    }
+    
+    public boolean isNull(){
+        return mediaPlayer==null;
+    }
+    
+      public void pause(){
         
         if(mediaPlayer!=null)
             mediaPlayer.pause();
         
     }
-    
+      
     public Musique next(){
         index++;
         if(index>=playList.getPlayList().size()){

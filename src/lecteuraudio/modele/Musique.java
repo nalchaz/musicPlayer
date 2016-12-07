@@ -16,42 +16,45 @@ import javafx.beans.property.StringProperty;
  */
 public class Musique {
     
-    private String auteur;
     private String path;
-    private String titre;
-    
+    private StringProperty auteurProperty=new SimpleStringProperty();    
+    private StringProperty titreProperty=new SimpleStringProperty();
     
     public Musique(){
         
     }
     
     public Musique (String auteur, String titre, String path){
-        this.auteur=auteur; 
-        this.titre=titre;
+        this.auteurProperty.set(auteur); 
+        this.titreProperty.set(titre);
         this.path=path; 
     }
 
-    private StringProperty titreProperty;
+    
     
     public StringProperty titreProperty(){
-        return new SimpleStringProperty(titre); 
+        return titreProperty; 
     }
     
     public String getTitre() {
-        return titre;
+        return titreProperty.get();
     }
 
     public void setTitre(String titre) {
-        this.titre=titre;
+        this.titreProperty.set(titre);
     }
     
     
-    public void setAuteur(String auteur){
-        this.auteur=auteur;
+    public StringProperty auteurProperty(){
+        return auteurProperty; 
     }
     
-    public String getAuteur(){
-        return auteur;
+    public String getAuteur() {
+        return auteurProperty.get();
+    }
+
+    public void setAuteur(String auteur) {
+        this.auteurProperty.set(auteur);
     }
     
 
@@ -65,6 +68,6 @@ public class Musique {
     
     @Override 
     public String toString (){ 
-        return titre; 
+        return titreProperty.get(); 
     }
 }

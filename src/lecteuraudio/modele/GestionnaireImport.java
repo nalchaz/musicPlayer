@@ -10,8 +10,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
+import javafx.collections.MapChangeListener;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.media.Media;
 import javax.swing.JFileChooser;
 
 /**
@@ -61,7 +63,7 @@ public class GestionnaireImport {
             e.printStackTrace();
         } 
     }
-        
+    
     private void ajouterMusiqueAPlayList (PlayList p,String nom,PlayList tout){ 
         for (Musique m : tout.getPlayList()){ 
             if (m.getTitre().equals(nom)){ 
@@ -88,8 +90,8 @@ public class GestionnaireImport {
             }
         }
     
-    }    
-        
+    }   
+    
     private void dialogueErreurFichierExistant() {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("Erreur");
@@ -97,11 +99,21 @@ public class GestionnaireImport {
         alert.showAndWait();
 
     }
-    
-    private void ajouterMusique(File f,PlayList tout) { 
-        int taille = (int)f.getName().length()-4; 
-        Musique m= new Musique("auteur",f.getName().substring(0,taille)  , f.getName()); 
+  
+    private void ajouterMusique(File f, PlayList tout) {
+        int taille = (int) f.getName().length() - 4;
+        Musique m = new Musique("auteur", f.getName().substring(0, taille), ("file:///" + System.getProperty("user.dir").replace("\\", "/") + "/Musiques/" + f.getName().replaceAll(" ", "%20")));
+        Media media = new Media(m.getPath());
+        media.getMetadata().addListener(new MapChangeListener<String, Object>() {
+            @Override
+            public void onChanged(Change<? extends String, ? extends Object> ch) {
+                if (ch.wasAdded()) {
+                    m.setAuteur((String) media.getMetadata().get("artist"));
+                }
+            }
+        });
+
         tout.ajouter(m);
     }
-    
+
 }
