@@ -5,9 +5,9 @@
  */
 package lecteuraudio.controller;
 
-import com.sun.deploy.association.utility.WinRegistryUtil;
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -30,12 +30,17 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import lecteuraudio.modele.GestionnaireImport;
 import lecteuraudio.modele.GestionnaireRepertoire;
@@ -373,6 +378,16 @@ public class FXMLDocumentController implements Initializable {
             lec.seek(newDuration);
             progressbar.setProgress(event.getX() / progressbar.getWidth());
         }
-    }   
-    
+    }
+
+    @FXML
+    private void onDragDetected(MouseEvent event) {
+    Dragboard dragBoard = listMusique.startDragAndDrop(TransferMode.MOVE);
+    dragBoard.setDragView(new Text(listMusique.getSelectionModel().getSelectedItem().toString()).snapshot(null, null), event.getX()/100, event.getY()/100);
+    ClipboardContent content = new ClipboardContent();
+
+    content.putString(listMusique.getSelectionModel().getSelectedItem().toString());
+    dragBoard.setContent(content);
+}
+
 }

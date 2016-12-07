@@ -17,7 +17,7 @@ import javafx.util.Duration;
 public class Lecteur {
         
     private MediaPlayer mediaPlayer;
-    private int index=0;
+    private int index;
     private PlayList playList;
     private MediaPlayer.Status status;
     private Musique musiqueCourante;
@@ -93,6 +93,7 @@ public class Lecteur {
     }
       
     public Musique next(){
+        index=playList.getPlayList().indexOf(musiqueCourante);
         index++;
         if(index>=playList.getPlayList().size()){
             index=0;
@@ -105,6 +106,7 @@ public class Lecteur {
     }
     
     public Musique precedent(){
+        index=playList.getPlayList().indexOf(musiqueCourante);
         index--;
         if(index<0){
             index=playList.getPlayList().size()-1;
