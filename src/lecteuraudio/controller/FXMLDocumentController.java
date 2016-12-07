@@ -113,7 +113,8 @@ public class FXMLDocumentController implements Initializable {
         //Importation des musiques
         gesRep.ouverture();
         gesImp.importerRepertoireMusiques(new File(gesRep.getRepositoryPath()), tout);
-
+        gesImp.importerPlayLists(new File(gesRep.getRepositoryPlayLists()),liste);
+        
     }
      
     
@@ -266,6 +267,7 @@ public class FXMLDocumentController implements Initializable {
                 alert.setContentText("Vous ne pouvez pas supprimer la playlist principale.");
                 alert.showAndWait();
             }
+            gesRep.ecraserPlayList(listemusiques); 
         }
     }
     
@@ -302,7 +304,7 @@ public class FXMLDocumentController implements Initializable {
         alert.setTitle("Confirmation");
         alert.setHeaderText(null);
         alert.setContentText("Êtes-vous sûr de vouloir quitter ?");
-
+        gesRep.ecrirePlayLists(liste);
         Optional<ButtonType> result = alert.showAndWait();       
         if (result.get() == ButtonType.OK){
             Platform.exit();
@@ -344,7 +346,7 @@ public class FXMLDocumentController implements Initializable {
     }
 
     @FXML
-    private void OnProgressBar(MouseEvent event) {
+    private void onProgressBar(MouseEvent event) {
         MediaPlayer media = lec.getMediaPlayer();
         if (progressbar != null && media != null) {
             double d = event.getX();

@@ -5,7 +5,13 @@
  */
 package lecteuraudio.modele;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javax.swing.JFileChooser;
 
 /**
@@ -26,15 +32,70 @@ public class GestionnaireImport {
         }
         
     }
+    
+    public void importerPlayLists(File repertoire,ListePlayLists liste){ 
+        for(File f : repertoire.listFiles()){ 
+            String nom=f.getName(); 
+            String extension=nom.substring(nom.length()-3, nom.length()); 
+            if (extension.equals("txt") && nom.charAt(0)=='.' ){ 
+                importerPlayList(f,liste); 
+            }
+           
+        }
+    }
+    
+    private void importerPlayList(File f,ListePlayLists liste){ 
+        String nomMusique; 
+
+        try { 
+            BufferedReader br= new BufferedReader(new FileReader(f)) ;
+            PlayList p=new PlayList (br.readLine());
+            while ((nomMusique=br.readLine())!=null){ 
+                ajouterMusiqueAPlayList(p,nomMusique,liste.getPlayListTout()); 
+            }
+            liste.ajouterPlayList(p); 
+            br.close();
+            
+        }
+        catch (IOException e){ 
+            e.printStackTrace();
+        } 
+    }
+        
+    private void ajouterMusiqueAPlayList (PlayList p,String nom,PlayList tout){ 
+        for (Musique m : tout.getPlayList()){ 
+            if (m.getTitre().equals(nom)){ 
+                p.ajouter(m); 
+            }
+        }
+    }
+    
     public  void chercherDisqueDur (PlayList tout) {
         JFileChooser dialogue = new JFileChooser(new File(".."));
 	File fichier;
 	
-	if (dialogue.showOpenDialog(null)== JFileChooser.APPROVE_OPTION) {
-	    fichier = dialogue.getSelectedFile();
-            gesRep.copierDansRepository(fichier);
-            ajouterMusique(fichier,tout);
-        }    
+        if (dialogue.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            fichier = dialogue.getSelectedFile();
+            try {
+                gesRep.copierDansRepository(fichier);
+                ajouterMusique(fichier, tout);
+            } 
+            catch (FileAlreadyExistsException e) {
+                dialogueErreurFichierExistant();
+            }
+            catch (Exception ex){ 
+                ex.printStackTrace();
+            }
+        }
+    
+    }    
+        
+    private void dialogueErreurFichierExistant() {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle("Erreur");
+        alert.setContentText("Musique déjà importée");
+        alert.showAndWait();
+
     }
     
     private void ajouterMusique(File f,PlayList tout) { 
