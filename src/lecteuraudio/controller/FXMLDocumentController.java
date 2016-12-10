@@ -393,29 +393,33 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void onDragDetected(MouseEvent event) {
-        
         dragged=(Musique)listMusique.getSelectionModel().getSelectedItem();
         Dragboard dragBoard = listMusique.startDragAndDrop(TransferMode.COPY);
         dragBoard.setDragView(new Text(dragged.toString()).snapshot(null, null), event.getX() / 100, event.getY() / 100);
         ClipboardContent content = new ClipboardContent();
+
+        content.putString(dragged.toString());
         dragBoard.setContent(content);
-        
+
         event.consume();
     }
 
     @FXML
     private void onDragOverListPlayList(DragEvent event) {
-      
-        //event.acceptTransferModes(TransferMode.COPY);
-
-        
+        Dragboard db = event.getDragboard();
+        event.acceptTransferModes(TransferMode.COPY);
+        event.consume();
     }
 
     @FXML
     private void onDragDroppedListPlayList(DragEvent event) {
-        //Dragboard db = event.getDragboard();
-       // PlayList tmp=(PlayList)event.getAcceptingObject();
-        //tmp.ajouter(dragged);
+        Dragboard db = event.getDragboard();
+        PlayList tmp=(PlayList)event.getGestureTarget();
+        System.out.println(event.getGestureTarget().toString());
+        tmp.ajouter(dragged);
+        
+        event.setDropCompleted(true);
+        event.consume();
     }
 
     @FXML
