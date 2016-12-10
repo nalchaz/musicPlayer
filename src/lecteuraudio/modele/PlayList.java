@@ -81,6 +81,15 @@ public class PlayList{
         return titre; 
     }
    
+    public PlayList rechByString(String recherche){
+        recherche=recherche.toLowerCase();
+        PlayList playListRech=new PlayList("Recherche");
+        for(Musique m : playlist){
+            if(m.titreProperty().get().toLowerCase().contains(recherche)) //To mis un lowercase pour un erecherche plus efficace
+                playListRech.ajouter(m);
+        }
+        return playListRech;
+    }
     
     
 }

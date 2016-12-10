@@ -88,7 +88,7 @@ public class Lecteur {
       public void pause(){
         
         if(mediaPlayer!=null)
-            mediaPlayer.pause();
+           mediaPlayer.pause();
         
     }
       

@@ -6,6 +6,7 @@
 
 package lecteuraudio.modele;
 
+import java.io.Serializable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -14,7 +15,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author nahel
  */
-public class Musique {
+public class Musique implements Serializable{
     
     private String path;
     private StringProperty auteurProperty=new SimpleStringProperty();    

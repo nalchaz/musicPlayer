@@ -7,6 +7,7 @@ package lecteuraudio.controller;
 
 import java.io.File;
 import java.net.URL;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -32,6 +33,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -100,11 +102,16 @@ public class FXMLDocumentController implements Initializable {
     private Slider volumeSlider;
     
     
-    private Musique pressePapier;
+    private Musique pressePapier; //Utilisé pour le copié collé
+    private Musique dragged; //Utilisé pour le drag and drop
     private PlayList listemusiques; 
     
     //Property musiqueView : musique courante
     private ObjectProperty musiqueViewProperty=new SimpleObjectProperty(new Musique());
+    @FXML
+    private TextField zoneRech;
+    @FXML
+    private Button rechButton;
     
     public ObjectProperty musiqueViewProperty(){
         return musiqueViewProperty; 
@@ -117,6 +124,8 @@ public class FXMLDocumentController implements Initializable {
     public void setMusiqueView(Musique musique) {
         this.musiqueViewProperty.set(musique);
     }
+    
+    //private final DataFormat musiqueFormat = new DataFormat("musique"); //Utilisé pour reconnaitre des Musique dans le drag and drop
     
     private GestionnaireRepertoire gesRep= new GestionnaireRepertoire(); 
     private GestionnaireImport gesImp= new GestionnaireImport(gesRep);
@@ -148,7 +157,7 @@ public class FXMLDocumentController implements Initializable {
             volumeSlider.valueProperty().addListener(new InvalidationListener() {
                 public void invalidated(Observable ov) {
                     if (volumeSlider.isValueChanging()) {
-                        lec.setVolume(volumeSlider.getValue() / 200.0);
+                        lec.setVolume(volumeSlider.getValue()/100.0);
                     }
                 }
             });
@@ -366,8 +375,10 @@ public class FXMLDocumentController implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
                 listemusiques.supprimer(m);
+
             }
         }
+        
     }
 
     @FXML
@@ -382,12 +393,39 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void onDragDetected(MouseEvent event) {
-    Dragboard dragBoard = listMusique.startDragAndDrop(TransferMode.MOVE);
-    dragBoard.setDragView(new Text(listMusique.getSelectionModel().getSelectedItem().toString()).snapshot(null, null), event.getX()/100, event.getY()/100);
-    ClipboardContent content = new ClipboardContent();
+        
+        dragged=(Musique)listMusique.getSelectionModel().getSelectedItem();
+        Dragboard dragBoard = listMusique.startDragAndDrop(TransferMode.COPY);
+        dragBoard.setDragView(new Text(dragged.toString()).snapshot(null, null), event.getX() / 100, event.getY() / 100);
+        ClipboardContent content = new ClipboardContent();
+        dragBoard.setContent(content);
+        
+        event.consume();
+    }
 
-    content.putString(listMusique.getSelectionModel().getSelectedItem().toString());
-    dragBoard.setContent(content);
-}
+    @FXML
+    private void onDragOverListPlayList(DragEvent event) {
+      
+        //event.acceptTransferModes(TransferMode.COPY);
+
+        
+    }
+
+    @FXML
+    private void onDragDroppedListPlayList(DragEvent event) {
+        //Dragboard db = event.getDragboard();
+       // PlayList tmp=(PlayList)event.getAcceptingObject();
+        //tmp.ajouter(dragged);
+    }
+
+    @FXML
+    private void onRech(ActionEvent event) {
+        String recherche=zoneRech.getText();
+        if(recherche!=null && !"".equals(recherche)){
+            listMusique.itemsProperty().bind(listemusiques.rechByString(recherche).playlistProperty());
+        }
+    }
+
+    
 
 }
