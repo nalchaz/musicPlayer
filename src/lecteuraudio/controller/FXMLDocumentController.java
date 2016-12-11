@@ -103,7 +103,6 @@ public class FXMLDocumentController implements Initializable {
     
     
     private Musique pressePapier; //Utilisé pour le copié collé
-    private Musique dragged; //Utilisé pour le drag and drop
     private PlayList listemusiques; 
     
     //Property musiqueView : musique courante
@@ -185,7 +184,8 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML 
     private void importPressed(ActionEvent event) { 
-       gesImp.chercherDisqueDur(liste.getPlayListTout()); 
+       gesImp.chercherDisqueDur(liste.getPlayListTout(), borderPane.getScene().getWindow());
+       
         
     }
 
@@ -301,6 +301,7 @@ public class FXMLDocumentController implements Initializable {
                 alert.showAndWait();
             }
         }
+        listMusique.itemsProperty().bind(liste.getPlayListTout().playlistProperty());
     }
     
     //creerPlayListDepuisView : validation apres la saisie d'une playlist, la rajoute dans la liste des playlist, affiche une fenetre d'erreur si le titre de la playlist existe deja
@@ -391,19 +392,21 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
+    //private static final DataFormat musiqueDataFormat = new DataFormat("lecteuraudio.modele.Musique");
+    
     @FXML
     private void onDragDetected(MouseEvent event) {
-        dragged=(Musique)listMusique.getSelectionModel().getSelectedItem();
+        Musique dragged=(Musique)listMusique.getSelectionModel().getSelectedItem();
         Dragboard dragBoard = listMusique.startDragAndDrop(TransferMode.COPY);
         dragBoard.setDragView(new Text(dragged.toString()).snapshot(null, null), event.getX() / 100, event.getY() / 100);
         ClipboardContent content = new ClipboardContent();
-
         content.putString(dragged.toString());
+        //content.put(musiqueDataFormat,dragged);
         dragBoard.setContent(content);
 
         event.consume();
     }
-
+    
     @FXML
     private void onDragOverListPlayList(DragEvent event) {
         Dragboard db = event.getDragboard();
@@ -414,9 +417,9 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void onDragDroppedListPlayList(DragEvent event) {
         Dragboard db = event.getDragboard();
-        PlayList tmp=(PlayList)event.getGestureTarget();
-        System.out.println(event.getGestureTarget().toString());
-        tmp.ajouter(dragged);
+        
+        //Musique m=(Musique)db.getContent(musiqueDataFormat);
+        //PlayList tmp=(PlayList)event.getGestureTarget();
         
         event.setDropCompleted(true);
         event.consume();

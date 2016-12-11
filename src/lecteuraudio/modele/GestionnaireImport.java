@@ -14,6 +14,8 @@ import javafx.collections.MapChangeListener;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.media.Media;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
 import javax.swing.JFileChooser;
 
 /**
@@ -72,24 +74,22 @@ public class GestionnaireImport {
         }
     }
     
-    public  void chercherDisqueDur (PlayList tout) {
-        JFileChooser dialogue = new JFileChooser(new File(".."));
-	File fichier;
-	
-        if (dialogue.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            fichier = dialogue.getSelectedFile();
+    public  void chercherDisqueDur (PlayList tout, Window window) {
+        
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Music Files", "*.mp3", "*.wav", "*.mp4"));
+        File fichier = fileChooser.showOpenDialog(window);
+        if (fichier != null) {
             try {
                 gesRep.copierDansRepository(fichier);
                 ajouterMusique(fichier, tout);
-            } 
-            catch (FileAlreadyExistsException e) {
+            } catch (FileAlreadyExistsException e) {
                 dialogueErreurFichierExistant();
-            }
-            catch (Exception ex){ 
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
-    
     }   
     
     private void dialogueErreurFichierExistant() {
