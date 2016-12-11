@@ -51,6 +51,8 @@ import lecteuraudio.modele.ListePlayLists;
 import lecteuraudio.modele.Musique;
 import lecteuraudio.modele.PlayList;
 import lecteuraudio.modele.Utils;
+import java.net.URI; 
+import java.awt.Desktop; 
 
 /**
  *
@@ -430,6 +432,16 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
+   
     
+    @FXML
+    private void onYoutube() {
+        try {
+            Desktop.getDesktop().browse(new URL("http://youtube.fr").toURI());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }
+

@@ -152,7 +152,7 @@
                   <Insets right="10.0" />
                </StackPane.margin>
             </Button>
-            <Button mnemonicParsing="false" style="-fx-background-color: darkgray;" text="Youtube" textFill="#d01010" StackPane.alignment="CENTER_RIGHT">
+            <Button mnemonicParsing="false" style="-fx-background-color: darkgray;" onAction="#onYoutube" text="Youtube" textFill="#d01010" StackPane.alignment="CENTER_RIGHT">
                <StackPane.margin>
                   <Insets right="100.0" />
                </StackPane.margin>
