@@ -97,3 +97,22 @@
     -fx-padding: 3px;
     -fx-background-color: transparent;
 }
+
+#import {
+    -fx-background-color: darkgray;
+    -fx-text-fill: #f5f2f2
+}
+
+#import:hover {
+    -fx-background-color: lightgray;
+}
+
+#youtube {
+    -fx-background-color: darkgray;
+    -fx-text-fill: #d01010;
+    
+}
+
+#youtube:hover {
+    -fx-background-color: lightgray;
+}

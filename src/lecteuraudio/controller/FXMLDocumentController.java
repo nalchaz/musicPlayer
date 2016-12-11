@@ -7,8 +7,6 @@ package lecteuraudio.controller;
 
 import java.io.File;
 import java.net.URL;
-import java.time.Clock;
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -32,7 +30,6 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
@@ -51,28 +48,25 @@ import lecteuraudio.modele.ListePlayLists;
 import lecteuraudio.modele.Musique;
 import lecteuraudio.modele.PlayList;
 import lecteuraudio.modele.Utils;
-import java.net.URI; 
-import java.awt.Desktop; 
+import java.awt.Desktop;
 
 /**
  *
  * @author nachazot1
  */
 public class FXMLDocumentController implements Initializable {
-    
-    
-    
-    @FXML 
-    private TextField nomPlayListAjout; 
-    
+
+    @FXML
+    private TextField nomPlayListAjout;
+
     @FXML
     private ListView listMusique;
-    @FXML 
-    private ListView listeplaylists; 
-    
+    @FXML
+    private ListView listeplaylists;
+
     @FXML
     private Button play;
-    @FXML   
+    @FXML
     private Button previous;
     @FXML
     private Button next;
@@ -80,7 +74,7 @@ public class FXMLDocumentController implements Initializable {
     private Button muteButton;
     @FXML
     private Button ajoutPlayList;
-    
+
     @FXML
     private Label titreMusique;
     @FXML
@@ -89,51 +83,48 @@ public class FXMLDocumentController implements Initializable {
     private Label tempsRestant;
     @FXML
     private Label auteur;
-   
+
     @FXML
-    private ListePlayLists liste=ListePlayLists.getInstance();
-       
+    private ListePlayLists liste = ListePlayLists.getInstance();
+
     @FXML
     private BorderPane borderPane;
     @FXML
     private FlowPane zoneAjout;
-    
+
     @FXML
     private ProgressBar progressbar;
     @FXML
     private Slider volumeSlider;
-    
-    
+
     private Musique pressePapier; //Utilisé pour le copié collé
-    private PlayList listemusiques; 
-    
+    private PlayList listemusiques;
+
     //Property musiqueView : musique courante
-    private ObjectProperty musiqueViewProperty=new SimpleObjectProperty(new Musique());
+    private ObjectProperty musiqueViewProperty = new SimpleObjectProperty(new Musique());
     @FXML
     private TextField zoneRech;
     @FXML
     private Button rechButton;
-    
-    public ObjectProperty musiqueViewProperty(){
-        return musiqueViewProperty; 
+
+    public ObjectProperty musiqueViewProperty() {
+        return musiqueViewProperty;
     }
-    
+
     public Musique getMusiqueView() {
-        return (Musique)musiqueViewProperty.get();
+        return (Musique) musiqueViewProperty.get();
     }
 
     public void setMusiqueView(Musique musique) {
         this.musiqueViewProperty.set(musique);
     }
-    
+
     //private final DataFormat musiqueFormat = new DataFormat("musique"); //Utilisé pour reconnaitre des Musique dans le drag and drop
-    
-    private GestionnaireRepertoire gesRep= new GestionnaireRepertoire(); 
-    private GestionnaireImport gesImp= new GestionnaireImport(gesRep);
-    
+    private GestionnaireRepertoire gesRep = new GestionnaireRepertoire();
+    private GestionnaireImport gesImp = new GestionnaireImport(gesRep);
+
     Lecteur lec = new Lecteur();
-    
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -144,56 +135,55 @@ public class FXMLDocumentController implements Initializable {
         //Importation des musiques
         gesRep.ouverture();
         gesImp.importerRepertoireMusiques(new File(gesRep.getRepositoryPath()), tout);
-        gesImp.importerPlayLists(new File(gesRep.getRepositoryPlayLists()),liste);
-        
+        gesImp.importerPlayLists(new File(gesRep.getRepositoryPlayLists()), liste);
+
     }
-     
+
     //methode en attendant d'arriver a utiliser les bindings fxml
-    private void bindings(){
+    private void bindings() {
         //Binding sur le titre da la musique courante (musiqueView)
         titreMusique.textProperty().bind(getMusiqueView().titreProperty());
         auteur.textProperty().bind(getMusiqueView().auteurProperty());
-        
+
         //Binding du Slider sur le volume du Lecteur
-            volumeSlider.valueProperty().addListener(new InvalidationListener() {
-                public void invalidated(Observable ov) {
-                    if (volumeSlider.isValueChanging()) {
-                        lec.setVolume(volumeSlider.getValue()/100.0);
-                    }
+        volumeSlider.valueProperty().addListener(new InvalidationListener() {
+            public void invalidated(Observable ov) {
+                if (volumeSlider.isValueChanging()) {
+                    lec.setVolume(volumeSlider.getValue() / 100.0);
                 }
-            });
+            }
+        });
 
-            //Binding des labels tempsEcoule, tempsRestant sur les valeur du mediaPlayer, ainsi que le binding de la progressBar
-            lec.currentTimeProperty().addListener(new ChangeListener() {
-                @Override
-                public void changed(ObservableValue o, Object oldVal, Object newVal) {
-                    Duration current = lec.getCurrentTime();
-                    Duration duration = lec.getTotalDuration();
-                    tempsEcoule.textProperty().bind(new SimpleStringProperty(Utils.formatTime(current)));
-                    tempsRestant.textProperty().bind(new SimpleStringProperty(Utils.formatTime(duration)));
-                    progressbar.setProgress((current.toSeconds() / duration.toSeconds()));
+        //Binding des labels tempsEcoule, tempsRestant sur les valeur du mediaPlayer, ainsi que le binding de la progressBar
+        lec.currentTimeProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue o, Object oldVal, Object newVal) {
+                Duration current = lec.getCurrentTime();
+                Duration duration = lec.getTotalDuration();
+                tempsEcoule.textProperty().bind(new SimpleStringProperty(Utils.formatTime(current)));
+                tempsRestant.textProperty().bind(new SimpleStringProperty(Utils.formatTime(duration)));
+                progressbar.setProgress((current.toSeconds() / duration.toSeconds()));
 
-                }
-            });
-            //Si la musique est a la fin, jouer la prochaine musique du lecteur
-            lec.setOnEndOfMedia(new Runnable() {
-                public void run() {
-                    setMusiqueView(lec.next());
-                    bindings();
-                }
-            });
+            }
+        });
+        //Si la musique est a la fin, jouer la prochaine musique du lecteur
+        lec.setOnEndOfMedia(new Runnable() {
+            public void run() {
+                setMusiqueView(lec.next());
+                bindings();
+            }
+        });
     }
-    
-    @FXML 
-    private void importPressed(ActionEvent event) { 
-       gesImp.chercherDisqueDur(liste.getPlayListTout(), borderPane.getScene().getWindow());
-       
-        
+
+    @FXML
+    private void importPressed(ActionEvent event) {
+        gesImp.chercherDisqueDur(liste.getPlayListTout(), borderPane.getScene().getWindow());
+
     }
 
     @FXML
     private void previousPressed(ActionEvent event) {
-        if("play".equals(play.getId())){
+        if ("play".equals(play.getId())) {
             play.setId("pause");
         }
         setMusiqueView(lec.precedent());
@@ -224,7 +214,7 @@ public class FXMLDocumentController implements Initializable {
 
         if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {  //double clic gauche
             //Met la musique séléctionné dans musiqueView puis la joue
-            setMusiqueView((Musique)listMusique.getSelectionModel().getSelectedItem());
+            setMusiqueView((Musique) listMusique.getSelectionModel().getSelectedItem());
             lec.setPlaylist(listemusiques);
             lec.setMusiqueCourante(getMusiqueView());
             lec.pause();
@@ -233,10 +223,8 @@ public class FXMLDocumentController implements Initializable {
             }
             lec.play(getMusiqueView());
 
-            lec.setVolume(volumeSlider.getValue());         
+            lec.setVolume(volumeSlider.getValue());
             bindings();
-            
-            
 
         }
     }
@@ -256,7 +244,6 @@ public class FXMLDocumentController implements Initializable {
 
     }
 
-
     //onMuteClic : mute si le lecteur est unmute, unmute si le lecteur est mute
     @FXML
     private void onMuteClic(ActionEvent event) {
@@ -272,12 +259,12 @@ public class FXMLDocumentController implements Initializable {
     }
 
     //onAjoutPlayList : affiche la zone permettant de saisir une nouvelle playlist à ajouter 
-    @FXML 
-    private void onAjoutPlayList (ActionEvent event){ 
+    @FXML
+    private void onAjoutPlayList(ActionEvent event) {
         zoneAjout.setVisible(true);
         ajoutPlayList.setVisible(false);
     }
-    
+
     //onAnnulerPlaylist : annule l'ajout d'une playlist, cache la zone permettant de saisir une nouvelle playlist à ajouter 
     @FXML
     private void onAnnulerPlaylist(ActionEvent event) {
@@ -285,18 +272,18 @@ public class FXMLDocumentController implements Initializable {
         zoneAjout.setVisible(false);
         ajoutPlayList.setVisible(true);
     }
-    
+
     //onSupprimerPlayList : Supprime une playlist, affiche une fenetre de dialogue permettant de confirmer et une fenetre d'erreur si il s'agit de la playlist principale
-    @FXML 
-    private void onSupprimerPlayList (ActionEvent event){ 
+    @FXML
+    private void onSupprimerPlayList(ActionEvent event) {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
         alert.setHeaderText(null);
-        alert.setContentText("Êtes-vous sûr de vouloir supprimer "+listemusiques.getNom()+" ?");
+        alert.setContentText("Êtes-vous sûr de vouloir supprimer " + listemusiques.getNom() + " ?");
 
-        Optional<ButtonType> result = alert.showAndWait();       
-        if (result.get() == ButtonType.OK){
-            if(!liste.supprimerPlayList(listemusiques)){
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            if (!liste.supprimerPlayList(listemusiques)) {
                 alert.setAlertType(AlertType.ERROR);
                 alert.setTitle("Erreur");
                 alert.setContentText("Vous ne pouvez pas supprimer la playlist principale.");
@@ -305,16 +292,15 @@ public class FXMLDocumentController implements Initializable {
         }
         listMusique.itemsProperty().bind(liste.getPlayListTout().playlistProperty());
     }
-    
+
     //creerPlayListDepuisView : validation apres la saisie d'une playlist, la rajoute dans la liste des playlist, affiche une fenetre d'erreur si le titre de la playlist existe deja
-    
-    private void creerPlaylistDepuisView(){
-        PlayList p=new PlayList(nomPlayListAjout.getText()); 
-        if(!liste.ajouterPlayList(p)){
+    private void creerPlaylistDepuisView() {
+        PlayList p = new PlayList(nomPlayListAjout.getText());
+        if (!liste.ajouterPlayList(p)) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Erreur");
             alert.setHeaderText(null);
-            alert.setContentText("Une playlist possède déja le nom \""+p.getNom()+"\".");
+            alert.setContentText("Une playlist possède déja le nom \"" + p.getNom() + "\".");
             alert.showAndWait();
         }
         nomPlayListAjout.clear();
@@ -333,38 +319,40 @@ public class FXMLDocumentController implements Initializable {
     private void onValidNomButton(ActionEvent event) {
         creerPlaylistDepuisView();
     }
-    @FXML 
-    private void onExit (ActionEvent event){ 
+
+    @FXML
+    private void onExit(ActionEvent event) {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
         alert.setHeaderText(null);
         alert.setContentText("Êtes-vous sûr de vouloir quitter ?");
 
-        Optional<ButtonType> result = alert.showAndWait();       
-        if (result.get() == ButtonType.OK){
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
             gesRep.ecrirePlayLists(liste);
             Platform.exit();
-        } 
-        
+        }
+
     }
 
     @FXML
     private void onCopier(ActionEvent event) {
-        pressePapier=(Musique)listMusique.getSelectionModel().getSelectedItem();
+        pressePapier = (Musique) listMusique.getSelectionModel().getSelectedItem();
     }
 
     @FXML
     private void onColler(ActionEvent event) {
-        if(pressePapier!=null)
-            if(!listemusiques.ajouter(pressePapier)){
+        if (pressePapier != null) {
+            if (!listemusiques.ajouter(pressePapier)) {
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Attention");
                 alert.setHeaderText(null);
                 alert.setContentText("Vous ne pouvez pas ajouter deux fois la même musique dans une playlist.");
                 alert.showAndWait();
             }
+        }
     }
-    
+
     @FXML
     private void onSuppr(ActionEvent event) {
 
@@ -381,7 +369,7 @@ public class FXMLDocumentController implements Initializable {
 
             }
         }
-        
+
     }
 
     @FXML
@@ -395,10 +383,9 @@ public class FXMLDocumentController implements Initializable {
     }
 
     //private static final DataFormat musiqueDataFormat = new DataFormat("lecteuraudio.modele.Musique");
-    
     @FXML
     private void onDragDetected(MouseEvent event) {
-        Musique dragged=(Musique)listMusique.getSelectionModel().getSelectedItem();
+        Musique dragged = (Musique) listMusique.getSelectionModel().getSelectedItem();
         Dragboard dragBoard = listMusique.startDragAndDrop(TransferMode.COPY);
         dragBoard.setDragView(new Text(dragged.toString()).snapshot(null, null), event.getX() / 100, event.getY() / 100);
         ClipboardContent content = new ClipboardContent();
@@ -408,7 +395,7 @@ public class FXMLDocumentController implements Initializable {
 
         event.consume();
     }
-    
+
     @FXML
     private void onDragOverListPlayList(DragEvent event) {
         Dragboard db = event.getDragboard();
@@ -419,24 +406,21 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void onDragDroppedListPlayList(DragEvent event) {
         Dragboard db = event.getDragboard();
-        
+
         //Musique m=(Musique)db.getContent(musiqueDataFormat);
         //PlayList tmp=(PlayList)event.getGestureTarget();
-        
         event.setDropCompleted(true);
         event.consume();
     }
 
     @FXML
     private void onRech(ActionEvent event) {
-        String recherche=zoneRech.getText();
-        if(recherche!=null && !"".equals(recherche)){
+        String recherche = zoneRech.getText();
+        if (recherche != null && !"".equals(recherche)) {
             listMusique.itemsProperty().bind(listemusiques.rechByString(recherche).playlistProperty());
         }
     }
 
-   
-    
     @FXML
     private void onYoutube() {
         try {
@@ -447,4 +431,3 @@ public class FXMLDocumentController implements Initializable {
     }
 
 }
-
