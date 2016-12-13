@@ -22,7 +22,7 @@
 
 <BorderPane id="BorderPane" fx:id="borderPane" minHeight="900.0" minWidth="1200.0" prefHeight="900.0" prefWidth="1200.0" stylesheets="@MediaPlayer.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lecteuraudio.controller.FXMLDocumentController"> 
     <fx:define>
-        <ListePlayLists fx:id="liste" />        
+        <ListePlayLists fx:id="liste" />       
     </fx:define>
    <center>
       <GridPane alignment="TOP_CENTER" minHeight="700.0" minWidth="700.0" prefHeight="900.0" prefWidth="800.0" BorderPane.alignment="CENTER">

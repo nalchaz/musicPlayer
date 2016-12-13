@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
 import javafx.collections.MapChangeListener;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -23,56 +24,28 @@ import javax.swing.JFileChooser;
  * @author aldonne
  */
 public class GestionnaireImport {
-    private GestionnaireRepertoire gesRep; 
-    public GestionnaireImport (GestionnaireRepertoire gesRep){ 
-        this.gesRep=gesRep; 
-        
+    
+    private String repositoryPath=System.getProperty("user.dir")+"/Musiques";
+    
+    public String getRepositoryPath (){
+    return repositoryPath;
     }
     
+     
+   
+    public void ouverture() {
+        if (!new File(System.getProperty("user.dir") + "/Musiques" + "/").exists()) {
+            new File(System.getProperty("user.dir") + "/Musiques" + "/").mkdir();
+        }
+    }
     
-    public  void importerRepertoireMusiques (File repertoire, PlayList tout){ 
-        for( File f : repertoire.listFiles()){ 
+ 
+    public  void importerRepertoireMusiques (PlayList tout){ 
+        for( File f : new File(repositoryPath).listFiles()){ 
            ajouterMusique(f,tout); 
         }
         
-    }
-    
-    public void importerPlayLists(File repertoire,ListePlayLists liste){ 
-        for(File f : repertoire.listFiles()){ 
-            String nom=f.getName(); 
-            String extension=nom.substring(nom.length()-3, nom.length()); 
-            if (extension.equals("txt") && nom.charAt(0)=='.' ){ 
-                importerPlayList(f,liste); 
-            }
-           
-        }
-    }
-    
-    private void importerPlayList(File f,ListePlayLists liste){ 
-        String nomMusique; 
-
-        try { 
-            BufferedReader br= new BufferedReader(new FileReader(f)) ;
-            PlayList p=new PlayList (br.readLine());
-            while ((nomMusique=br.readLine())!=null){ 
-                ajouterMusiqueAPlayList(p,nomMusique,liste.getPlayListTout()); 
-            }
-            liste.ajouterPlayList(p); 
-            br.close();
-            
-        }
-        catch (IOException e){ 
-            e.printStackTrace();
-        } 
-    }
-    
-    private void ajouterMusiqueAPlayList (PlayList p,String nom,PlayList tout){ 
-        for (Musique m : tout.getPlayList()){ 
-            if (m.getTitre().equals(nom)){ 
-                p.ajouter(m); 
-            }
-        }
-    }
+    }    
     
     public  void chercherDisqueDur (PlayList tout, Window window) {
         
@@ -82,7 +55,7 @@ public class GestionnaireImport {
         File fichier = fileChooser.showOpenDialog(window);
         if (fichier != null) {
             try {
-                gesRep.copierDansRepository(fichier);
+                copierDansRepository(fichier);
                 ajouterMusique(fichier, tout);
             } catch (FileAlreadyExistsException e) {
                 dialogueErreurFichierExistant();
@@ -99,7 +72,7 @@ public class GestionnaireImport {
         alert.showAndWait();
 
     }
-  
+
     private void ajouterMusique(File f, PlayList tout) {
         int taille = (int) f.getName().length() - 4;
         Musique m = new Musique("auteur", f.getName().substring(0, taille), ("file:///" + System.getProperty("user.dir").replace("\\", "/") + "/Musiques/" + f.getName().replaceAll(" ", "%20")));
@@ -116,4 +89,14 @@ public class GestionnaireImport {
         tout.ajouter(m);
     }
 
+    public void copierDansRepository(File source) throws Exception {
+        String destination = System.getProperty("user.dir") + "/Musiques" + "/" + source.getName();
+
+        Files.copy(source.toPath(), new File(destination).toPath());
+
+    }
+    
+   
+
+    
 }
