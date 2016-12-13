@@ -25,6 +25,7 @@ import javafx.scene.control.Alert.AlertType;
  * @author aldonne
  */
 public class GestionnaireRepertoire {
+    
     private static final String repositoryPath=System.getProperty("user.dir")+"/Musiques";
     private static final String repositoryPlayLists=System.getProperty("user.dir")+"/Playlists"; 
     
