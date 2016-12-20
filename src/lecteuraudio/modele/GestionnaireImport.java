@@ -51,7 +51,14 @@ public class GestionnaireImport {
         
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
-        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Music Files", "*.mp3", "*.wav", "*.mp4"));
+        fileChooser.getExtensionFilters().addAll(
+            new FileChooser.ExtensionFilter("All files", "*.*"),
+            new FileChooser.ExtensionFilter("Music files", "*.mp3", "*.wav", "*.mp4"), 
+            new FileChooser.ExtensionFilter("MP3", "*.mp3"),
+            new FileChooser.ExtensionFilter("WAV", "*.wav"),
+            new FileChooser.ExtensionFilter("MP4", "*.mp4")
+        );
+
         File fichier = fileChooser.showOpenDialog(window);
         if (fichier != null) {
             try {
