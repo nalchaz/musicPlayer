@@ -15,11 +15,11 @@ import javafx.beans.property.StringProperty;
  *
  * @author nahel
  */
-public class Musique implements Serializable{
+public class Musique extends NoeudMusique implements Serializable{
     
     private String path;
     private StringProperty auteurProperty=new SimpleStringProperty();    
-    private StringProperty titreProperty=new SimpleStringProperty();
+    
     
     public Musique(){
         
@@ -29,22 +29,7 @@ public class Musique implements Serializable{
         this.auteurProperty.set(auteur); 
         this.titreProperty.set(titre);
         this.path=path; 
-    }
-
-    
-    
-    public StringProperty titreProperty(){
-        return titreProperty; 
-    }
-    
-    public String getTitre() {
-        return titreProperty.get();
-    }
-
-    public void setTitre(String titre) {
-        this.titreProperty.set(titre);
-    }
-    
+    }  
     
     public StringProperty auteurProperty(){
         return auteurProperty; 

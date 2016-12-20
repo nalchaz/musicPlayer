@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lecteuraudio.persistance;
+package lecteuraudio.persistancetexte;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import lecteuraudio.modele.IDataManager;
 import lecteuraudio.modele.ListePlayLists;
 import lecteuraudio.modele.Musique;
+import lecteuraudio.modele.NoeudMusique;
 import lecteuraudio.modele.PlayList;
 
 /**
@@ -58,7 +59,7 @@ public class TextDataManager implements IDataManager {
     }
 
     private void ajouterMusiqueAPlayList(PlayList p, String nom, PlayList tout) {
-        for (Musique m : tout.getPlayList()) {
+        for (NoeudMusique m : tout.getPlayList()) {
             if (m.getTitre().equals(nom)) {
                 p.ajouter(m);
             }
@@ -82,7 +83,7 @@ public class TextDataManager implements IDataManager {
                 PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(f)));
                 System.out.println(p.getNom());
                 pw.println(p.getNom());
-                for (Musique m : p.getPlayList()) {
+                for (NoeudMusique m : p.getPlayList()) {
                     pw.println(m.getTitre());
                 }
                 pw.close();

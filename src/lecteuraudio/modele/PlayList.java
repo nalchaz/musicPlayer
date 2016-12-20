@@ -16,49 +16,47 @@ import javafx.collections.ObservableList;
  *
  * @author nahel
  */
-public class PlayList{
+public class PlayList extends NoeudMusique{
     
-    private  ListProperty<Musique> playlist= new SimpleListProperty<>(FXCollections.observableArrayList());
-
-    protected String titre;
+    private  ListProperty<NoeudMusique> playlist= new SimpleListProperty<>(FXCollections.observableArrayList());
     
     public PlayList(){
     
     }
     
     public PlayList(String titre){
-        this.titre=titre;
+        this.titreProperty.set(titre);
     }
     
-    public void setPlayList(ListProperty<Musique> playList) {
+    public void setPlayList(ListProperty<NoeudMusique> playList) {
         this.playlist = playList;
     }
 
-    public ObservableList<Musique> getPlayList() {
+    public ObservableList<NoeudMusique> getPlayList() {
         return playlist.get(); 
 
     }
     
-    public void setPlayList(ObservableList<Musique> value) {
+    public void setPlayList(ObservableList<NoeudMusique> value) {
         playlist.set(value); 
 
     }
     
-    public ListProperty<Musique> playlistProperty() { 
+    public ListProperty<NoeudMusique> playlistProperty() { 
         return playlist ; 
     }
     
     
     public String getNom(){ 
-        return titre;
+        return titreProperty.get();
     }
     
     public void setNom (String nom){ 
-        this.titre=nom; 
+        this.titreProperty.set(nom); 
     }
     // Return true si la musique a été ajouté, false si la musique y était déja
     
-    public boolean ajouter(Musique m){ 
+    public boolean ajouter(NoeudMusique m){ 
         if(!playlist.contains(m)){
             playlist.add(m);
             return true;
@@ -66,7 +64,7 @@ public class PlayList{
     return false;
     }
     
-    public void supprimer(Musique m){
+    public void supprimer(NoeudMusique m){
         playlist.remove(m);      
     }
     
@@ -78,13 +76,13 @@ public class PlayList{
             
     @Override
     public String toString() { 
-        return titre; 
+        return titreProperty.get(); 
     }
    
     public PlayList rechByString(String recherche){
         recherche=recherche.toLowerCase();
         PlayList playListRech=new PlayList("Recherche");
-        for(Musique m : playlist){
+        for(NoeudMusique m : playlist){
             if(m.titreProperty().get().toLowerCase().contains(recherche)) //To mis un lowercase pour un erecherche plus efficace
                 playListRech.ajouter(m);
         }

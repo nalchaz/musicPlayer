@@ -5,6 +5,8 @@
  */
 package lecteuraudio.modele;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.stage.Window;
 
 /**
@@ -12,15 +14,17 @@ import javafx.stage.Window;
  * @author alexd
  */
 public class Manager {
+    
     private GestionnaireImport gesImp; 
-    private Lecteur lec; 
-    private IDataManager datamanager; 
+    private IDataManager datamanager;  
+    
+    private ObjectProperty noeudCourant = new SimpleObjectProperty();
+    public ObjectProperty noeudCourantProperty() { return noeudCourant;}
+    public NoeudMusique getNoeudCourant() { return (NoeudMusique) noeudCourant.get();}
+    public void setNoeudCourant(NoeudMusique noeud) { this.noeudCourant.set(noeud);}
     
     public Manager (){ 
-        gesImp= new GestionnaireImport(); 
-        lec=new Lecteur(); 
-        
-        
+        gesImp= new GestionnaireImport();             
     }
     
     public void setDataManager (IDataManager m){ 
@@ -41,14 +45,9 @@ public class Manager {
         gesImp.importerRepertoireMusiques(liste.getPlayListTout());    
     }
     
-    public Lecteur getLecteur (){ 
-        return lec; 
-    }
     
     public void chercherDisqueDur(Window window,ListePlayLists liste){
         gesImp.chercherDisqueDur(liste.getPlayListTout(), window);
     }
-    
-
     
 }

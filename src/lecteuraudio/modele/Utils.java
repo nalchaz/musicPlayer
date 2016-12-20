@@ -14,13 +14,6 @@ import javafx.util.Duration;
  * @author nahel
  */
 public class Utils {
-    
-    public static String formatDuration(Duration duration) {
-        long secs = Double.doubleToLongBits(duration.toSeconds());  
-        secs=secs/100000000000000L;
-        String display = String.format("%02d:%02d", (secs % 3600) / 60, (secs % 60));
-    return display;
-}
  
     public static String formatTime(Duration elapsed) {
         int intElapsed = (int) floor(elapsed.toSeconds());

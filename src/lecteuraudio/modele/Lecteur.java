@@ -5,8 +5,6 @@
  */
 package lecteuraudio.modele;
 import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.collections.MapChangeListener;
-import javafx.collections.ObservableMap;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
@@ -19,11 +17,10 @@ public class Lecteur {
     private MediaPlayer mediaPlayer;
     private int index;
     private PlayList playList;
-    private MediaPlayer.Status status;
-    private Musique musiqueCourante;
+    private NoeudMusique musiqueCourante;
     
     
-    public Musique play(){
+    public NoeudMusique play(){
         if(mediaPlayer==null){
             if(playList==null || playList.isEmpty())
                 return null;
@@ -36,12 +33,18 @@ public class Lecteur {
     return musiqueCourante;
     }
     
-    public void play(Musique musique){
-          
-        Media media=new Media(musique.getPath());
-        mediaPlayer=new MediaPlayer(media);
-        mediaPlayer.play();
-        
+    public void play(NoeudMusique musique){
+        if(musique instanceof Musique){
+            Musique m=(Musique)musique;
+            Media media=new Media(m.getPath());
+            mediaPlayer=new MediaPlayer(media);
+            mediaPlayer.play();
+        }
+        else{
+            playList=(PlayList)musique;
+            index=0;
+            play();
+        }
     }
     
     public ReadOnlyObjectProperty<Duration> currentTimeProperty(){
@@ -56,11 +59,11 @@ public class Lecteur {
         return mediaPlayer.getTotalDuration();
     }
     
-    public Musique getMusiqueCourante(){ 
+    public NoeudMusique getMusiqueCourante(){ 
         return musiqueCourante;
     }
     
-    public void setMusiqueCourante(Musique musique){ 
+    public void setMusiqueCourante(NoeudMusique musique){ 
         this.musiqueCourante=musique; 
     }
     
@@ -92,7 +95,7 @@ public class Lecteur {
         
     }
       
-    public Musique next(){
+    public NoeudMusique next(){
         index=playList.getPlayList().indexOf(musiqueCourante);
         index++;
         if(index>=playList.getPlayList().size()){
@@ -105,7 +108,7 @@ public class Lecteur {
         
     }
     
-    public Musique precedent(){
+    public NoeudMusique precedent(){
         index=playList.getPlayList().indexOf(musiqueCourante);
         index--;
         if(index<0){

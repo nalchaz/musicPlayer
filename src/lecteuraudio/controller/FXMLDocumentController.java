@@ -45,9 +45,11 @@ import lecteuraudio.modele.Musique;
 import lecteuraudio.modele.PlayList;
 import lecteuraudio.modele.Utils;
 import java.awt.Desktop;
+import lecteuraudio.modele.Lecteur;
 import lecteuraudio.modele.ListePlayLists;
 import lecteuraudio.modele.Manager;
-import lecteuraudio.persistance.TextDataManager;
+import lecteuraudio.modele.NoeudMusique;
+import lecteuraudio.persistancetexte.TextDataManager;
 
 /**
  *
@@ -83,9 +85,6 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Label auteur;
 
-    
-  
-
     @FXML
     private BorderPane borderPane;
     @FXML
@@ -96,36 +95,30 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Slider volumeSlider;
 
-    private Musique pressePapier; //Utilisé pour le copié collé
-    private PlayList listemusiques;
+    
 
-    //Property musiqueView : musique courante
-    private ObjectProperty musiqueViewProperty = new SimpleObjectProperty(new Musique());
+   
+    
     @FXML
     private TextField zoneRech;
     @FXML
     private Button rechButton;
-
-    public ObjectProperty musiqueViewProperty() {
-        return musiqueViewProperty;
-    }
-
-    public Musique getMusiqueView() {
-        return (Musique) musiqueViewProperty.get();
-    }
-
-    public void setMusiqueView(Musique musique) {
-        this.musiqueViewProperty.set(musique);
-    }
-   
     
-    //private final DataFormat musiqueFormat = new DataFormat("musique"); //Utilisé pour reconnaitre des Musique dans le drag and drop
+     //Property musiqueView : musique courante
+    
+   
+    private NoeudMusique pressePapier; //Utilisé pour le copié collé
+    
+    private PlayList listemusiques;
+    
+    private Manager manager;
+    private Lecteur lec=new Lecteur();
     
     
     @FXML 
     ListePlayLists liste=new ListePlayLists(); 
    
-    Manager manager;
+    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -136,32 +129,34 @@ public class FXMLDocumentController implements Initializable {
         manager.ouverture(liste);      
         //Importation des playlists
         manager.charger(liste); 
-         
-        
-
     }
 
     //methode en attendant d'arriver a utiliser les bindings fxml
     private void bindings() {
         //Binding sur le titre da la musique courante (musiqueView)
-        titreMusique.textProperty().bind(getMusiqueView().titreProperty());
-        auteur.textProperty().bind(getMusiqueView().auteurProperty());
-
+        titreMusique.textProperty().bind(manager.getNoeudCourant().titreProperty());
+        if(manager.getNoeudCourant() instanceof Musique){
+            Musique m=(Musique)manager.getNoeudCourant();
+            auteur.textProperty().bind(m.auteurProperty());
+        }
+        else{
+            auteur.textProperty().set("");
+        }
         //Binding du Slider sur le volume du Lecteur
         volumeSlider.valueProperty().addListener(new InvalidationListener() {
             public void invalidated(Observable ov) {
                 if (volumeSlider.isValueChanging()) {
-                    manager.getLecteur().setVolume(volumeSlider.getValue() / 100.0);
+                    lec.setVolume(volumeSlider.getValue() / 100.0);
                 }
             }
         });
 
         //Binding des labels tempsEcoule, tempsRestant sur les valeur du mediaPlayer, ainsi que le binding de la progressBar
-        manager.getLecteur().currentTimeProperty().addListener(new ChangeListener() {
+        lec.currentTimeProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue o, Object oldVal, Object newVal) {
-                Duration current = manager.getLecteur().getCurrentTime();
-                Duration duration = manager.getLecteur().getTotalDuration();
+                Duration current = lec.getCurrentTime();
+                Duration duration = lec.getTotalDuration();
                 tempsEcoule.textProperty().bind(new SimpleStringProperty(Utils.formatTime(current)));
                 tempsRestant.textProperty().bind(new SimpleStringProperty(Utils.formatTime(duration)));
                 progressbar.setProgress((current.toSeconds() / duration.toSeconds()));
@@ -169,9 +164,9 @@ public class FXMLDocumentController implements Initializable {
             }
         });
         //Si la musique est a la fin, jouer la prochaine musique du lecteur
-        manager.getLecteur().setOnEndOfMedia(new Runnable() {
+        lec.setOnEndOfMedia(new Runnable() {
             public void run() {
-                setMusiqueView(manager.getLecteur().next());
+                manager.setNoeudCourant(lec.next());
                 bindings();
             }
         });
@@ -188,7 +183,7 @@ public class FXMLDocumentController implements Initializable {
         if ("play".equals(play.getId())) {
             play.setId("pause");
         }
-        setMusiqueView(manager.getLecteur().precedent());
+        manager.setNoeudCourant(lec.precedent());
         bindings();
     }
 
@@ -197,7 +192,7 @@ public class FXMLDocumentController implements Initializable {
         if ("play".equals(play.getId())) {
             play.setId("pause");
         }
-        setMusiqueView(manager.getLecteur().next());
+        manager.setNoeudCourant(lec.next());
         bindings();
     }
 
@@ -205,7 +200,7 @@ public class FXMLDocumentController implements Initializable {
     private void onPlayListChoisie(MouseEvent event) {
 
         if (listeplaylists.getSelectionModel().getSelectedItem() != null) {
-            listemusiques = (PlayList) listeplaylists.getSelectionModel().getSelectedItem();
+            listemusiques = (PlayList)listeplaylists.getSelectionModel().getSelectedItem();
             listMusique.itemsProperty().bind(listemusiques.playlistProperty());
         }
 
@@ -216,16 +211,16 @@ public class FXMLDocumentController implements Initializable {
 
         if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {  //double clic gauche
             //Met la musique séléctionné dans musiqueView puis la joue
-            setMusiqueView((Musique) listMusique.getSelectionModel().getSelectedItem());
-            manager.getLecteur().setPlaylist(listemusiques);
-            manager.getLecteur().setMusiqueCourante(getMusiqueView());
-            manager.getLecteur().pause();
+            manager.setNoeudCourant((Musique)listMusique.getSelectionModel().getSelectedItem());
+            lec.setPlaylist(listemusiques);
+            lec.setMusiqueCourante(manager.getNoeudCourant());
+            lec.pause();
             if ("play".equals(play.getId())) {
                 play.setId("pause");
             }
-            manager.getLecteur().play(getMusiqueView());
+            lec.play(manager.getNoeudCourant());
 
-            manager.getLecteur().setVolume(volumeSlider.getValue());
+            lec.setVolume(volumeSlider.getValue());
             bindings();
 
         }
@@ -236,12 +231,12 @@ public class FXMLDocumentController implements Initializable {
     ) {
 
         if ("play".equals(play.getId())) {
-            if (manager.getLecteur().play() != null) {
+            if (lec.play() != null) {
                 play.setId("pause");
             }
         } else {
             play.setId("play");
-            manager.getLecteur().pause();
+            lec.pause();
         }
 
     }
@@ -249,12 +244,12 @@ public class FXMLDocumentController implements Initializable {
     //onMuteClic : mute si le lecteur est unmute, unmute si le lecteur est mute
     @FXML
     private void onMuteClic(ActionEvent event) {
-        if (!manager.getLecteur().isNull()) {
-            if (manager.getLecteur().isMute()) {
-                manager.getLecteur().setMute(false);
+        if (!lec.isNull()) {
+            if (lec.isMute()) {
+                lec.setMute(false);
                 muteButton.setId("mute");
             } else {
-                manager.getLecteur().setMute(true);
+                lec.setMute(true);
                 muteButton.setId("unmute");
             }
         }
@@ -377,10 +372,10 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void OnProgressBar(MouseEvent event) {
-        if (progressbar != null && !manager.getLecteur().isNull()) {
+        if (progressbar != null && !lec.isNull()) {
             double d = event.getX();
-            Duration newDuration = new Duration(event.getX() / progressbar.getWidth() * manager.getLecteur().getTotalDuration().toMillis());
-            manager.getLecteur().seek(newDuration);
+            Duration newDuration = new Duration(event.getX() / progressbar.getWidth() * lec.getTotalDuration().toMillis());
+            lec.seek(newDuration);
             progressbar.setProgress(event.getX() / progressbar.getWidth());
         }
     }
