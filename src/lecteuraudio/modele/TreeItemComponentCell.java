@@ -1,5 +1,8 @@
 package lecteuraudio.modele;
 
+import lecteuraudio.metier.PlayList;
+import lecteuraudio.metier.NoeudMusique;
+import lecteuraudio.metier.Musique;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.TreeCell;

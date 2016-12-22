@@ -41,17 +41,20 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import lecteuraudio.modele.Musique;
-import lecteuraudio.modele.PlayList;
+import lecteuraudio.metier.Musique;
+import lecteuraudio.metier.PlayList;
 import lecteuraudio.modele.Utils;
 import java.awt.Desktop;
+import java.util.ArrayList;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
+import javafx.collections.ObservableList;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import lecteuraudio.modele.Lecteur;
-import lecteuraudio.modele.Manager;
-import lecteuraudio.modele.NoeudMusique;
+import lecteuraudio.metier.Lecteur;
+import lecteuraudio.metier.Manager;
+import lecteuraudio.metier.NoeudMusique;
 import lecteuraudio.persistancetexte.TextDataManager;
 
 /**
@@ -117,7 +120,7 @@ public class FXMLDocumentController implements Initializable {
     private TreeView<NoeudMusique> treeView;
     
    
-    private NoeudMusique pressePapier; //Utilisé pour le copié collé
+    private ArrayList<NoeudMusique> pressePapier; //Utilisé pour le copié collé
     
     private PlayList listemusiques;
     
@@ -142,6 +145,8 @@ public class FXMLDocumentController implements Initializable {
                 () -> treeView.getSelectionModel().getSelectedItem().getValue(), 
             treeView.getSelectionModel().selectedItemProperty());
         selectedNoeudProperty().bind(ob);
+        updateTreeView(rootItem, racine);
+        listMusique.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
     
     private void initializeTreeView()
@@ -162,7 +167,6 @@ public class FXMLDocumentController implements Initializable {
         //récupération de l'élément de la structure composite correspondant
         NoeudMusique noeud = getSelectedItemInTreeView((TreeItem<NoeudMusique>)newValue);
         
-        
     }
     
     private NoeudMusique getSelectedItemInTreeView(TreeItem<NoeudMusique> item)
@@ -177,8 +181,26 @@ public class FXMLDocumentController implements Initializable {
         return noeud;
     }
  
-    
-    //methode en attendant d'arriver a utiliser les bindings fxml
+    //Met a jour le treeView a partir d'un noeud
+    private void updateTreeView(TreeItem<NoeudMusique> item, NoeudMusique noeud) {
+        //vide le TreeItem
+        item.getChildren().clear();
+        
+        //ajoute un TreeItem pour la musique
+        if (noeud instanceof Musique){
+            item.getChildren().add(new TreeItem<>(noeud));
+        }
+        //ajoute des TreeItems pour chaque noeud du composite
+        else{
+            for (NoeudMusique nm : ((PlayList) noeud).getPlayList()) {
+                TreeItem<NoeudMusique> noeudItem = new TreeItem<>(nm);
+                item.getChildren().add(noeudItem);
+                updateTreeView(noeudItem, nm);
+            }
+        }
+    }
+
+    //methode en attendant d'arriver à utiliser les bindings fxml
     private void bindings() {
         //Binding sur le titre da la musique courante (musiqueView)
         titreMusique.textProperty().bind(manager.getNoeudCourant().titreProperty());
@@ -395,18 +417,21 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void onCopier(ActionEvent event) {
-        pressePapier = (NoeudMusique)listMusique.getSelectionModel().getSelectedItem();
+        ObservableList list=listMusique.getSelectionModel().getSelectedItems();
+        pressePapier=new ArrayList<>(list);
     }
 
     @FXML
     private void onColler(ActionEvent event) {
         if (pressePapier != null) {
-            if (!listemusiques.ajouter(pressePapier)) {
-                Alert alert = new Alert(AlertType.INFORMATION);
-                alert.setTitle("Attention");
-                alert.setHeaderText(null);
-                alert.setContentText("Vous ne pouvez pas ajouter deux fois la même musique dans une playlist.");
-                alert.showAndWait();
+            for (NoeudMusique nm : pressePapier) {
+                if (!listemusiques.ajouter(nm)) {
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Attention");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Vous ne pouvez pas ajouter deux fois la même musique dans une playlist.\n"+nm.getTitre()+" existe déja.");
+                    alert.showAndWait();
+                }
             }
         }
     }

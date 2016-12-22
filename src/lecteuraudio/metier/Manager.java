@@ -3,11 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lecteuraudio.modele;
+package lecteuraudio.metier;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.stage.Window;
+import lecteuraudio.modele.GestionnaireImport;
+import lecteuraudio.modele.IDataManager;
 
 /**
  *

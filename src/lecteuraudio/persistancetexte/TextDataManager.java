@@ -13,9 +13,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import lecteuraudio.modele.IDataManager;
-import lecteuraudio.modele.Musique;
-import lecteuraudio.modele.NoeudMusique;
-import lecteuraudio.modele.PlayList;
+import lecteuraudio.metier.Musique;
+import lecteuraudio.metier.NoeudMusique;
+import lecteuraudio.metier.PlayList;
 
 /**
  *

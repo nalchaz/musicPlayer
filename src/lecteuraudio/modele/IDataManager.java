@@ -5,6 +5,7 @@
  */
 package lecteuraudio.modele;
 
+import lecteuraudio.metier.PlayList;
 import java.io.File;
 
 /**

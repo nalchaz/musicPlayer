@@ -5,6 +5,8 @@
  */
 package lecteuraudio.modele;
 
+import lecteuraudio.metier.PlayList;
+import lecteuraudio.metier.Musique;
 import java.io.File;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;

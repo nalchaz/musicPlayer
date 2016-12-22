@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package lecteuraudio.modele;
+package lecteuraudio.metier;
 
 import java.io.Serializable;
 import javafx.beans.property.SimpleStringProperty;
