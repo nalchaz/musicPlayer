@@ -5,10 +5,7 @@
  */
 package lecteuraudio.modele;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import javafx.collections.MapChangeListener;
@@ -17,7 +14,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.media.Media;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
-import javax.swing.JFileChooser;
 
 /**
  *
@@ -40,14 +36,14 @@ public class GestionnaireImport {
     }
     
  
-    public  void importerRepertoireMusiques (PlayList tout){ 
+    public  void importerRepertoireMusiques (PlayList racine){ 
         for( File f : new File(repositoryPath).listFiles()){ 
-           ajouterMusique(f,tout); 
+           ajouterMusique(f,racine); 
         }
         
     }    
     
-    public  void chercherDisqueDur (PlayList tout, Window window) {
+    public  void chercherDisqueDur (PlayList racine, Window window) {
         
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
@@ -63,7 +59,7 @@ public class GestionnaireImport {
         if (fichier != null) {
             try {
                 copierDansRepository(fichier);
-                ajouterMusique(fichier, tout);
+                ajouterMusique(fichier, racine);
             } catch (FileAlreadyExistsException e) {
                 dialogueErreurFichierExistant();
             } catch (Exception ex) {
@@ -80,7 +76,7 @@ public class GestionnaireImport {
 
     }
 
-    private void ajouterMusique(File f, PlayList tout) {
+    private void ajouterMusique(File f, PlayList racine) {
         int taille = (int) f.getName().length() - 4;
         Musique m = new Musique("auteur", f.getName().substring(0, taille), ("file:///" + System.getProperty("user.dir").replace("\\", "/") + "/Musiques/" + f.getName().replaceAll(" ", "%20")));
         Media media = new Media(m.getPath());
@@ -93,7 +89,7 @@ public class GestionnaireImport {
             }
         });
 
-        tout.ajouter(m);
+        racine.ajouter(m);
     }
 
     public void copierDansRepository(File source) throws Exception {

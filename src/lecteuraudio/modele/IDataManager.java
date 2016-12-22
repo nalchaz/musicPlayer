@@ -12,6 +12,6 @@ import java.io.File;
  * @author alexd
  */
 public interface IDataManager {
-    public void charger(ListePlayLists playlists); 
-    public void sauver (ListePlayLists playlists); 
+    public void charger(PlayList racine); 
+    public void sauver (PlayList racine); 
 }

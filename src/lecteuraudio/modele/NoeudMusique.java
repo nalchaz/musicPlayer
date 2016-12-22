@@ -19,5 +19,4 @@ public abstract class NoeudMusique {
     public String getTitre() {return titreProperty.get();}
     public void setTitre(String titre) {this.titreProperty.set(titre);}
     
-    
 }

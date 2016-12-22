@@ -13,7 +13,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import lecteuraudio.modele.IDataManager;
-import lecteuraudio.modele.ListePlayLists;
 import lecteuraudio.modele.Musique;
 import lecteuraudio.modele.NoeudMusique;
 import lecteuraudio.modele.PlayList;
@@ -27,30 +26,30 @@ public class TextDataManager implements IDataManager {
     
     
     @Override
-    public void charger(ListePlayLists liste) {
+    public void charger(PlayList racine) {
         if (!new File(repositoryPlayLists).exists()) 
             new File(repositoryPlayLists).mkdir(); 
         for (File f : new File(repositoryPlayLists).listFiles()) {
             String nom = f.getName();
             String extension = nom.substring(nom.length() - 3, nom.length());
             if (extension.equals("txt") ) {
-                importerPlayList(f, liste);
+                importerPlayList(f, racine);
             }
 
         }
     }
 
     
-    private void importerPlayList(File f, ListePlayLists liste) {
+    private void importerPlayList(File f, PlayList racine) {
         String nomMusique;
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(f));
             PlayList p = new PlayList(br.readLine());
             while ((nomMusique = br.readLine()) != null) {
-                ajouterMusiqueAPlayList(p, nomMusique, liste.getPlayListTout());
+                ajouterMusiqueAPlayList(p, nomMusique, racine);
             }
-            liste.ajouterPlayList(p);
+            racine.ajouter(p);
             br.close();
 
         } catch (IOException e) {
@@ -67,22 +66,22 @@ public class TextDataManager implements IDataManager {
     }
     
     @Override
-    public void sauver(ListePlayLists playlists) {
+    public void sauver(PlayList racine) {
         for (File f : new File(repositoryPlayLists).listFiles()){ 
             f.delete(); 
         }
-        for (PlayList p : playlists.getPlayLists()) {
+        for (PlayList p : racine.getListPlayList()) {
             creerFichierPlayList(p);
         }
     }
 
     public void creerFichierPlayList(PlayList p) {
-        if (!p.getNom().equals("Musiques")) {
-            File f = new File(System.getProperty("user.dir")+"/Playlists/" + p.getNom() + ".txt");
+        if (!p.getTitre().equals("Musiques")) {
+            File f = new File(System.getProperty("user.dir")+"/Playlists/" + p.getTitre() + ".txt");
             try {
                 PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(f)));
-                System.out.println(p.getNom());
-                pw.println(p.getNom());
+                System.out.println(p.getTitre());
+                pw.println(p.getTitre());
                 for (NoeudMusique m : p.getPlayList()) {
                     pw.println(m.getTitre());
                 }

@@ -45,8 +45,11 @@ import lecteuraudio.modele.Musique;
 import lecteuraudio.modele.PlayList;
 import lecteuraudio.modele.Utils;
 import java.awt.Desktop;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ObjectBinding;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import lecteuraudio.modele.Lecteur;
-import lecteuraudio.modele.ListePlayLists;
 import lecteuraudio.modele.Manager;
 import lecteuraudio.modele.NoeudMusique;
 import lecteuraudio.persistancetexte.TextDataManager;
@@ -62,8 +65,7 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private ListView listMusique;
-    @FXML
-    private ListView listeplaylists;
+    
 
     @FXML
     private Button play;
@@ -95,8 +97,11 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Slider volumeSlider;
 
-    
-
+    //Noeud sélectionné dans la TreeView
+    private final ObjectProperty<NoeudMusique> selectedNoeud = new SimpleObjectProperty<>();
+    public NoeudMusique getSelectedNoeud() { return selectedNoeud.get(); }
+    public void setSelectedNoeud(NoeudMusique value) { selectedNoeud.set(value); }
+    public ObjectProperty<NoeudMusique> selectedNoeudProperty() { return selectedNoeud; }
    
     
     @FXML
@@ -104,7 +109,12 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button rechButton;
     
-     //Property musiqueView : musique courante
+    @FXML
+    private PlayList racine;
+    @FXML
+    private TreeItem<NoeudMusique> rootItem;
+    @FXML
+    private TreeView<NoeudMusique> treeView;
     
    
     private NoeudMusique pressePapier; //Utilisé pour le copié collé
@@ -112,25 +122,62 @@ public class FXMLDocumentController implements Initializable {
     private PlayList listemusiques;
     
     private Manager manager;
+    
     private Lecteur lec=new Lecteur();
     
-    
-    @FXML 
-    ListePlayLists liste=new ListePlayLists(); 
-   
-    
+
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         manager = new Manager(); 
         manager.setDataManager(new TextDataManager()); 
-        liste.ajouterPlayList(new PlayList ("Musiques")); 
         //Importation des musiques 
-        manager.ouverture(liste);      
+        manager.ouverture(racine);      
         //Importation des playlists
-        manager.charger(liste); 
-    }
+        manager.charger(racine); 
 
+        
+        initializeTreeView();
+        ObjectBinding<NoeudMusique> ob = Bindings.createObjectBinding(
+                () -> treeView.getSelectionModel().getSelectedItem().getValue(), 
+            treeView.getSelectionModel().selectedItemProperty());
+        selectedNoeudProperty().bind(ob);
+    }
+    
+    private void initializeTreeView()
+    {
+        treeView=new TreeView<>(rootItem);
+        //sélectionne le premier item
+        treeView.getSelectionModel().selectFirst();
+
+        treeView.getSelectionModel().selectedItemProperty().addListener(
+            (observable, oldValue, newValue)->
+                treeViewSelectedItemListener(observable, oldValue, newValue));
+
+    }
+    
+    private void treeViewSelectedItemListener(Observable observable, 
+                                              Object oldValue, Object newValue)
+    {
+        //récupération de l'élément de la structure composite correspondant
+        NoeudMusique noeud = getSelectedItemInTreeView((TreeItem<NoeudMusique>)newValue);
+        
+        
+    }
+    
+    private NoeudMusique getSelectedItemInTreeView(TreeItem<NoeudMusique> item)
+    {
+        
+        TreeItem<NoeudMusique> treeItem = item;
+
+        if(treeItem == null) return null;
+
+        NoeudMusique noeud = treeItem.getValue();
+        
+        return noeud;
+    }
+ 
+    
     //methode en attendant d'arriver a utiliser les bindings fxml
     private void bindings() {
         //Binding sur le titre da la musique courante (musiqueView)
@@ -174,7 +221,7 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void importPressed(ActionEvent event) {
-        manager.chercherDisqueDur(borderPane.getScene().getWindow(),liste);
+        manager.chercherDisqueDur(borderPane.getScene().getWindow(), racine);
 
     }
 
@@ -197,11 +244,29 @@ public class FXMLDocumentController implements Initializable {
     }
 
     @FXML
-    private void onPlayListChoisie(MouseEvent event) {
+    private void onNoeudMusiqueChoisie(MouseEvent event) {
+        NoeudMusique nm = treeView.getSelectionModel().getSelectedItem().getValue();
+        if (nm != null) {
+            if (nm instanceof Musique) {
+                if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {  //double clic gauche
+                    //Met la musique séléctionné dans musiqueView puis la joue
+                    manager.setNoeudCourant((Musique) listMusique.getSelectionModel().getSelectedItem());
+                    lec.setPlaylist(listemusiques);
+                    lec.setMusiqueCourante(manager.getNoeudCourant());
+                    lec.pause();
+                    if ("play".equals(play.getId())) {
+                        play.setId("pause");
+                    }
+                    lec.play(manager.getNoeudCourant());
 
-        if (listeplaylists.getSelectionModel().getSelectedItem() != null) {
-            listemusiques = (PlayList)listeplaylists.getSelectionModel().getSelectedItem();
-            listMusique.itemsProperty().bind(listemusiques.playlistProperty());
+                    lec.setVolume(volumeSlider.getValue());
+                    bindings();
+
+                }
+            } else {
+                listemusiques = (PlayList) nm;
+                listMusique.itemsProperty().bind(listemusiques.playlistProperty());
+            }
         }
 
     }
@@ -270,35 +335,30 @@ public class FXMLDocumentController implements Initializable {
         ajoutPlayList.setVisible(true);
     }
 
-    //onSupprimerPlayList : Supprime une playlist, affiche une fenetre de dialogue permettant de confirmer et une fenetre d'erreur si il s'agit de la playlist principale
+    //onSupprimerNoeudMusique : Supprime un noeud, affiche une fenetre de dialogue permettant de confirmer
     @FXML
-    private void onSupprimerPlayList(ActionEvent event) {
+    private void onSupprimerNoeudMusique(ActionEvent event) {
+        
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
         alert.setHeaderText(null);
-        alert.setContentText("Êtes-vous sûr de vouloir supprimer " + listemusiques.getNom() + " ?");
+        alert.setContentText("Êtes-vous sûr de vouloir supprimer " + treeView.getSelectionModel().getSelectedItem().getValue().getTitre() + " ?");
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-            if (!liste.supprimerPlayList(listemusiques)) {
-                alert.setAlertType(AlertType.ERROR);
-                alert.setTitle("Erreur");
-                alert.setContentText("Vous ne pouvez pas supprimer la playlist principale.");
-                alert.showAndWait();
-            }
-            
+            racine.supprimer(treeView.getSelectionModel().getSelectedItem().getValue());   
         }
-        listMusique.itemsProperty().bind(liste.getPlayListTout().playlistProperty());
+        listMusique.itemsProperty().bind(racine.playlistProperty());
     }
 
     //creerPlayListDepuisView : validation apres la saisie d'une playlist, la rajoute dans la liste des playlist, affiche une fenetre d'erreur si le titre de la playlist existe deja
     private void creerPlaylistDepuisView() {
         PlayList p = new PlayList(nomPlayListAjout.getText());
-        if (!liste.ajouterPlayList(p)) {
+        if (!racine.ajouter(p)) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Erreur");
             alert.setHeaderText(null);
-            alert.setContentText("Une playlist possède déja le nom \"" + p.getNom() + "\".");
+            alert.setContentText("Une playlist possède déja le nom \"" + p.getTitre() + "\".");
             alert.showAndWait();
         }
         nomPlayListAjout.clear();
@@ -327,7 +387,7 @@ public class FXMLDocumentController implements Initializable {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-            manager.sauver(liste);
+            manager.sauver(racine);
             Platform.exit();
         }
 
@@ -335,7 +395,7 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void onCopier(ActionEvent event) {
-        pressePapier = (Musique) listMusique.getSelectionModel().getSelectedItem();
+        pressePapier = (NoeudMusique)listMusique.getSelectionModel().getSelectedItem();
     }
 
     @FXML
@@ -354,7 +414,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void onSuppr(ActionEvent event) {
 
-        Musique m = (Musique) listMusique.getSelectionModel().getSelectedItem();
+        NoeudMusique m = (NoeudMusique) listMusique.getSelectionModel().getSelectedItem();
         if (m != null) {
             Alert alert = new Alert(AlertType.CONFIRMATION);
             alert.setTitle("Confirmation");
@@ -379,7 +439,8 @@ public class FXMLDocumentController implements Initializable {
             progressbar.setProgress(event.getX() / progressbar.getWidth());
         }
     }
-
+    
+/*
     //private static final DataFormat musiqueDataFormat = new DataFormat("lecteuraudio.modele.Musique");
     @FXML
     private void onDragDetected(MouseEvent event) {
@@ -394,14 +455,12 @@ public class FXMLDocumentController implements Initializable {
         event.consume();
     }
 
-    @FXML
     private void onDragOverListPlayList(DragEvent event) {
         Dragboard db = event.getDragboard();
         event.acceptTransferModes(TransferMode.COPY);
         event.consume();
     }
 
-    @FXML
     private void onDragDroppedListPlayList(DragEvent event) {
         Dragboard db = event.getDragboard();
 
@@ -410,7 +469,7 @@ public class FXMLDocumentController implements Initializable {
         event.setDropCompleted(true);
         event.consume();
     }
-
+*/
     @FXML
     private void onRech(ActionEvent event) {
         String recherche = zoneRech.getText();
@@ -427,5 +486,15 @@ public class FXMLDocumentController implements Initializable {
             e.printStackTrace();
         }
     }
-
+    
+    @FXML
+    private void onDragOverTree(DragEvent event) {
+    }
+    @FXML
+    private void onDragDroppedTree(DragEvent event) {
+    }
+    @FXML
+    private void onDragDetected(MouseEvent event) {
+    
+    }
 }

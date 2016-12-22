@@ -31,23 +31,23 @@ public class Manager {
         datamanager=m ;
     }
     
-    public void charger(ListePlayLists liste){ 
-        datamanager.charger(liste);
+    public void charger(PlayList racine){ 
+        datamanager.charger(racine);
     }
     
-    public void sauver (ListePlayLists liste){ 
-        datamanager.sauver(liste);
+    public void sauver (PlayList racine){ 
+        datamanager.sauver(racine);
     }
     
     
-    public void ouverture (ListePlayLists liste){ 
+    public void ouverture (PlayList racine){ 
         gesImp.ouverture();
-        gesImp.importerRepertoireMusiques(liste.getPlayListTout());    
+        gesImp.importerRepertoireMusiques(racine);    
     }
     
     
-    public void chercherDisqueDur(Window window,ListePlayLists liste){
-        gesImp.chercherDisqueDur(liste.getPlayListTout(), window);
+    public void chercherDisqueDur(Window window,PlayList racine){
+        gesImp.chercherDisqueDur(racine, window);
     }
     
 }

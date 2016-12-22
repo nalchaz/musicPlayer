@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ContextMenu?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
@@ -20,11 +11,17 @@
 <?import javafx.scene.text.Font?>
 <?import lecteuraudio.modele.*?>
 
+
 <BorderPane id="BorderPane" fx:id="borderPane" minHeight="900.0" minWidth="1200.0" prefHeight="900.0" prefWidth="1200.0" stylesheets="@MediaPlayer.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lecteuraudio.controller.FXMLDocumentController"> 
-    <fx:define>
-        <ListePlayLists fx:id="liste" />
+<fx:define>
+        <!-- définition de la racine -->
+        <PlayList fx:id="racine">
+            <titre>Racine</titre>
+        </PlayList>
     </fx:define>
+    
     <center>
+      <!-- définition de la grille principale -->
       <GridPane alignment="TOP_CENTER" minHeight="700.0" minWidth="700.0" prefHeight="900.0" prefWidth="800.0" BorderPane.alignment="CENTER">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="248.0" minWidth="10.0" percentWidth="22.0" prefWidth="200.0" />
@@ -37,15 +34,21 @@
           <RowConstraints maxHeight="800.0" minHeight="10.0" percentHeight="88.0" prefHeight="602.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <ListView fx:id="listeplaylists" items="${liste.playLists}" onDragDropped="#onDragDroppedListPlayList" onDragOver="#onDragOverListPlayList" onMouseClicked="#onPlayListChoisie" prefHeight="530.0" prefWidth="220.0" style="-fx-border-width: 1;" GridPane.rowIndex="1">
-               <contextMenu>
+             <!-- définition du TreeView et de son menu contextuel-->
+             <TreeView fx:id="treeView" editable="true" onDragDropped="#onDragDroppedTree" onDragOver="#onDragOverTree" onMouseClicked="#onNoeudMusiqueChoisie" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" style="-fx-border-width: 1;">
+               <cellFactory>
+                    <TreeItemComponentCellFactory />
+                </cellFactory>
+                <TreeItem fx:id="rootItem" value="${racine}"/>
+                 <contextMenu>
                   <ContextMenu>
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#onAjoutPlayList" text="Ajouter" />
-                      <MenuItem mnemonicParsing="false" onAction="#onSupprimerPlayList" text="Supprimer" />
+                      <MenuItem mnemonicParsing="false" onAction="#onSupprimerNoeudMusique" text="Supprimer" />
                     </items>
                   </ContextMenu>
-               </contextMenu></ListView>
+               </contextMenu>
+            </TreeView>
             <ListView fx:id="listMusique" items="${listemusiques.playlist}" onDragDetected="#onDragDetected" onMouseClicked="#onMusiqueChoisie" prefHeight="530.0" prefWidth="400.0" style="-fx-border-width: 1;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                <contextMenu>
                   <ContextMenu>
@@ -141,23 +144,24 @@
                   </Button>
                </children>
             </StackPane>
+            
          </children>
       </GridPane>
    </center>
    <bottom>
       <StackPane alignment="CENTER_RIGHT" prefHeight="72.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
          <children>
-            <Button alignment="CENTER_RIGHT" id="import" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#importPressed" text="Importer" StackPane.alignment="CENTER_RIGHT">
+            <Button id="import" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#importPressed" text="Importer" StackPane.alignment="CENTER_RIGHT">
                <StackPane.margin>
                   <Insets right="10.0" />
                </StackPane.margin>
             </Button>
-            <Button mnemonicParsing="false" id="youtube" onAction="#onYoutube" text="Youtube" StackPane.alignment="CENTER_RIGHT">
+            <Button id="youtube" mnemonicParsing="false" onAction="#onYoutube" text="Youtube" StackPane.alignment="CENTER_RIGHT">
                <StackPane.margin>
                   <Insets right="100.0" />
                </StackPane.margin>
             </Button>
-            <Button mnemonicParsing="false" onAction="#onSupprimerPlayList" prefWidth="31.0" text="-" StackPane.alignment="BOTTOM_LEFT">
+            <Button mnemonicParsing="false" onAction="#onSupprimerNoeudMusique" prefWidth="31.0" text="-" StackPane.alignment="BOTTOM_LEFT">
                <StackPane.margin>
                   <Insets bottom="5.0" />
                </StackPane.margin>
@@ -198,7 +202,7 @@
             <items>
               <MenuItem mnemonicParsing="false" onAction="#importPressed" text="Importer" />
               <MenuItem mnemonicParsing="false" onAction="#onAjoutPlayList" text="Ajout PlayList" />
-              <MenuItem mnemonicParsing="false" onAction="#onSupprimerPlayList" text="Supprimer PlayList" />
+              <MenuItem mnemonicParsing="false" onAction="#onSupprimerNoeudMusique" text="Supprimer PlayList" />
               <MenuItem mnemonicParsing="false" onAction="#onExit" text="Exit" />
             </items>
           </Menu>
