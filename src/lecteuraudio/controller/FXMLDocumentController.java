@@ -147,6 +147,10 @@ public class FXMLDocumentController implements Initializable {
                 () -> treeView.getSelectionModel().getSelectedItem().getValue(), 
             treeView.getSelectionModel().selectedItemProperty());
         selectedNoeudProperty().bind(ob);
+
+        //resélectionne le premier item pour mettre a jour l'affichage
+        treeView.getSelectionModel().select(null);
+        treeView.getSelectionModel().selectFirst();
         updateTreeView(rootItem, racine);
         listMusique.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
@@ -160,7 +164,7 @@ public class FXMLDocumentController implements Initializable {
     {
         //sélectionne le premier item
         treeView.getSelectionModel().selectFirst();
-
+        //Ajoute le listner sur le noeud séléctionné
         treeView.getSelectionModel().selectedItemProperty().addListener(
             (observable, oldValue, newValue)->
                 treeViewSelectedItemListener(observable, oldValue, newValue));
@@ -210,7 +214,6 @@ public class FXMLDocumentController implements Initializable {
             for (NoeudMusique nm : ((PlayList) noeud).getPlayList()) {
                 TreeItem<NoeudMusique> noeudItem = new TreeItem<>(nm);
                 item.getChildren().add(noeudItem);
-                item.setExpanded(true);
                 updateTreeView(noeudItem, nm);
             }
         }
@@ -265,27 +268,34 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void previousPressed(ActionEvent event) {
+        
+        NoeudMusique nm = lec.precedent();
+        manager.setNoeudCourant(nm);
+        if(nm==null) return;
         if ("play".equals(play.getId())) {
             play.setId("pause");
         }
-
-        manager.setNoeudCourant(lec.precedent());
         bindings();
     }
 
     @FXML
     private void nextPressed(ActionEvent event) {
+        
+        NoeudMusique nm =lec.next();
+        if(nm==null) return;
+        manager.setNoeudCourant(nm);
         if ("play".equals(play.getId())) {
             play.setId("pause");
         }
-        NoeudMusique nm =lec.next();
-        manager.setNoeudCourant(nm);
         bindings();
     }
 
     @FXML
     private void onNoeudMusiqueChoisie(MouseEvent event) {
-        NoeudMusique nm = treeView.getSelectionModel().getSelectedItem().getValue();
+        NoeudMusique nm=null;
+        if(treeView.getSelectionModel().getSelectedItem()!=null)
+            nm = treeView.getSelectionModel().getSelectedItem().getValue();
+
         if (nm != null) {
             if (nm instanceof Musique) {
                 if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {  //double clic gauche
@@ -302,6 +312,9 @@ public class FXMLDocumentController implements Initializable {
                     lec.setVolume(volumeSlider.getValue());
                     bindings();
 
+                }
+                else{
+                    //Changement de node sur la zone centrale à implémenter
                 }
             } else {
                 listecourante=(PlayList) nm;
@@ -377,7 +390,15 @@ public class FXMLDocumentController implements Initializable {
     //onSupprimerNoeudMusique : Supprime un noeud, affiche une fenetre de dialogue permettant de confirmer
     @FXML
     private void onSupprimerNoeudMusique(ActionEvent event) {
-        
+     
+        if (treeView.getSelectionModel().getSelectedItem().getValue() == racine) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Vous ne pouvez pas supprimer la racine.");
+            alert.showAndWait();
+            return;
+        }
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
         alert.setHeaderText(null);
@@ -385,10 +406,14 @@ public class FXMLDocumentController implements Initializable {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-            ((PlayList)treeView.getSelectionModel().getSelectedItem().getParent().getValue()).supprimer(treeView.getSelectionModel().getSelectedItem().getValue()); 
-            updateTreeView(rootItem, racine);
+            TreeItem<NoeudMusique> item=treeView.getSelectionModel().getSelectedItem();
+            ((PlayList)item.getParent().getValue()).supprimer(item.getValue()); 
+            
+            //Désélectionne puis reselectionne pour mettre à jour l'affichage de la zone centrale
+            treeView.getSelectionModel().select(null);
+            treeView.getSelectionModel().select(item.getParent());
+            updateTreeView(item.getParent(), item.getParent().getValue());
         }
-        listMusique.itemsProperty().bind(racine.playlistProperty());
     }
 
     //creerPlayListDepuisView : validation apres la saisie d'une playlist, la rajoute dans la liste des playlist, affiche une fenetre d'erreur si le titre de la playlist existe deja
@@ -442,37 +467,29 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void onColler(ActionEvent event) {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Attention");
+        alert.setHeaderText(null);
+        
         if (pressePapier != null) {
+            TreeItem<NoeudMusique> playlist=treeView.getSelectionModel().getSelectedItem();
+            if(playlist.getValue() instanceof Musique){
+                alert.setContentText("Veuillez sélectionner la playlist dans laquelle coller dans le menu à gauche.");
+                alert.showAndWait();
+                return;
+            }
             for (NoeudMusique nm : pressePapier) {
-                if (!listemusiques.ajouter(nm)) {
-                    Alert alert = new Alert(AlertType.INFORMATION);
-                    alert.setTitle("Attention");
-                    alert.setHeaderText(null);
+                if (!((PlayList)playlist.getValue()).ajouter(nm)) {
                     alert.setContentText("Vous ne pouvez pas ajouter deux fois la même musique dans une playlist.\n"+nm.getTitre()+" existe déja.");
                     alert.showAndWait();
                 }
             }
-        }
-        updateTreeView(rootItem, racine);
-    }
-
-    @FXML
-    private void onSuppr(ActionEvent event) {
-
-        NoeudMusique m = (NoeudMusique) listMusique.getSelectionModel().getSelectedItem();
-        if (m != null) {
-            Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation");
-            alert.setHeaderText(null);
-            alert.setContentText("Êtes-vous sûr de vouloir supprimer " + m.getTitre() + " ?");
-
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK) {
-                listemusiques.supprimer(m);
-
-            }
-        }
-
+        //Met a jour l'affichage du treeView
+        updateTreeView(playlist, playlist.getValue());
+        //Désélectionne puis reselectionne pour mettre à jour l'affichage de la zone centrale
+        treeView.getSelectionModel().select(null);
+        treeView.getSelectionModel().select(playlist);
+        } 
     }
 
     @FXML

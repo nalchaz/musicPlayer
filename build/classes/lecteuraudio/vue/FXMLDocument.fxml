@@ -55,7 +55,6 @@
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#onCopier" text="Copier" />
                       <MenuItem mnemonicParsing="false" onAction="#onColler" text="Coller" />
-                      <MenuItem mnemonicParsing="false" onAction="#onSuppr" text="Suppr" />
                     </items>
                   </ContextMenu>
                </contextMenu>

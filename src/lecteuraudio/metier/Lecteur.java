@@ -96,6 +96,7 @@ public class Lecteur {
     }
       
     public NoeudMusique next(){
+        if(musiqueCourante==null) return null;
         index=playList.getPlayList().indexOf(musiqueCourante);
         index++;
         if(index>=playList.getPlayList().size()){
@@ -114,6 +115,7 @@ public class Lecteur {
     }
     
     public NoeudMusique precedent(){
+        if(musiqueCourante==null) return null;
         index=playList.getPlayList().indexOf(musiqueCourante);
         index--;
         if(index<0){
