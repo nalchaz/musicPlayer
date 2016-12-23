@@ -10,7 +10,7 @@ import javafx.util.Callback;
  * @author nahel
  */
 
-public class TreeItemComponentCellFactory implements Callback<TreeView<NoeudMusique>, TreeCell<NoeudMusique>> {
+public class TreeItemCellFactory implements Callback<TreeView<NoeudMusique>, TreeCell<NoeudMusique>> {
     /** 
      * fabrique une cellule pour le TreeView
      * @param param le TreeView à mettre à jour
@@ -18,6 +18,6 @@ public class TreeItemComponentCellFactory implements Callback<TreeView<NoeudMusi
      */
     @Override
     public TreeCell<NoeudMusique> call(TreeView<NoeudMusique> param) {
-        return new TreeItemComponentCell();
+        return new TreeItemCell();
     }
 }

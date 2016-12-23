@@ -103,6 +103,11 @@ public class Lecteur {
         }
         mediaPlayer.stop(); 
         musiqueCourante=playList.getPlayList().get(index);
+        if(musiqueCourante instanceof PlayList){
+            playList=((PlayList)musiqueCourante);
+            index=0;
+            musiqueCourante=playList.getPlayList().get(index);    
+        }
         play(musiqueCourante);
         return musiqueCourante;
         

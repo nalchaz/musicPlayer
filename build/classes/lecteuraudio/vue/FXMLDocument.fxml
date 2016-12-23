@@ -37,7 +37,7 @@
              <!-- définition du TreeView et de son menu contextuel-->
              <TreeView fx:id="treeView" editable="true" onDragDropped="#onDragDroppedTree" onDragOver="#onDragOverTree" onMouseClicked="#onNoeudMusiqueChoisie" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" style="-fx-border-width: 1;">
                <cellFactory>
-                    <TreeItemComponentCellFactory />
+                    <TreeItemCellFactory />
                 </cellFactory>
                 <TreeItem fx:id="rootItem" value="${racine}"/>
                  <contextMenu>
