@@ -45,7 +45,7 @@ public class GestionnaireImport {
         
     }    
     
-    public  void chercherDisqueDur (PlayList racine, Window window) {
+    public  boolean chercherDisqueDur (PlayList racine, Window window) {
         
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
@@ -62,12 +62,16 @@ public class GestionnaireImport {
             try {
                 copierDansRepository(fichier);
                 ajouterMusique(fichier, racine);
+                return true;
             } catch (FileAlreadyExistsException e) {
-                dialogueErreurFichierExistant();
+                if(!ajouterMusique(fichier, racine)){
+                    dialogueErreurFichierExistant();
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
+        return false;
     }   
     
     private void dialogueErreurFichierExistant() {
@@ -78,7 +82,7 @@ public class GestionnaireImport {
 
     }
 
-    private void ajouterMusique(File f, PlayList racine) {
+    private boolean ajouterMusique(File f, PlayList racine) {
         int taille = (int) f.getName().length() - 4;
         Musique m = new Musique("auteur", f.getName().substring(0, taille), ("file:///" + System.getProperty("user.dir").replace("\\", "/") + "/Musiques/" + f.getName().replaceAll(" ", "%20")));
         Media media = new Media(m.getPath());
@@ -91,7 +95,7 @@ public class GestionnaireImport {
             }
         });
 
-        racine.ajouter(m);
+        return racine.ajouter(m);
     }
 
     public void copierDansRepository(File source) throws Exception {

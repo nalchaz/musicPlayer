@@ -204,7 +204,7 @@ public class FXMLDocumentController implements Initializable {
         return noeud;
     }
  
-    //Met a jour le treeView a partir d'un noeud
+    //Met a jour le treeView à partir d'un noeud
     private void updateTreeView(TreeItem<NoeudMusique> item, NoeudMusique noeud) {
         //vide le TreeItem
         item.getChildren().clear();
@@ -218,7 +218,19 @@ public class FXMLDocumentController implements Initializable {
             }
         }
     }
+    /*Désélectionne puis reselectionne pour mettre à jour l'affichage de la zone centrale
+    *Puis met à jour l'affichage du treeView
+    *
+    */
+    private void updateLayoutTreeView(TreeItem<NoeudMusique> item, NoeudMusique noeud){
 
+        //Met à jour l'affichage du treeView
+        updateTreeView(item, noeud);
+        //Met à jour l'affichage de la zone centrale
+        treeView.getSelectionModel().select(null);
+        treeView.getSelectionModel().select(item);
+    }
+    
     //methode en attendant d'arriver à utiliser les bindings fxml
     private void bindings() {
         //Binding sur le titre da la musique courante (musiqueView)
@@ -262,8 +274,10 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void importPressed(ActionEvent event) {
-        manager.chercherDisqueDur(borderPane.getScene().getWindow(), racine);
-
+        if(!manager.chercherDisqueDur(borderPane.getScene().getWindow(), racine)){    
+            updateLayoutTreeView(rootItem, racine);
+        }
+        
     }
 
     @FXML
@@ -409,10 +423,7 @@ public class FXMLDocumentController implements Initializable {
             TreeItem<NoeudMusique> item=treeView.getSelectionModel().getSelectedItem();
             ((PlayList)item.getParent().getValue()).supprimer(item.getValue()); 
             
-            //Désélectionne puis reselectionne pour mettre à jour l'affichage de la zone centrale
-            treeView.getSelectionModel().select(null);
-            treeView.getSelectionModel().select(item.getParent());
-            updateTreeView(item.getParent(), item.getParent().getValue());
+            updateLayoutTreeView(item.getParent(), item.getParent().getValue());
         }
     }
 
@@ -484,11 +495,7 @@ public class FXMLDocumentController implements Initializable {
                     alert.showAndWait();
                 }
             }
-        //Met a jour l'affichage du treeView
-        updateTreeView(playlist, playlist.getValue());
-        //Désélectionne puis reselectionne pour mettre à jour l'affichage de la zone centrale
-        treeView.getSelectionModel().select(null);
-        treeView.getSelectionModel().select(playlist);
+            updateLayoutTreeView(playlist, playlist.getValue());
         } 
     }
 

@@ -47,9 +47,12 @@ public class Manager {
         gesImp.importerRepertoireMusiques(racine);    
     }
     
-    
-    public void chercherDisqueDur(Window window,PlayList racine){
-        gesImp.chercherDisqueDur(racine, window);
+    /*
+    *chercherDisqueDur :
+    return true si une musique est ajouté, false si rien n'est ajouté
+    */
+    public boolean chercherDisqueDur(Window window,PlayList racine){
+        return gesImp.chercherDisqueDur(racine, window);
     }
     
 }
