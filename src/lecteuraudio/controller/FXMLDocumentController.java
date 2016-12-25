@@ -87,10 +87,6 @@ public class FXMLDocumentController implements Initializable {
     private Button ajoutPlayList;
     @FXML
     private Button rechButton;
-    @FXML
-    private Button downLoad;
-    @FXML
-    private TextField urlYouTube;
     
     
     @FXML
@@ -129,7 +125,9 @@ public class FXMLDocumentController implements Initializable {
     private TreeItem<NoeudMusique> rootItem;
     @FXML
     private TreeView<NoeudMusique> treeView;
-    
+   
+    //Fenetre YouTube
+    Stage youTubeStage;
    
     private ArrayList<NoeudMusique> pressePapier; //Utilisé pour le copié collé
     
@@ -163,6 +161,11 @@ public class FXMLDocumentController implements Initializable {
         treeView.getSelectionModel().select(null);
         treeView.getSelectionModel().selectFirst();
         updateTreeView(rootItem, racine);
+        
+        //Initialisation des listes
+        listecourante=racine;
+        listemusiques=new PlayListMusiques(listecourante);
+        
         listMusique.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
     
@@ -464,8 +467,14 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void onValidNomButton(ActionEvent event) {
         creerPlaylistDepuisView();
-    }
+    }   
 
+    public void exit(){
+        youTubeStage.close();
+        manager.sauver(racine);
+        Platform.exit();
+    }
+    
     @FXML
     private void onExit(ActionEvent event) {
         Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -475,8 +484,7 @@ public class FXMLDocumentController implements Initializable {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-            manager.sauver(racine);
-            Platform.exit();
+            exit();
         }
 
     }
@@ -561,7 +569,8 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void onYoutube() throws Exception{
         
-        Stage youTubeStage=new Stage();
+        youTubeStage=new Stage();
+        youTubeStage.setTitle("YouTube");
         FXMLLoader fxmloader = new FXMLLoader(getClass().getResource("/lecteuraudio/vue/youTubeFXML.fxml"));
         Parent root = fxmloader.load();
         youTubeController=fxmloader.getController();
@@ -578,7 +587,7 @@ public class FXMLDocumentController implements Initializable {
                 if(!f.exists()){
                     String debutpath=pathdownload.substring(0, pathdownload.length()-4);
                     try{
-                        Files.delete(new File(debutpath+".video.mp4").toPath());
+                        Files.deleteIfExists(new File(debutpath+".video.mp4").toPath());
                         Files.copy(new File(debutpath+".audio.mp4").toPath(),new File(debutpath+".mp4").toPath());
                         Files.delete(new File(debutpath+".audio.mp4").toPath());
                         pathdownload=debutpath+".mp4";
@@ -613,21 +622,4 @@ public class FXMLDocumentController implements Initializable {
     }
     
 
-    @FXML
-    private void onDownLoad(ActionEvent event) {
-        /*
-        try{
-        DirectDownload(urlYouTube.getText());
-        }
-        catch(Exception e){
-            System.out.println(e.getMessage());
-          
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setHeaderText(null);
-            alert.setContentText("L'url \""+urlYouTube.getText()+"\" est invalide, ou le téléchargement a échoué.");
-            alert.showAndWait();
-*/
-        
-    }
 }

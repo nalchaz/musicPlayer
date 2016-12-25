@@ -19,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -47,6 +48,8 @@ public class YouTubeFXMLController implements Initializable {
     
     
     private final ObjectProperty<WebEngine> webengineProperty = new SimpleObjectProperty<>();
+    @FXML
+    private ProgressBar downloadProgress;
     public WebEngine getWebEngine() { return webengineProperty.get(); }
     public void setWebEngine(WebEngine value) { webengineProperty.set(value); }
     public ObjectProperty<WebEngine> webengineProperty() { return webengineProperty; }
@@ -74,6 +77,7 @@ public class YouTubeFXMLController implements Initializable {
 
         ManagedDownload managerDownload = new ManagedDownload(url, dest);
         downloadStatus.textProperty().bind(managerDownload.downloadStatusProperty());
+        downloadProgress.progressProperty().bind(managerDownload.progressProperty());
         managerDownload.start();
         managerDownload.pathDownloadProperty().addListener(new ChangeListener() {
             @Override
@@ -81,6 +85,7 @@ public class YouTubeFXMLController implements Initializable {
                     Object newVal) {
                 cancel.setDisable(false);
                 download.setDisable(false);
+                downloadProgress.setVisible(false);
                 setpathDownload(managerDownload.getpathDownload());
             }
         });
@@ -91,6 +96,7 @@ public class YouTubeFXMLController implements Initializable {
         getWebEngine().reload();
         cancel.setDisable(true);
         download.setDisable(true);
+        downloadProgress.setVisible(true);
         DirectDownload(getWebEngine().getLocation());
     }
 

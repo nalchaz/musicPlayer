@@ -23,6 +23,8 @@ import com.github.axet.wget.info.DownloadInfo.Part;
 import com.github.axet.wget.info.DownloadInfo.Part.States;
 import com.github.axet.wget.info.ex.DownloadInterruptedError;
 import javafx.application.Platform;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 /**
@@ -34,12 +36,17 @@ public class ManagedDownload extends Thread {
     private final StringProperty downloadStatusProperty=new SimpleStringProperty();
     public StringProperty downloadStatusProperty(){return downloadStatusProperty; }
     public String getdownloadStatus() {return downloadStatusProperty.get();}
-    public void setdownloadStatus(String titre) {this.downloadStatusProperty.set(titre);}
+    public void setdownloadStatus(String status) {this.downloadStatusProperty.set(status);}
 
     private final StringProperty pathDownloadProperty=new SimpleStringProperty();
     public StringProperty pathDownloadProperty(){return pathDownloadProperty; }
     public String getpathDownload() {return pathDownloadProperty.get();}
-    public void setpathDownload(String titre) {this.pathDownloadProperty.set(titre);}
+    public void setpathDownload(String path) {this.pathDownloadProperty.set(path);}
+    
+    private final DoubleProperty progressProperty=new SimpleDoubleProperty();
+    public DoubleProperty progressProperty(){return progressProperty; }
+    public Double getProgress() {return progressProperty.get();}
+    public void setProgress(Double value) {this.progressProperty.set(value);}
     
     private String url;
     private String dest;
@@ -73,6 +80,7 @@ public class ManagedDownload extends Thread {
         public void run() {
             
              List<VideoFileInfo> dinfoList = videoinfo.getInfo();
+             VideoFileInfo dinfo=dinfoList.get(0);
             // notify app or save download state
             // you can extract information from DownloadInfo info;
             switch (videoinfo.getState()) {
@@ -91,7 +99,7 @@ public class ManagedDownload extends Thread {
 
                     String parts = "";
 
-                    for (VideoFileInfo dinfo : dinfoList) {
+
                         SpeedInfo speedInfo = getSpeedInfo(dinfo);
                         speedInfo.step(dinfo.getCount());
 
@@ -112,10 +120,12 @@ public class ManagedDownload extends Thread {
                             @Override
                             public void run() {
                                 setdownloadStatus(s);
+                                double d=dinfo.getCount() / (float) dinfo.getLength();
+                                setProgress(d);
                             }
                         });
                     
-                    }
+                    
                     
                     
                 }
