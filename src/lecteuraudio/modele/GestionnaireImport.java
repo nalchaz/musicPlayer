@@ -82,13 +82,13 @@ public class GestionnaireImport {
 
     }
 
-    private boolean ajouterMusique(File f, PlayList racine) {
+    public boolean ajouterMusique(File f, PlayList racine) {
         int taille = (int) f.getName().length() - 4;
         Musique m = new Musique("auteur", f.getName().substring(0, taille), ("file:///" + System.getProperty("user.dir").replace("\\", "/") + "/Musiques/" + f.getName().replaceAll(" ", "%20")));
         Media media = new Media(m.getPath());
         media.getMetadata().addListener(new MapChangeListener<String, Object>() {
             @Override
-            public void onChanged(Change<? extends String, ? extends Object> ch) {
+            public void onChanged(MapChangeListener.Change<? extends String, ? extends Object> ch) {
                 if (ch.wasAdded()) {
                     m.setAuteur((String) media.getMetadata().get("artist"));
                 }

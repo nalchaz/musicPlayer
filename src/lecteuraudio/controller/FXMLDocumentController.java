@@ -29,33 +29,37 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
 import lecteuraudio.metier.Musique;
 import lecteuraudio.metier.PlayList;
 import lecteuraudio.modele.Utils;
 import java.awt.Desktop;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import lecteuraudio.metier.Lecteur;
 import lecteuraudio.metier.Manager;
 import lecteuraudio.metier.NoeudMusique;
 import lecteuraudio.metier.PlayListMusiques;
+import lecteuraudio.modele.ManagedDownload;
 import lecteuraudio.persistancetexte.TextDataManager;
 
 /**
@@ -81,7 +85,14 @@ public class FXMLDocumentController implements Initializable {
     private Button muteButton;
     @FXML
     private Button ajoutPlayList;
-
+    @FXML
+    private Button rechButton;
+    @FXML
+    private Button downLoad;
+    @FXML
+    private TextField urlYouTube;
+    
+    
     @FXML
     private Label titreMusique;
     @FXML
@@ -110,8 +121,7 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private TextField zoneRech;
-    @FXML
-    private Button rechButton;
+    
     
     @FXML
     private PlayList racine;
@@ -130,7 +140,8 @@ public class FXMLDocumentController implements Initializable {
     
     private Lecteur lec=new Lecteur();
     
-
+    private YouTubeFXMLController youTubeController;
+    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -548,12 +559,46 @@ public class FXMLDocumentController implements Initializable {
     }
 
     @FXML
-    private void onYoutube() {
+    private void onYoutube() throws Exception{
+        
+        Stage youTubeStage=new Stage();
+        FXMLLoader fxmloader = new FXMLLoader(getClass().getResource("/lecteuraudio/vue/youTubeFXML.fxml"));
+        Parent root = fxmloader.load();
+        youTubeController=fxmloader.getController();
+        Scene scene = new Scene(root);         
+        youTubeStage.setScene(scene);
+        youTubeStage.show();
+        
+        youTubeController.pathDownloadProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue o, Object oldVal,
+                    Object newVal) {
+                String pathdownload=youTubeController.getpathDownload();
+                File f=new File(pathdownload);
+                if(!f.exists()){
+                    String debutpath=pathdownload.substring(0, pathdownload.length()-4);
+                    try{
+                        Files.delete(new File(debutpath+".video.mp4").toPath());
+                        Files.copy(new File(debutpath+".audio.mp4").toPath(),new File(debutpath+".mp4").toPath());
+                        Files.delete(new File(debutpath+".audio.mp4").toPath());
+                        pathdownload=debutpath+".mp4";
+                    }
+                    catch(Exception e){
+                        System.err.println(e.getMessage());
+                    }
+                }
+                manager.ajouterMusique(new File(pathdownload), racine);
+                updateLayoutTreeView(rootItem, racine);
+            }
+        });
+        
+        /*
         try {
             Desktop.getDesktop().browse(new URL("http://youtube.fr").toURI());
         } catch (Exception e) {
             e.printStackTrace();
         }
+        */
     }
     
     @FXML
@@ -565,5 +610,24 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void onDragDetected(MouseEvent event) {
     
+    }
+    
+
+    @FXML
+    private void onDownLoad(ActionEvent event) {
+        /*
+        try{
+        DirectDownload(urlYouTube.getText());
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+          
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("L'url \""+urlYouTube.getText()+"\" est invalide, ou le téléchargement a échoué.");
+            alert.showAndWait();
+*/
+        
     }
 }

@@ -5,6 +5,7 @@
  */
 package lecteuraudio.metier;
 
+import java.io.File;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.stage.Window;
@@ -53,6 +54,10 @@ public class Manager {
     */
     public boolean chercherDisqueDur(Window window,PlayList racine){
         return gesImp.chercherDisqueDur(racine, window);
+    }
+    
+    public void ajouterMusique(File f, PlayList racine) {
+        gesImp.ajouterMusique(f, racine);
     }
     
 }

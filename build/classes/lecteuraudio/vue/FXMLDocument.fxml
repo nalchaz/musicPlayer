@@ -20,8 +20,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
-<?import lecteuraudio.metier.*?>
 <?import lecteuraudio.modele.*?>
+<?import lecteuraudio.metier.*?>
 
 <BorderPane id="BorderPane" fx:id="borderPane" prefHeight="900.0" prefWidth="1200.0" stylesheets="@MediaPlayer.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lecteuraudio.controller.FXMLDocumentController"> 
 <fx:define>
@@ -106,6 +106,11 @@
                         <Insets bottom="40.0" right="50.0" />
                      </StackPane.margin>
                   </Label>
+                  <Label fx:id="auteur" StackPane.alignment="CENTER">
+                     <StackPane.margin>
+                        <Insets bottom="5.0" right="50.0" />
+                     </StackPane.margin>
+                  </Label>
                   <FlowPane alignment="BOTTOM_CENTER" minWidth="510.0" StackPane.alignment="CENTER">
                      <children>
                         <Label fx:id="tempsEcoule" text="Temps">
@@ -130,11 +135,6 @@
                         <Insets bottom="20.0" />
                      </StackPane.margin>
                   </FlowPane>
-                  <Label fx:id="auteur" StackPane.alignment="CENTER">
-                     <StackPane.margin>
-                        <Insets bottom="5.0" right="50.0" />
-                     </StackPane.margin>
-                  </Label>
                </children>
                <GridPane.margin>
                   <Insets />
@@ -175,6 +175,16 @@
             <Button fx:id="ajoutPlayList" mnemonicParsing="false" onAction="#onAjoutPlayList" text="+" />
             <FlowPane alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowSpan="2">
                <children>
+                  <TextField fx:id="urlYouTube" promptText="URL Youtube">
+                     <FlowPane.margin>
+                        <Insets right="20.0" />
+                     </FlowPane.margin>
+                  </TextField>
+                  <Button fx:id="downLoad" mnemonicParsing="false" onAction="#onDownLoad" text="Download">
+                     <FlowPane.margin>
+                        <Insets right="40.0" />
+                     </FlowPane.margin>
+                  </Button>
                   <Button id="youtube" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#onYoutube" text="Youtube">
                      <FlowPane.margin>
                         <Insets right="40.0" />
@@ -211,7 +221,11 @@
                   <Insets left="35.0" />
                </GridPane.margin>
             </FlowPane>
-            <Button mnemonicParsing="false" onAction="#onSupprimerNoeudMusique" prefWidth="31.0" text="-" GridPane.rowIndex="1" />
+            <StackPane alignment="CENTER_LEFT" GridPane.rowIndex="1">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#onSupprimerNoeudMusique" prefWidth="31.0" text="-" />
+               </children>
+            </StackPane>
          </children>
       </GridPane>
    </bottom>
