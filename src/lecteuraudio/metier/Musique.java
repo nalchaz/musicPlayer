@@ -14,7 +14,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author nahel
  */
-public class Musique extends NoeudMusique {
+public class Musique extends NoeudMusique implements IMusique{
     
     private String path;
     private StringProperty auteurProperty=new SimpleStringProperty();    

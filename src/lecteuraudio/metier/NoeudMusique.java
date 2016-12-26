@@ -12,7 +12,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author nahel
  */
-public abstract class NoeudMusique {
+public abstract class NoeudMusique implements INoeudMusique{
     
     protected StringProperty titreProperty=new SimpleStringProperty();
     public StringProperty titreProperty(){return titreProperty; }

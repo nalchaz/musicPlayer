@@ -31,31 +31,63 @@ public class TextDataManager implements IDataManager {
             new File(repositoryPlayLists).mkdir(); 
         for (File f : new File(repositoryPlayLists).listFiles()) {
             String nom = f.getName();
-            String extension = nom.substring(nom.length() - 3, nom.length());
-            if (extension.equals("txt") ) {
-                importerPlayList(f, racine);
+            if (nom.equals("TouteslesPlayLists.txt") ) {
+                try (BufferedReader br = new BufferedReader(new FileReader(f))){
+                    importerPlayLists(racine,br,racine,racine,racine);
+                }
+                catch (Exception e){ 
+                      e.printStackTrace();
+                }
             }
 
         }
     }
 
     
-    private void importerPlayList(File f, PlayList racine) {
-        String nomMusique;
-
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(f));
-            PlayList p = new PlayList(br.readLine());
-            while ((nomMusique = br.readLine()) != null) {
-                ajouterMusiqueAPlayList(p, nomMusique, racine);
+    private void importerPlayLists(PlayList courante, BufferedReader br, PlayList pere,PlayList grandPere, PlayList racine) {//Marche pour 3 imbrications, à revoir
+        String nomNoeudMusique;
+        String nomPlayList;
+        int nbcourant,nbpere=1;
+        char caracNum; 
+        try {           
+            while ((nomNoeudMusique = br.readLine()) != null) {
+                if (nomNoeudMusique.charAt(1) == ':'&& nomNoeudMusique.charAt(2) == 'p') { //Si le nom correspond à une playlist
+                    nomPlayList= nomNoeudMusique.substring(3, nomNoeudMusique.length()); 
+                    PlayList p=new PlayList (nomPlayList);
+                    caracNum=nomNoeudMusique.charAt(0);  
+                    nbcourant=Integer.parseInt(caracNum+ ""); 
+                    if (nbcourant==nbpere){ //Si la playlist doit être imbriquée au même niveau que la précédente                               
+                        pere.ajouter(p); 
+                        courante=p; 
+                    } 
+                    else if (nbcourant>nbpere){ //Si la playlist doit être imbriquée dans la playlist courante
+                        courante.ajouter(p); 
+                        grandPere=pere; 
+                        pere=courante;
+                        courante=p; 
+                        nbpere++; 
+                    }
+                    else  { // Sinon il faut remonter dans la hiérarchie
+                        for (nbcourant=nbcourant;nbcourant<=nbpere;nbcourant++){ 
+                            courante=pere; 
+                            pere=grandPere;
+                            nbpere --; 
+                        }
+                        pere.ajouter(p); 
+                        courante=p; 
+                    }
+                    
+                }
+                else {
+                    ajouterMusiqueAPlayList(courante,nomNoeudMusique,racine); 
+                }
             }
-            racine.ajouter(p);
-            br.close();
-
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    
+
 
     private void ajouterMusiqueAPlayList(PlayList p, String nom, PlayList tout) {
         for (NoeudMusique m : tout.getPlayList()) {
@@ -65,32 +97,37 @@ public class TextDataManager implements IDataManager {
         }
     }
     
+    
     @Override
     public void sauver(PlayList racine) {
         for (File f : new File(repositoryPlayLists).listFiles()){ 
             f.delete(); 
         }
-        for (PlayList p : racine.getListPlayList()) {
-            creerFichierPlayList(p);
-        }
+            File f = new File(System.getProperty("user.dir")+"/Playlists/TouteslesPlayLists.txt");
+            try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(f)))){
+                for (PlayList p : racine.getListPlayList()){ 
+                    ajouterPlayListaFichier(p,pw,1); 
+                }
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        
     }
 
-    public void creerFichierPlayList(PlayList p) {
-        if (!p.getTitre().equals("Musiques")) {
-            File f = new File(System.getProperty("user.dir")+"/Playlists/" + p.getTitre() + ".txt");
-            try {
-                PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(f)));
-                System.out.println(p.getTitre());
-                pw.println(p.getTitre());
-                for (NoeudMusique m : p.getPlayList()) {
-                    pw.println(m.getTitre());
-                }
-                pw.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+    public void ajouterPlayListaFichier(PlayList p,PrintWriter pw, int nb) {
+        System.out.println(nb);
+        pw.println(nb+":p"+p.getTitre()); 
+        for (NoeudMusique nm : p.getPlayList()){
+            if (nm instanceof Musique){
+                pw.println(nm.getTitre());
+            }
+            else {
+                ajouterPlayListaFichier((PlayList) nm, pw, ++nb);
             }
         }
     }
+   
     
     
     

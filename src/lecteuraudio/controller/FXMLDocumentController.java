@@ -477,11 +477,12 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void onExit(ActionEvent event) {
+        manager.sauver(racine);
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
         alert.setHeaderText(null);
         alert.setContentText("Êtes-vous sûr de vouloir quitter ?");
-
+        
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
             exit();
