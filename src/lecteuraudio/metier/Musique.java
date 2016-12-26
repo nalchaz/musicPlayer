@@ -65,11 +65,13 @@ public class Musique extends NoeudMusique implements IMusique,Externalizable{
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeObject(getTitre());
         out.writeObject(path);
+        out.writeObject(getAuteur());
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         setTitre((String)in.readObject());
-        setPath((String)in.readObject()); 
+        setPath((String)in.readObject());
+        setAuteur((String)in.readObject());
     }
 }
