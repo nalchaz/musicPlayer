@@ -6,7 +6,13 @@
 package lecteuraudio.metier;
 
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
@@ -16,13 +22,13 @@ import javafx.collections.ObservableList;
  *
  * @author nahel
  */
-public class PlayList extends NoeudMusique implements IPlayList{
-    
+public class PlayList extends NoeudMusique implements IPlayList,Externalizable{
+
     private  ListProperty<NoeudMusique> playlist= new SimpleListProperty<>(FXCollections.observableArrayList());
     public ObservableList<NoeudMusique> getPlayList() {return playlist.get(); }   
     public void setPlayList(ListProperty<NoeudMusique> playList) {this.playlist.set(playList);}
     public ListProperty<NoeudMusique> playlistProperty() { return playlist ; }
-    
+
     public PlayList(){
     }
     
@@ -36,10 +42,11 @@ public class PlayList extends NoeudMusique implements IPlayList{
         for (NoeudMusique nm : playlist) {
             if (nm.getTitre().equals(m.getTitre())) {
                 return false;
-            }
+            }            
         }
-        playlist.add(m);
-        return true;
+                
+                playlist.add(m);
+        return true; 
     }
 
     public void supprimer(NoeudMusique m){
@@ -54,7 +61,7 @@ public class PlayList extends NoeudMusique implements IPlayList{
             
     @Override
     public String toString() { 
-        return titreProperty.get(); 
+        return titreProperty.get();  
     }
    
     /* 
@@ -71,7 +78,6 @@ public class PlayList extends NoeudMusique implements IPlayList{
     }
     
 
-    
     public ArrayList<PlayList> getListPlayList(){
         ArrayList<PlayList> list=new ArrayList();
         for(NoeudMusique m : playlist){
@@ -80,6 +86,22 @@ public class PlayList extends NoeudMusique implements IPlayList{
             }
         }
         return list;
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        List<NoeudMusique> liste= new ArrayList<>(getPlayList()); 
+        out.writeObject(getTitre());
+        out.writeObject(liste);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        setTitre((String)in.readObject()); 
+        List<NoeudMusique> liste=(ArrayList)in.readObject(); 
+        for (NoeudMusique nm : liste){
+            ajouter(nm); 
+        }
     }
     
 }

@@ -6,6 +6,11 @@
 
 package lecteuraudio.metier;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+import java.io.Serializable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -14,8 +19,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author nahel
  */
-public class Musique extends NoeudMusique implements IMusique{
-    
+public class Musique extends NoeudMusique implements IMusique,Externalizable{
     private String path;
     private StringProperty auteurProperty=new SimpleStringProperty();    
     
@@ -51,8 +55,21 @@ public class Musique extends NoeudMusique implements IMusique{
         return path;
     }
     
+    
     @Override 
     public String toString (){ 
         return titreProperty.get(); 
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeObject(getTitre());
+        out.writeObject(path);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        setTitre((String)in.readObject());
+        setPath((String)in.readObject()); 
     }
 }

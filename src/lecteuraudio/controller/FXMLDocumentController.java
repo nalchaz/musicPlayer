@@ -60,6 +60,7 @@ import lecteuraudio.metier.Manager;
 import lecteuraudio.metier.NoeudMusique;
 import lecteuraudio.metier.PlayListMusiques;
 import lecteuraudio.modele.ManagedDownload;
+import lecteuraudio.persistanceBin.BinaryDataManager;
 import lecteuraudio.persistancetexte.TextDataManager;
 
 /**
@@ -144,9 +145,9 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         manager = new Manager(); 
-        manager.setDataManager(new TextDataManager()); 
+        manager.setDataManager(new BinaryDataManager()); 
         //Importation des musiques 
-        manager.ouverture(racine);      
+        manager.ouverture(racine); 
         //Importation des playlists
         manager.charger(racine); 
 

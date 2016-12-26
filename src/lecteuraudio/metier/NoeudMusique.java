@@ -5,6 +5,8 @@
  */
 package lecteuraudio.metier;
 
+import java.io.Externalizable;
+import java.io.Serializable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -12,11 +14,12 @@ import javafx.beans.property.StringProperty;
  *
  * @author nahel
  */
-public abstract class NoeudMusique implements INoeudMusique{
-    
+public abstract class NoeudMusique implements INoeudMusique,Externalizable{
+
     protected StringProperty titreProperty=new SimpleStringProperty();
     public StringProperty titreProperty(){return titreProperty; }
     public String getTitre() {return titreProperty.get();}
-    public void setTitre(String titre) {this.titreProperty.set(titre);}
+    public void setTitre(String titre) {this.titreProperty.set(titre); }
+
     
 }

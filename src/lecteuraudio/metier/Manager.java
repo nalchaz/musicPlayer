@@ -34,7 +34,7 @@ public class Manager {
         datamanager=m ;
     }
     
-    public void charger(PlayList racine){ 
+    public void charger(PlayList racine ){ 
         datamanager.charger(racine);
     }
     

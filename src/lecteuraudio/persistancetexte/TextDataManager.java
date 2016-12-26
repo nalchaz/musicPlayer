@@ -44,7 +44,7 @@ public class TextDataManager implements IDataManager {
     }
 
     
-    private void importerPlayLists(PlayList courante, BufferedReader br, PlayList pere,PlayList grandPere, PlayList racine) {//Marche pour 3 imbrications, à revoir
+    private PlayList importerPlayLists(PlayList courante, BufferedReader br, PlayList pere,PlayList grandPere, PlayList racine) {//Marche pour 3 imbrications, à revoir
         String nomNoeudMusique;
         String nomPlayList;
         int nbcourant,nbpere=1;
@@ -85,6 +85,7 @@ public class TextDataManager implements IDataManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return racine; 
     }
     
 
@@ -103,7 +104,7 @@ public class TextDataManager implements IDataManager {
         for (File f : new File(repositoryPlayLists).listFiles()){ 
             f.delete(); 
         }
-            File f = new File(System.getProperty("user.dir")+"/Playlists/TouteslesPlayLists.txt");
+            File f = new File(repositoryPlayLists+"/TouteslesPlayLists.txt");
             try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(f)))){
                 for (PlayList p : racine.getListPlayList()){ 
                     ajouterPlayListaFichier(p,pw,1); 

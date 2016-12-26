@@ -22,49 +22,44 @@ public class BinaryDataManager implements IDataManager{
     private String repositoryPlayLists=System.getProperty("user.dir")+"/Playlists"; 
     private File f= new File (repositoryPlayLists); 
     // TOUTES LES PLAYLISTS VONT DEVENIR DES IPLAYLISTS
+    
     @Override
     public void charger(PlayList racine) {
-        if (!new File(repositoryPlayLists).exists()) 
-            new File(repositoryPlayLists).mkdir(); 
+        if (!new File(repositoryPlayLists).exists()) {
+            new File(repositoryPlayLists).mkdir();
+        } 
         for (File f : new File(repositoryPlayLists).listFiles()) {
             String nom = f.getName();
-            String extension = nom.substring(nom.length() - 3, nom.length());
-            if (extension.equals("bin") ) {
-                importerPlayList(f, racine);
+            if (nom.equals("ToutesLesPlaylists.bin")) {
+               
+                try (ObjectInputStream reader = new ObjectInputStream(new FileInputStream(f))) {
+                    for (PlayList p : ((PlayList)reader.readObject()).getListPlayList()) {
+                        racine.ajouter(p); 
+                    } 
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-
         }
-        
+ 
     }
     
-    private void importerPlayList (File f,PlayList racine){ 
-        try (ObjectInputStream reader=new ObjectInputStream(new FileInputStream (f))){
-            PlayList p=(PlayList) reader.readObject(); 
-            racine.ajouter(p); 
-        }
-        catch (Exception e){ 
-            e.printStackTrace();
-        }
-    }
+  
 
     @Override
     public void sauver(PlayList racine) {
         for (File f : new File(repositoryPlayLists).listFiles()){ 
             f.delete(); 
         }
-        for (PlayList p : racine.getListPlayList()) {
-            creerFichierPlayList(p);
-        }
-    }
-    
-    private void creerFichierPlayList (PlayList p){ 
-        File f=new File (repositoryPlayLists+"/"+p.getTitre()+".bin"); 
-        try (ObjectOutputStream writer=new ObjectOutputStream( new FileOutputStream(f))){
-            writer.writeObject(p); 
+        File fbin=new File (repositoryPlayLists+"/ToutesLesPlaylists.bin"); 
+        try (ObjectOutputStream writer=new ObjectOutputStream( new FileOutputStream(fbin))){
+            writer.writeObject(racine);
         }
         catch (Exception e){ 
             e.printStackTrace();
         }
     }
+    
+    
     
 }
