@@ -17,6 +17,7 @@ import com.github.axet.vget.info.VGetParser;
 import com.github.axet.vget.info.VideoFileInfo;
 import com.github.axet.vget.info.VideoInfo;
 import com.github.axet.vget.vhs.YouTubeMPGParser;
+import com.github.axet.vget.vhs.YouTubeParser;
 import com.github.axet.wget.SpeedInfo;
 import com.github.axet.wget.info.DownloadInfo;
 import com.github.axet.wget.info.DownloadInfo.Part;
@@ -27,6 +28,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.Alert;
 /**
  *
  * @author nahel
@@ -113,8 +115,10 @@ public class ManagedDownload extends Thread {
                                 }
                             }
                         }
-                        String s=String.format("Téléchargement : %.2f %s (%s)", (dinfo.getCount() / (float) dinfo.getLength())*100, parts,
-                                formatSpeed(speedInfo.getCurrentSpeed()));
+                        //String s=String.format("Téléchargement de \"%s\": %.2f %s (%s)", dinfo.toString(),(dinfo.getCount() / (float) dinfo.getLength())*100, parts,
+                                //Utils.formatSpeed(speedInfo.getCurrentSpeed()));
+                        String s=String.format("Téléchargement : %.2f %s (%s)",(dinfo.getCount() / (float) dinfo.getLength())*100, parts,
+                                Utils.formatSpeed(speedInfo.getCurrentSpeed()));
                         
                         Platform.runLater(new Runnable() {
                             @Override
@@ -134,19 +138,6 @@ public class ManagedDownload extends Thread {
                 break;
             }
             
-        }
-    }
-
-    public static String formatSpeed(long s) {
-        if (s > 0.1 * 1024 * 1024 * 1024) {
-            float f = s / 1024f / 1024f / 1024f;
-            return String.format("%.1f GB/s", f);
-        } else if (s > 0.1 * 1024 * 1024) {
-            float f = s / 1024f / 1024f;
-            return String.format("%.1f MB/s", f);
-        } else {
-            float f = s / 1024f;
-            return String.format("%.1f kb/s", f);
         }
     }
 
@@ -187,7 +178,7 @@ public class ManagedDownload extends Thread {
             user = VGet.parser(web);
 
             // download limited video quality from youtube
-            // user = new YouTubeQParser(YoutubeQuality.p480);
+            //user = new YouTubeQParser(YoutubeQuality.p480);
 
             // download mp4 format only, fail if non exist
             user = new YouTubeMPGParser();
@@ -211,15 +202,23 @@ public class ManagedDownload extends Thread {
                             }
                         });
             
-            
-            return dest+"/"+videoinfo.getTitle()+".mp4";
-        } catch (DownloadInterruptedError e) {
-            throw e;
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+                  return dest + "/" + videoinfo.getTitle() + ".mp4";
+        } 
+        catch (Exception e) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Vidéo introuvable.");
+                    alert.showAndWait();
+                    setdownloadStatus("Téléchargement annulé");
+                }
+            });
+
+            return "";
         }
     }
-    
+
 }

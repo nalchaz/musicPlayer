@@ -33,5 +33,18 @@ public class Utils {
                     elapsedSeconds);
         }
     }
+    
+    public static String formatSpeed(long s) {
+        if (s > 0.1 * 1024 * 1024 * 1024) {
+            float f = s / 1024f / 1024f / 1024f;
+            return String.format("%.1f GB/s", f);
+        } else if (s > 0.1 * 1024 * 1024) {
+            float f = s / 1024f / 1024f;
+            return String.format("%.1f MB/s", f);
+        } else {
+            float f = s / 1024f;
+            return String.format("%.1f kb/s", f);
+        }
+    }
 }
 

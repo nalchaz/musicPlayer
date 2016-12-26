@@ -86,7 +86,8 @@ public class YouTubeFXMLController implements Initializable {
                 cancel.setDisable(false);
                 download.setDisable(false);
                 downloadProgress.setVisible(false);
-                setpathDownload(managerDownload.getpathDownload());
+                if(managerDownload.getpathDownload()!=null && !managerDownload.getpathDownload().equals(""))
+                    setpathDownload(managerDownload.getpathDownload());
             }
         });
     }

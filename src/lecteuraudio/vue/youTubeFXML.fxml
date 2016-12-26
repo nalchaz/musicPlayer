@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.web.WebView?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lecteuraudio.controller.YouTubeFXMLController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@MediaPlayer.css" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lecteuraudio.controller.YouTubeFXMLController">
    <bottom>
       <GridPane BorderPane.alignment="CENTER">
          <BorderPane.margin>
@@ -29,7 +29,7 @@
          <children>
             <FlowPane alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
                <children>
-                  <Button fx:id="download" mnemonicParsing="false" onAction="#onDownload" text="Télécharger">
+                  <Button fx:id="download" id="youtube" mnemonicParsing="false" onAction="#onDownload" text="Télécharger">
                      <FlowPane.margin>
                         <Insets right="20.0" />
                      </FlowPane.margin>
