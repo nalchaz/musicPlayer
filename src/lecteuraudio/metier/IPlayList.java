@@ -7,6 +7,7 @@ package lecteuraudio.metier;
 
 import java.util.ArrayList;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -14,4 +15,7 @@ import javafx.beans.property.StringProperty;
  */
 public interface IPlayList extends INoeudMusique {
     public  ArrayList<PlayList> getListPlayList();
+    public boolean ajouter(NoeudMusique nm);
+    public ObservableList<NoeudMusique> getPlayList();
+    
 }

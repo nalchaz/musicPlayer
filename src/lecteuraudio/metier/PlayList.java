@@ -22,7 +22,7 @@ import javafx.collections.ObservableList;
  *
  * @author nahel
  */
-public class PlayList extends NoeudMusique implements IPlayList,Externalizable{
+public class PlayList extends NoeudMusique implements IPlayList{
 
     private  ListProperty<NoeudMusique> playlist= new SimpleListProperty<>(FXCollections.observableArrayList());
     public ObservableList<NoeudMusique> getPlayList() {return playlist.get(); }   

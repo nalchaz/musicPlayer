@@ -11,4 +11,5 @@ package lecteuraudio.metier;
  */
 public interface INoeudMusique {
         public String getTitre(); 
+        public void setTitre(String titre); 
 }

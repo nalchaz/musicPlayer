@@ -486,7 +486,7 @@ public class FXMLDocumentController implements Initializable {
         
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-            exit();
+            Platform.exit();
         }
 
     }

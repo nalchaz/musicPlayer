@@ -87,8 +87,57 @@ public class TextDataManager implements IDataManager {
         }
         return racine; 
     }
-    
-
+        //Essai de fonction pour gérer tous les niveaux d'imbrication, ne fonctionne pas encore
+        /*private void importerPlayLists (List<PlayList> liste, BufferedReader br){
+        int niveauImbrication=1, nbcourant, indiceCourant=0,nbPlayListsImbriques=0;   
+        String nomNoeudMusique, nomPlayList; 
+        char caracNum;         
+        try {           
+            while ((nomNoeudMusique = br.readLine()) != null) {
+                if (nomNoeudMusique.charAt(1) == ':'&& nomNoeudMusique.charAt(2) == 'p') { //Si le nom correspond à une playlist
+                    nomPlayList= nomNoeudMusique.substring(3, nomNoeudMusique.length()); 
+                    PlayList p=new PlayList (nomPlayList);
+                    caracNum=nomNoeudMusique.charAt(0);  
+                    nbcourant=Integer.parseInt(caracNum+ ""); 
+                    if (nbcourant==1){ 
+                        liste.get(0).ajouter(p); 
+                        indiceCourant++;
+                        niveauImbrication=1; 
+                    }
+                    else if (nbcourant==niveauImbrication){ //Si la playlist doit être imbriquée au même niveau que la précédente                               
+                        nbPlayListsImbriques++; 
+                        liste.get(indiceCourant-niveauImbrication-nbPlayListsImbriques).ajouter(p);
+                        liste.add(p);
+                        indiceCourant++;
+                    } 
+                    else if (nbcourant>niveauImbrication){ //Si la playlist doit être imbriquée dans la playlist courante
+                        liste.get(indiceCourant).ajouter(p); 
+                        niveauImbrication++;
+                        liste.add(p);
+                        indiceCourant++; 
+                    }
+                    else  { // Sinon il faut remonter dans la hiérarchie 
+                        for (nbcourant=nbcourant;nbcourant<=niveauImbrication;nbcourant++){                            
+                            niveauImbrication --; 
+                        }  
+                        liste.get(indiceCourant-niveauImbrication-nbPlayListsImbriques).ajouter(p);
+                        nbPlayListsImbriques++; 
+                        liste.add(p); 
+                        indiceCourant++; 
+                                                                    
+                         
+                    }
+                    
+                }
+                else {
+                    ajouterMusiqueAPlayList(liste.get(indiceCourant),nomNoeudMusique,liste.get(0)); 
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+*/
 
     private void ajouterMusiqueAPlayList(PlayList p, String nom, PlayList tout) {
         for (NoeudMusique m : tout.getPlayList()) {

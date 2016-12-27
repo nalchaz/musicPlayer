@@ -16,6 +16,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.media.Media;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
+import lecteuraudio.metier.IMusique;
 
 /**
  *
