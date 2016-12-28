@@ -5,8 +5,7 @@
  */
 package lecteuraudio.modele;
 
-import lecteuraudio.metier.PlayList;
-import lecteuraudio.metier.Musique;
+
 import java.io.File;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
@@ -17,6 +16,9 @@ import javafx.scene.media.Media;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import lecteuraudio.metier.IMusique;
+import lecteuraudio.metier.Musique;
+import lecteuraudio.metier.IPlayList;
+import lecteuraudio.persistanceBin.BinaryMusique;
 
 /**
  *
@@ -39,14 +41,14 @@ public class GestionnaireImport {
     }
     
  
-    public  void importerRepertoireMusiques (PlayList racine){ 
+    public  void importerRepertoireMusiques (IPlayList racine){ 
         for( File f : new File(repositoryPath).listFiles()){ 
            ajouterMusique(f,racine); 
         }
         
     }    
     
-    public  boolean chercherDisqueDur (PlayList racine, Window window) {
+    public  boolean chercherDisqueDur (IPlayList racine, Window window) {
         
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
@@ -83,9 +85,9 @@ public class GestionnaireImport {
 
     }
 
-    public boolean ajouterMusique(File f, PlayList racine) {
+    public boolean ajouterMusique(File f, IPlayList racine) {
         int taille = (int) f.getName().length() - 4;
-        Musique m = new Musique("Artiste inconnu", f.getName().substring(0, taille), ("file:///" + System.getProperty("user.dir").replace("\\", "/") + "/Musiques/" + f.getName().replaceAll(" ", "%20")));
+        IMusique m = new BinaryMusique("Artiste inconnu", f.getName().substring(0, taille), ("file:///" + System.getProperty("user.dir").replace("\\", "/") + "/Musiques/" + f.getName().replaceAll(" ", "%20")));
         Media media = new Media(m.getPath());
         media.getMetadata().addListener(new MapChangeListener<String, Object>() {
             @Override

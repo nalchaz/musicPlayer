@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import lecteuraudio.metier.IPlayList;
 import lecteuraudio.metier.PlayList;
 import lecteuraudio.modele.IDataManager;
 
@@ -24,16 +25,16 @@ public class BinaryDataManager implements IDataManager{
     // TOUTES LES PLAYLISTS VONT DEVENIR DES IPLAYLISTS
     
     @Override
-    public void charger(PlayList racine) {
+    public void charger(IPlayList racine) {
         if (!new File(repositoryPlayLists).exists()) {
             new File(repositoryPlayLists).mkdir();
         } 
         for (File f : new File(repositoryPlayLists).listFiles()) {
             String nom = f.getName();
-            if (nom.equals("ToutesLesPlaylists.bin")) {
+            if (nom.equals("ToutesLesPlaylistsSer.bin")) {
                
                 try (ObjectInputStream reader = new ObjectInputStream(new FileInputStream(f))) {
-                    for (PlayList p : ((PlayList)reader.readObject()).getListPlayList()) {
+                    for (IPlayList p : ((BinaryPlayList)reader.readObject()).getListPlayList()) {
                         racine.ajouter(p); 
                     } 
                 } catch (Exception e) {
@@ -47,11 +48,12 @@ public class BinaryDataManager implements IDataManager{
   
 
     @Override
-    public void sauver(PlayList racine) {
+    public void sauver(IPlayList racine) {
         for (File f : new File(repositoryPlayLists).listFiles()){ 
-            f.delete(); 
+                if (f.getName().equals("ToutesLesPlaylistsSer.bin"))
+                    f.delete(); 
         }
-        File fbin=new File (repositoryPlayLists+"/ToutesLesPlaylists.bin"); 
+        File fbin=new File (repositoryPlayLists+"/ToutesLesPlaylistsSer.bin"); 
         try (ObjectOutputStream writer=new ObjectOutputStream( new FileOutputStream(fbin))){
             writer.writeObject(racine);
         }

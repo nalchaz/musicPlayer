@@ -12,6 +12,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import lecteuraudio.metier.IPlayList;
 import lecteuraudio.modele.IDataManager;
 import lecteuraudio.metier.Musique;
 import lecteuraudio.metier.NoeudMusique;
@@ -26,7 +27,7 @@ public class TextDataManager implements IDataManager {
     
     
     @Override
-    public void charger(PlayList racine) {
+    public void charger(IPlayList racine) {
         if (!new File(repositoryPlayLists).exists()) 
             new File(repositoryPlayLists).mkdir(); 
         for (File f : new File(repositoryPlayLists).listFiles()) {
@@ -44,7 +45,7 @@ public class TextDataManager implements IDataManager {
     }
 
     
-    private PlayList importerPlayLists(PlayList courante, BufferedReader br, PlayList pere,PlayList grandPere, PlayList racine) {//Marche pour 3 imbrications, à revoir
+    private IPlayList importerPlayLists(IPlayList courante, BufferedReader br, IPlayList pere,IPlayList grandPere, IPlayList racine) {//Marche pour 3 imbrications, à revoir
         String nomNoeudMusique;
         String nomPlayList;
         int nbcourant,nbpere=1;
@@ -53,7 +54,7 @@ public class TextDataManager implements IDataManager {
             while ((nomNoeudMusique = br.readLine()) != null) {
                 if (nomNoeudMusique.charAt(1) == ':'&& nomNoeudMusique.charAt(2) == 'p') { //Si le nom correspond à une playlist
                     nomPlayList= nomNoeudMusique.substring(3, nomNoeudMusique.length()); 
-                    PlayList p=new PlayList (nomPlayList);
+                    IPlayList p=new PlayList (nomPlayList);
                     caracNum=nomNoeudMusique.charAt(0);  
                     nbcourant=Integer.parseInt(caracNum+ ""); 
                     if (nbcourant==nbpere){ //Si la playlist doit être imbriquée au même niveau que la précédente                               
@@ -139,7 +140,7 @@ public class TextDataManager implements IDataManager {
     }
 */
 
-    private void ajouterMusiqueAPlayList(PlayList p, String nom, PlayList tout) {
+    private void ajouterMusiqueAPlayList(IPlayList p, String nom, IPlayList tout) {
         for (NoeudMusique m : tout.getPlayList()) {
             if (m.getTitre().equals(nom)) {
                 p.ajouter(m);
@@ -149,13 +150,14 @@ public class TextDataManager implements IDataManager {
     
     
     @Override
-    public void sauver(PlayList racine) {
+    public void sauver(IPlayList racine) {
         for (File f : new File(repositoryPlayLists).listFiles()){ 
-            f.delete(); 
+                if (f.getName().equals("ToutesLesPlaylists.txt"))
+                    f.delete(); 
         }
             File f = new File(repositoryPlayLists+"/TouteslesPlayLists.txt");
             try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(f)))){
-                for (PlayList p : racine.getListPlayList()){ 
+                for (IPlayList p : racine.getListPlayList()){ 
                     ajouterPlayListaFichier(p,pw,1); 
                 }
             } 
@@ -165,7 +167,7 @@ public class TextDataManager implements IDataManager {
         
     }
 
-    public void ajouterPlayListaFichier(PlayList p,PrintWriter pw, int nb) {
+    public void ajouterPlayListaFichier(IPlayList p,PrintWriter pw, int nb) {
         System.out.println(nb);
         pw.println(nb+":p"+p.getTitre()); 
         for (NoeudMusique nm : p.getPlayList()){

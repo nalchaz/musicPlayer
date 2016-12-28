@@ -1,9 +1,9 @@
 package lecteuraudio.modele;
 
-import lecteuraudio.metier.NoeudMusique;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeView;
 import javafx.util.Callback;
+import lecteuraudio.metier.NoeudMusique;
 
 /**
  *

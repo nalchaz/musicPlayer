@@ -24,13 +24,13 @@ public class PlayListMusiques extends PlayList{
                 return false;
             }
         }
-        if(m instanceof Musique){
+        if(m instanceof IMusique){
             super.getPlayList().add(m);
         }
         return true;
     }
     
-    public PlayListMusiques(PlayList playlist){
+    public PlayListMusiques(IPlayList playlist){
         for(NoeudMusique nm : playlist.getPlayList()){
             this.ajouter(nm);
         }

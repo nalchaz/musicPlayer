@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.Serializable;
+import javafx.beans.property.StringProperty;
 import lecteuraudio.metier.IMusique;
 import lecteuraudio.metier.Musique;
 
@@ -17,8 +18,17 @@ import lecteuraudio.metier.Musique;
  *
  * @author alexd
  */
-public class BinaryMusique implements IMusique, Externalizable{
-    private Musique musique; 
+public class BinaryMusique extends IMusique implements  Externalizable{
+    private Musique musique = new Musique(); 
+    
+    public BinaryMusique(){}
+    
+    public BinaryMusique (String auteur, String titre, String path){ 
+        musique.setAuteur(auteur); 
+        musique.setTitre(titre);
+        musique.setPath(path); 
+    }  
+    
     @Override
     public String getAuteur() {
         return musique.getAuteur(); 
@@ -47,6 +57,16 @@ public class BinaryMusique implements IMusique, Externalizable{
     @Override
     public String getTitre() {
         return musique.getTitre(); 
+    }
+    
+    @Override
+    public StringProperty titreProperty(){
+        return musique.titreProperty();
+    }
+    
+    @Override
+    public StringProperty auteurProperty(){
+        return musique.auteurProperty(); 
     }
 
     @Override

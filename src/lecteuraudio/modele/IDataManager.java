@@ -7,12 +7,13 @@ package lecteuraudio.modele;
 
 import lecteuraudio.metier.PlayList;
 import java.io.File;
+import lecteuraudio.metier.IPlayList;
 
 /**
  *
  * @author alexd
  */
 public interface IDataManager {
-    public void charger(PlayList racine); 
-    public void sauver (PlayList racine); 
+    public void charger(IPlayList racine); 
+    public void sauver (IPlayList racine); 
 }

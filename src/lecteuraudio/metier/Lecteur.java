@@ -16,7 +16,7 @@ public class Lecteur {
         
     private MediaPlayer mediaPlayer;
     private int index;
-    private PlayList playList;
+    private IPlayList playList;
     private NoeudMusique musiqueCourante;
     
     
@@ -34,14 +34,14 @@ public class Lecteur {
     }
     
     public void play(NoeudMusique musique){
-        if(musique instanceof Musique){
-            Musique m=(Musique)musique;
+        if(musique instanceof IMusique){
+            IMusique m=(IMusique)musique;
             Media media=new Media(m.getPath());
             mediaPlayer=new MediaPlayer(media);
             mediaPlayer.play();
         }
         else{
-            playList=(PlayList)musique;
+            playList=(IPlayList)musique;
             index=0;
             play();
         }
@@ -67,7 +67,7 @@ public class Lecteur {
         this.musiqueCourante=musique; 
     }
     
-    public void setPlaylist(PlayList p){ 
+    public void setPlaylist(IPlayList p){ 
         this.playList=p; 
     }
   

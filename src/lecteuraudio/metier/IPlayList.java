@@ -6,16 +6,19 @@
 package lecteuraudio.metier;
 
 import java.util.ArrayList;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.ListProperty;
 import javafx.collections.ObservableList;
 
 /**
  *
  * @author alexd
  */
-public interface IPlayList extends INoeudMusique {
-    public  ArrayList<PlayList> getListPlayList();
-    public boolean ajouter(NoeudMusique nm);
-    public ObservableList<NoeudMusique> getPlayList();
+public abstract class IPlayList extends NoeudMusique {
+    public  abstract ArrayList<IPlayList> getListPlayList();
+    public abstract boolean ajouter(NoeudMusique nm);
+    public abstract ObservableList<NoeudMusique> getPlayList();
+    public abstract boolean isEmpty(); 
+    public abstract void supprimer(NoeudMusique m);     
+    public abstract ListProperty<NoeudMusique> playlistProperty();
     
 }

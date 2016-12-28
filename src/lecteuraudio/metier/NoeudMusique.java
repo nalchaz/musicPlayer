@@ -14,12 +14,18 @@ import javafx.beans.property.StringProperty;
  *
  * @author nahel
  */
-public abstract class NoeudMusique implements INoeudMusique,Externalizable{
+public abstract class NoeudMusique implements INoeudMusique{
 
     protected StringProperty titreProperty=new SimpleStringProperty();
+    @Override
     public StringProperty titreProperty(){return titreProperty; }
+    @Override
     public String getTitre() {return titreProperty.get();}
+    @Override
     public void setTitre(String titre) {this.titreProperty.set(titre); }
-
+    @Override 
+    public String toString (){ 
+        return getTitre(); 
+    }
     
 }

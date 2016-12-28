@@ -34,16 +34,16 @@ public class Manager {
         datamanager=m ;
     }
     
-    public void charger(PlayList racine ){ 
+    public void charger(IPlayList racine ){ 
         datamanager.charger(racine);
     }
     
-    public void sauver (PlayList racine){ 
+    public void sauver (IPlayList racine){ 
         datamanager.sauver(racine);
     }
     
     
-    public void ouverture (PlayList racine){ 
+    public void ouverture (IPlayList racine){ 
         gesImp.ouverture();
         gesImp.importerRepertoireMusiques(racine);    
     }
@@ -52,11 +52,11 @@ public class Manager {
     *chercherDisqueDur :
     return true si une musique est ajouté, false si rien n'est ajouté
     */
-    public boolean chercherDisqueDur(Window window,PlayList racine){
+    public boolean chercherDisqueDur(Window window,IPlayList racine){
         return gesImp.chercherDisqueDur(racine, window);
     }
     
-    public void ajouterMusique(File f, PlayList racine) {
+    public void ajouterMusique(File f, IPlayList racine) {
         gesImp.ajouterMusique(f, racine);
     }
     

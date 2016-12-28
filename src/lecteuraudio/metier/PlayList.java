@@ -6,13 +6,7 @@
 package lecteuraudio.metier;
 
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
@@ -22,7 +16,7 @@ import javafx.collections.ObservableList;
  *
  * @author nahel
  */
-public class PlayList extends NoeudMusique implements IPlayList{
+public class PlayList extends IPlayList{
 
     private  ListProperty<NoeudMusique> playlist= new SimpleListProperty<>(FXCollections.observableArrayList());
     public ObservableList<NoeudMusique> getPlayList() {return playlist.get(); }   
@@ -53,7 +47,7 @@ public class PlayList extends NoeudMusique implements IPlayList{
         playlist.remove(m);      
     }
     
-    
+    @Override
     public boolean isEmpty(){
         return playlist.isEmpty();
     }
@@ -71,37 +65,23 @@ public class PlayList extends NoeudMusique implements IPlayList{
         recherche=recherche.toLowerCase();
         PlayList playListRech=new PlayList("Recherche");
         for(NoeudMusique m : playlist){
-            if(m.titreProperty().get().toLowerCase().contains(recherche)) //To mis un lowercase pour une recherche plus efficace
+            if(m.getTitre().toLowerCase().contains(recherche)) //To mis un lowercase pour une recherche plus efficace
                 playListRech.ajouter(m);
         }
         return playListRech;
     }
     
 
-    public ArrayList<PlayList> getListPlayList(){
-        ArrayList<PlayList> list=new ArrayList();
+    public ArrayList<IPlayList> getListPlayList(){
+        ArrayList<IPlayList> list=new ArrayList();
         for(NoeudMusique m : playlist){
-            if(m instanceof PlayList){
-                list.add((PlayList)m);
+            if(m instanceof IPlayList){
+                list.add((IPlayList)m);
             }
         }
         return list;
     }
 
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        List<NoeudMusique> liste= new ArrayList<>(getPlayList()); 
-        out.writeObject(getTitre());
-        out.writeObject(liste);
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        setTitre((String)in.readObject()); 
-        List<NoeudMusique> liste=(ArrayList)in.readObject(); 
-        for (NoeudMusique nm : liste){
-            ajouter(nm); 
-        }
-    }
+    
     
 }

@@ -37,8 +37,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.util.Duration;
-import lecteuraudio.metier.Musique;
-import lecteuraudio.metier.PlayList;
+import lecteuraudio.metier.IMusique;
+import lecteuraudio.metier.IPlayList;
 import lecteuraudio.modele.Utils;
 import java.awt.Desktop;
 import java.nio.file.Files;
@@ -58,9 +58,12 @@ import javafx.stage.Stage;
 import lecteuraudio.metier.Lecteur;
 import lecteuraudio.metier.Manager;
 import lecteuraudio.metier.NoeudMusique;
+import lecteuraudio.metier.PlayList;
 import lecteuraudio.metier.PlayListMusiques;
 import lecteuraudio.modele.ManagedDownload;
 import lecteuraudio.persistanceBin.BinaryDataManager;
+import lecteuraudio.persistanceBin.BinaryMusique;
+import lecteuraudio.persistanceBin.BinaryPlayList;
 import lecteuraudio.persistancetexte.TextDataManager;
 
 /**
@@ -121,7 +124,7 @@ public class FXMLDocumentController implements Initializable {
     
     
     @FXML
-    private PlayList racine;
+    private BinaryPlayList racine;
     @FXML
     private TreeItem<NoeudMusique> rootItem;
     @FXML
@@ -132,7 +135,7 @@ public class FXMLDocumentController implements Initializable {
    
     private ArrayList<NoeudMusique> pressePapier; //Utilisé pour le copié collé
     
-    private PlayList listecourante;
+    private IPlayList listecourante;
     private PlayListMusiques listemusiques; //Liste de musiques seulement
     
     private Manager manager;
@@ -146,6 +149,9 @@ public class FXMLDocumentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         manager = new Manager(); 
         manager.setDataManager(new BinaryDataManager()); 
+        /* Pour passer en texte :
+        Passer à Musique dans GestionnaireImport, PlayList dans "creerPlayListDepuisView" et racine en PlayList dans FXML et Controller 
+        */
         //Importation des musiques 
         manager.ouverture(racine); 
         //Importation des playlists
@@ -165,8 +171,7 @@ public class FXMLDocumentController implements Initializable {
         
         //Initialisation des listes
         listecourante=racine;
-        listemusiques=new PlayListMusiques(listecourante);
-        
+        listemusiques=new PlayListMusiques(listecourante);        
         listMusique.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
     
@@ -196,9 +201,9 @@ public class FXMLDocumentController implements Initializable {
     {
         //récupération de l'élément de la structure composite correspondant
         NoeudMusique noeud = getSelectedItemInTreeView((TreeItem<NoeudMusique>)newValue);
-        //Affichage des musiques de la PlayList dans la zone centrale
-        if(noeud instanceof PlayList){
-            listMusique.itemsProperty().bind(new PlayListMusiques((PlayList)noeud).playlistProperty());
+        //Affichage des musiques de la IPlayList dans la zone centrale
+        if(noeud instanceof IPlayList){
+            listMusique.itemsProperty().bind(new PlayListMusiques((IPlayList)noeud).playlistProperty());
         }
     }
     
@@ -225,8 +230,8 @@ public class FXMLDocumentController implements Initializable {
         item.getChildren().clear();
 
         //ajoute des TreeItems pour chaque noeud du composite
-        if (noeud instanceof PlayList) {
-            for (NoeudMusique nm : ((PlayList) noeud).getPlayList()) {
+        if (noeud instanceof IPlayList) {
+            for (NoeudMusique nm : ((IPlayList) noeud).getPlayList()) {
                 TreeItem<NoeudMusique> noeudItem = new TreeItem<>(nm);
                 item.getChildren().add(noeudItem);
                 updateTreeView(noeudItem, nm);
@@ -250,8 +255,8 @@ public class FXMLDocumentController implements Initializable {
     private void bindings() {
         //Binding sur le titre da la musique courante (musiqueView)
         titreMusique.textProperty().bind(manager.getNoeudCourant().titreProperty());
-        if(manager.getNoeudCourant() instanceof Musique){
-            Musique m=(Musique)manager.getNoeudCourant();
+        if(manager.getNoeudCourant() instanceof IMusique){
+            IMusique m=(IMusique)manager.getNoeudCourant();
             auteur.textProperty().bind(m.auteurProperty());
         }
         else{
@@ -326,11 +331,11 @@ public class FXMLDocumentController implements Initializable {
             nm = treeView.getSelectionModel().getSelectedItem().getValue();
 
         if (nm != null) {
-            if (nm instanceof Musique) {
+            if (nm instanceof IMusique) {
                 if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {  //double clic gauche
                     //Met la musique séléctionné dans musiqueView puis la joue
-                    manager.setNoeudCourant((Musique) nm);
-                    lec.setPlaylist((PlayList)treeView.getSelectionModel().getSelectedItem().getParent().getValue());
+                    manager.setNoeudCourant((IMusique) nm);
+                    lec.setPlaylist((IPlayList)treeView.getSelectionModel().getSelectedItem().getParent().getValue());
                     lec.setMusiqueCourante(manager.getNoeudCourant());
                     lec.pause();
                     if ("play".equals(play.getId())) {
@@ -346,7 +351,7 @@ public class FXMLDocumentController implements Initializable {
                     //Changement de node sur la zone centrale à implémenter
                 }
             } else {
-                listecourante=(PlayList) nm;
+                listecourante=(IPlayList) nm;
                 listemusiques=new PlayListMusiques(listecourante);
             }
         }
@@ -357,7 +362,7 @@ public class FXMLDocumentController implements Initializable {
 
         if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {  //double clic gauche
             //Met la musique séléctionné dans musiqueView puis la joue
-            manager.setNoeudCourant((Musique)listMusique.getSelectionModel().getSelectedItem());
+            manager.setNoeudCourant((IMusique)listMusique.getSelectionModel().getSelectedItem());
             lec.setPlaylist(listecourante);
             lec.setMusiqueCourante(manager.getNoeudCourant());
             lec.pause();
@@ -436,15 +441,15 @@ public class FXMLDocumentController implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
             TreeItem<NoeudMusique> item=treeView.getSelectionModel().getSelectedItem();
-            ((PlayList)item.getParent().getValue()).supprimer(item.getValue()); 
+            ((IPlayList)item.getParent().getValue()).supprimer(item.getValue()); 
             
             updateLayoutTreeView(item.getParent(), item.getParent().getValue());
         }
     }
 
-    //creerPlayListDepuisView : validation apres la saisie d'une playlist, la rajoute dans la liste des playlist, affiche une fenetre d'erreur si le titre de la playlist existe deja
+    //creerIPlayListDepuisView : validation apres la saisie d'une playlist, la rajoute dans la liste des playlist, affiche une fenetre d'erreur si le titre de la playlist existe deja
     private void creerPlaylistDepuisView() {
-        PlayList p = new PlayList(nomPlayListAjout.getText());
+        IPlayList p = new BinaryPlayList(nomPlayListAjout.getText());
         if (!racine.ajouter(p)) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Erreur");
@@ -505,13 +510,13 @@ public class FXMLDocumentController implements Initializable {
         
         if (pressePapier != null) {
             TreeItem<NoeudMusique> playlist=treeView.getSelectionModel().getSelectedItem();
-            if(playlist.getValue() instanceof Musique){
+            if(playlist.getValue() instanceof IMusique){
                 alert.setContentText("Veuillez sélectionner la playlist dans laquelle coller dans le menu à gauche.");
                 alert.showAndWait();
                 return;
             }
             for (NoeudMusique nm : pressePapier) {
-                if (!((PlayList)playlist.getValue()).ajouter(nm)) {
+                if (!((IPlayList)playlist.getValue()).ajouter(nm)) {
                     alert.setContentText("Vous ne pouvez pas ajouter deux fois la même musique dans une playlist.\n"+nm.getTitre()+" existe déja.");
                     alert.showAndWait();
                 }
@@ -531,10 +536,10 @@ public class FXMLDocumentController implements Initializable {
     }
     
 /*
-    //private static final DataFormat musiqueDataFormat = new DataFormat("lecteuraudio.modele.Musique");
+    //private static final DataFormat musiqueDataFormat = new DataFormat("lecteuraudio.modele.IMusique");
     @FXML
     private void onDragDetected(MouseEvent event) {
-        Musique dragged = (Musique) listMusique.getSelectionModel().getSelectedItem();
+        IMusique dragged = (IMusique) listMusique.getSelectionModel().getSelectedItem();
         Dragboard dragBoard = listMusique.startDragAndDrop(TransferMode.COPY);
         dragBoard.setDragView(new Text(dragged.toString()).snapshot(null, null), event.getX() / 100, event.getY() / 100);
         ClipboardContent content = new ClipboardContent();
@@ -545,17 +550,17 @@ public class FXMLDocumentController implements Initializable {
         event.consume();
     }
 
-    private void onDragOverListPlayList(DragEvent event) {
+    private void onDragOverListIPlayList(DragEvent event) {
         Dragboard db = event.getDragboard();
         event.acceptTransferModes(TransferMode.COPY);
         event.consume();
     }
 
-    private void onDragDroppedListPlayList(DragEvent event) {
+    private void onDragDroppedListIPlayList(DragEvent event) {
         Dragboard db = event.getDragboard();
 
-        //Musique m=(Musique)db.getContent(musiqueDataFormat);
-        //PlayList tmp=(PlayList)event.getGestureTarget();
+        //IMusique m=(IMusique)db.getContent(musiqueDataFormat);
+        //IPlayList tmp=(IPlayList)event.getGestureTarget();
         event.setDropCompleted(true);
         event.consume();
     }

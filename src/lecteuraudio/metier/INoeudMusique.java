@@ -5,11 +5,14 @@
  */
 package lecteuraudio.metier;
 
+import javafx.beans.property.StringProperty;
+
 /**
  *
  * @author alexd
  */
 public interface INoeudMusique {
         public String getTitre(); 
-        public void setTitre(String titre); 
+        public void setTitre(String titre);
+        public StringProperty titreProperty();
 }

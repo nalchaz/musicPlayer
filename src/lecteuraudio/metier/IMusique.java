@@ -5,13 +5,16 @@
  */
 package lecteuraudio.metier;
 
+import javafx.beans.property.StringProperty;
+
 /**
  *
  * @author alexd
  */
-public interface IMusique extends INoeudMusique{
-    public String getAuteur();
-    public String getPath(); 
-    public void setPath(String path);
-    public void setAuteur(String auteur); 
+public abstract class IMusique extends NoeudMusique {
+    public abstract String getAuteur();
+    public abstract String getPath(); 
+    public abstract void setPath(String path);
+    public abstract void setAuteur(String auteur); 
+    public abstract StringProperty auteurProperty();
 }
