@@ -105,6 +105,7 @@ public class YouTubeFXMLController implements Initializable {
     private void onCancel(ActionEvent event) {
         Stage stage = (Stage) cancel.getScene().getWindow();
         stage.close();
+        
     }
     
 }

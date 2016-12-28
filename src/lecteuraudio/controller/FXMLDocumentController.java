@@ -61,6 +61,7 @@ import lecteuraudio.metier.NoeudMusique;
 import lecteuraudio.metier.PlayList;
 import lecteuraudio.metier.PlayListMusiques;
 import lecteuraudio.modele.ManagedDownload;
+import lecteuraudio.modele.VideoToAudio;
 import lecteuraudio.persistanceBin.BinaryDataManager;
 import lecteuraudio.persistanceBin.BinaryMusique;
 import lecteuraudio.persistanceBin.BinaryPlayList;
@@ -164,14 +165,16 @@ public class FXMLDocumentController implements Initializable {
             treeView.getSelectionModel().selectedItemProperty());
         selectedNoeudProperty().bind(ob);
 
+
+        //Initialisation des listes
+        listecourante=racine;
+        listemusiques=new PlayListMusiques(listecourante); 
+        
         //resélectionne le premier item pour mettre a jour l'affichage
         treeView.getSelectionModel().select(null);
         treeView.getSelectionModel().selectFirst();
         updateTreeView(rootItem, racine);
         
-        //Initialisation des listes
-        listecourante=racine;
-        listemusiques=new PlayListMusiques(listecourante);        
         listMusique.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
     
@@ -294,7 +297,7 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void importPressed(ActionEvent event) {
-        if(!manager.chercherDisqueDur(borderPane.getScene().getWindow(), racine)){    
+        if(manager.chercherDisqueDur(borderPane.getScene().getWindow(), racine)){    
             updateLayoutTreeView(rootItem, racine);
         }
         
@@ -591,30 +594,29 @@ public class FXMLDocumentController implements Initializable {
                     Object newVal) {
                 String pathdownload=youTubeController.getpathDownload();
                 File f=new File(pathdownload);
-                if(!f.exists()){
-                    String debutpath=pathdownload.substring(0, pathdownload.length()-4);
+                String debutpath=pathdownload.substring(0, pathdownload.length()-4);
+                if(!f.exists()){      
                     try{
                         Files.deleteIfExists(new File(debutpath+".video.mp4").toPath());
                         Files.copy(new File(debutpath+".audio.mp4").toPath(),new File(debutpath+".mp4").toPath());
                         Files.delete(new File(debutpath+".audio.mp4").toPath());
-                        pathdownload=debutpath+".mp4";
+                        
+                        
+
+                        pathdownload=debutpath+".mp3";
                     }
                     catch(Exception e){
                         System.err.println(e.getMessage());
                     }
                 }
+                //Convertit le mp4 en mp3
+                VideoToAudio vta = new VideoToAudio();
+                vta.convertVideoToAudio(debutpath + ".mp4", debutpath + ".mp3");
+     
                 manager.ajouterMusique(new File(pathdownload), racine);
                 updateLayoutTreeView(rootItem, racine);
             }
         });
-        
-        /*
-        try {
-            Desktop.getDesktop().browse(new URL("http://youtube.fr").toURI());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        */
     }
     
     @FXML

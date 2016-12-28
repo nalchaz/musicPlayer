@@ -211,13 +211,16 @@ public class ManagedDownload extends Thread {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Erreur");
                     alert.setHeaderText(null);
-                    alert.setContentText("Vidéo introuvable.");
+                    alert.setContentText("Vidéo introuvable, la page n'est pas un lien d'une vidéo YouTube, ou la vidéo est protégé.");
                     alert.showAndWait();
                     setdownloadStatus("Téléchargement annulé");
                 }
             });
-
-            return "";
+            
+            if(getpathDownload()==null){
+                return "";
+            }
+            return null;
         }
     }
 
