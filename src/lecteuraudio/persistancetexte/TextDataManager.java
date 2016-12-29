@@ -45,7 +45,7 @@ public class TextDataManager implements IDataManager {
     }
 
     
-    private IPlayList importerPlayLists(IPlayList courante, BufferedReader br, IPlayList pere,IPlayList grandPere, IPlayList racine) {//Marche pour 3 imbrications, à revoir
+    private void importerPlayLists(IPlayList courante, BufferedReader br, IPlayList pere,IPlayList grandPere, IPlayList racine) {//Marche pour 3 imbrications, à revoir
         String nomNoeudMusique;
         String nomPlayList;
         int nbcourant,nbpere=1;
@@ -86,7 +86,7 @@ public class TextDataManager implements IDataManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return racine; 
+
     }
         //Essai de fonction pour gérer tous les niveaux d'imbrication, ne fonctionne pas encore
         /*private void importerPlayLists (List<PlayList> liste, BufferedReader br){
@@ -168,7 +168,6 @@ public class TextDataManager implements IDataManager {
     }
 
     public void ajouterPlayListaFichier(IPlayList p,PrintWriter pw, int nb) {
-        System.out.println(nb);
         pw.println(nb+":p"+p.getTitre()); 
         for (NoeudMusique nm : p.getPlayList()){
             if (nm instanceof Musique){

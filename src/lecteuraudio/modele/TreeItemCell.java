@@ -1,7 +1,5 @@
 package lecteuraudio.modele;
 
-
-import lecteuraudio.metier.NoeudMusique;
 import javafx.scene.control.TreeCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
