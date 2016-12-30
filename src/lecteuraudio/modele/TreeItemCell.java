@@ -21,7 +21,7 @@ public class TreeItemCell extends TreeCell<NoeudMusique> {
         super.updateItem(item, empty);
         if(empty)
         {
-            //setText(null);
+            setText(null);
             setGraphic(null);
             textProperty().unbind();
         }

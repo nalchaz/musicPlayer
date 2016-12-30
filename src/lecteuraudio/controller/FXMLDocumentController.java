@@ -131,7 +131,7 @@ public class FXMLDocumentController implements Initializable {
     private TreeView<NoeudMusique> treeView;
    
     //Fenetre YouTube
-    Stage youTubeStage;
+    private Stage youTubeStage;
    
     private ArrayList<NoeudMusique> pressePapier; //Utilisé pour le copié collé
     

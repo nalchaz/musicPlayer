@@ -62,7 +62,10 @@
                </contextMenu>
             </TreeView>
             <ListView fx:id="listMusique" items="${listemusiques.playlist}" onDragDetected="#onDragDetected" onMouseClicked="#onMusiqueChoisie" style="-fx-border-width: 1;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
-               <contextMenu>
+               <cellFactory>
+                    <ListMusiqueCellFactory />
+                </cellFactory>
+                <contextMenu>
                   <ContextMenu>
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#onCopier" text="Copier" />

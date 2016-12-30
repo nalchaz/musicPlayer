@@ -93,7 +93,9 @@ public class GestionnaireImport {
             @Override
             public void onChanged(MapChangeListener.Change<? extends String, ? extends Object> ch) {
                 if (ch.wasAdded()) {
-                    m.setAuteur((String) media.getMetadata().get("artist"));
+                    String artist=(String)media.getMetadata().get("artist");
+                    if(artist!=null)
+                        m.setAuteur(artist);
                 }
             }
         });
