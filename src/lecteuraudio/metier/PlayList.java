@@ -31,6 +31,7 @@ public class PlayList extends IPlayList{
     }
     
     // Return true si la musique a été ajouté, false si la musique y était déja
+    @Override
     public boolean ajouter(NoeudMusique m) {
 
         for (NoeudMusique nm : playlist) {
@@ -42,7 +43,8 @@ public class PlayList extends IPlayList{
                 playlist.add(m);
         return true; 
     }
-
+    
+    @Override
     public void supprimer(NoeudMusique m){
         playlist.remove(m);      
     }
@@ -71,7 +73,7 @@ public class PlayList extends IPlayList{
         return playListRech;
     }
     
-
+    @Override
     public ArrayList<IPlayList> getListPlayList(){
         ArrayList<IPlayList> list=new ArrayList();
         for(NoeudMusique m : playlist){

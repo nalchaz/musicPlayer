@@ -26,8 +26,8 @@ public class Manager {
     public NoeudMusique getNoeudCourant() { return (NoeudMusique) noeudCourant.get();}
     public void setNoeudCourant(NoeudMusique noeud) { this.noeudCourant.set(noeud);}
     
-    private IPlayList racineI=new BinaryPlayList("Racine"); 
-    private ObjectProperty<IPlayList> racine=new SimpleObjectProperty<>(racineI);
+
+    private ObjectProperty<IPlayList> racine=new SimpleObjectProperty<>(new BinaryPlayList("Racine"));
     public ObjectProperty<IPlayList> racineProperty (){  return racine;   }
     public IPlayList getRacine (){return racine.get(); }
         

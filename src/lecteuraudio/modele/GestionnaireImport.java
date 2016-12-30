@@ -29,14 +29,14 @@ public class GestionnaireImport {
     private String repositoryPath=System.getProperty("user.dir")+"/Musiques";
     
     public String getRepositoryPath (){
-    return repositoryPath;
+        return repositoryPath;
     }
     
      
    
     public void ouverture() {
-        if (!new File(System.getProperty("user.dir") + "/Musiques" + "/").exists()) {
-            new File(System.getProperty("user.dir") + "/Musiques" + "/").mkdir();
+        if (!new File(repositoryPath+ "/").exists()) {
+            new File(repositoryPath + "/").mkdir();
         }
     }
     
