@@ -24,7 +24,7 @@ public class LecteurAudio extends Application {
     
     private void charger (){ 
         manager=new Manager(); 
-        // Pour passer en texte : TextDataManager ici, Musique dans GestionnaireImport, PlayList dans "creerPlayListDepuisView dans controller
+        // A améliorer, le passage en texte doit seulement dépandre de la classe du datamanager. Pour passer en texte : TextDataManager ici, Musique dans GestionnaireImport, PlayList dans "creerPlayListDepuisView dans controller
         manager.setDataManager(new BinaryDataManager());
         manager.charger();
     }

@@ -254,9 +254,6 @@ public class FXMLDocumentController implements Initializable {
             IMusique m=(IMusique)getManager().getNoeudCourant();
             auteur.textProperty().bind(m.auteurProperty());
         }
-        else{
-            auteur.textProperty().set("");
-        }
         //Binding du Slider sur le volume du Lecteur
         volumeSlider.valueProperty().addListener(new InvalidationListener() {
             public void invalidated(Observable ov) {
