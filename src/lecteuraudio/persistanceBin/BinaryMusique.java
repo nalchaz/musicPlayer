@@ -19,14 +19,12 @@ import lecteuraudio.metier.Musique;
  * @author alexd
  */
 public class BinaryMusique extends IMusique implements  Externalizable{
-    private Musique musique = new Musique(); 
+    private IMusique musique= new Musique(); 
     
     public BinaryMusique(){}
     
-    public BinaryMusique (String auteur, String titre, String path){ 
-        musique.setAuteur(auteur); 
-        musique.setTitre(titre);
-        musique.setPath(path); 
+    public BinaryMusique (IMusique model){ 
+        musique=model; 
     }  
     
     @Override

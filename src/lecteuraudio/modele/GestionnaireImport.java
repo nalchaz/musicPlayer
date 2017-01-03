@@ -53,8 +53,8 @@ public class GestionnaireImport {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
         fileChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter("All files", "*.*"),
             new FileChooser.ExtensionFilter("Music files", "*.mp3", "*.wav", "*.mp4"), 
+            new FileChooser.ExtensionFilter("All files", "*.*"),       
             new FileChooser.ExtensionFilter("MP3", "*.mp3"),
             new FileChooser.ExtensionFilter("WAV", "*.wav"),
             new FileChooser.ExtensionFilter("MP4", "*.mp4")
@@ -87,7 +87,7 @@ public class GestionnaireImport {
 
     public boolean ajouterMusique(File f, IPlayList racine) {
         int taille = (int) f.getName().length() - 4;
-        IMusique m = new BinaryMusique("Artiste inconnu", f.getName().substring(0, taille), ("file:///" + System.getProperty("user.dir").replace("\\", "/") + "/Musiques/" + f.getName().replaceAll(" ", "%20")));
+        IMusique m = new BinaryMusique(new Musique("Artiste inconnu", f.getName().substring(0, taille), ("file:///" + System.getProperty("user.dir").replace("\\", "/") + "/Musiques/" + f.getName().replaceAll(" ", "%20"))));
         Media media = new Media(m.getPath());
         media.getMetadata().addListener(new MapChangeListener<String, Object>() {
             @Override

@@ -27,7 +27,7 @@ public class Manager {
     public void setNoeudCourant(NoeudMusique noeud) { this.noeudCourant.set(noeud);}
     
 
-    private ObjectProperty<IPlayList> racine=new SimpleObjectProperty<>(new BinaryPlayList("Racine"));
+    private ObjectProperty<IPlayList> racine=new SimpleObjectProperty<>(new BinaryPlayList(new PlayList("Racine")));
     public ObjectProperty<IPlayList> racineProperty (){  return racine;   }
     public IPlayList getRacine (){return racine.get(); }
         
@@ -42,7 +42,7 @@ public class Manager {
     
     public void charger(){ 
         gesImp.ouverture();
-        gesImp.importerRepertoireMusiques(getRacine());  
+        //gesImp.importerRepertoireMusiques(getRacine());  
         datamanager.charger(getRacine());
     }
     

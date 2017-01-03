@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import lecteuraudio.metier.IPlayList;
+import lecteuraudio.metier.NoeudMusique;
 import lecteuraudio.metier.PlayList;
 import lecteuraudio.modele.IDataManager;
 
@@ -34,7 +35,7 @@ public class BinaryDataManager implements IDataManager{
             if (nom.equals("ToutesLesPlaylistsSer.bin")) {
                
                 try (ObjectInputStream reader = new ObjectInputStream(new FileInputStream(f))) {
-                    for (IPlayList p : ((BinaryPlayList)reader.readObject()).getListPlayList()) {
+                    for (NoeudMusique p : ((IPlayList)reader.readObject()).getPlayList()) {
                         racine.ajouter(p); 
                     } 
                 } catch (Exception e) {

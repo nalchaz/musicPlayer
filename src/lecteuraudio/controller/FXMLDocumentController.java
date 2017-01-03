@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -54,6 +55,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import lecteuraudio.metier.Lecteur;
 import lecteuraudio.metier.Manager;
 import lecteuraudio.metier.NoeudMusique;
@@ -74,6 +76,7 @@ public class FXMLDocumentController implements Initializable {
     public Manager getManager() { return manager.get(); }
     public void setManager(Manager value) {  manager.set(value); }
     public ObjectProperty<Manager> managerProperty() { return manager; }
+    
     @FXML
     private TextField nomPlayListAjout;
 
@@ -275,7 +278,7 @@ public class FXMLDocumentController implements Initializable {
 
             }
         });
-        //Si la musique est a la fin, jouer la prochaine musique du lecteur
+        //Si la musique est à la fin, jouer la prochaine musique du lecteur
         lec.setOnEndOfMedia(new Runnable() {
             public void run() {
                 getManager().setNoeudCourant(lec.next());
@@ -441,7 +444,7 @@ public class FXMLDocumentController implements Initializable {
 
     //creerIPlayListDepuisView : validation apres la saisie d'une playlist, la rajoute dans la liste des playlist, affiche une fenetre d'erreur si le titre de la playlist existe deja
     private void creerPlaylistDepuisView() {
-        IPlayList p = new BinaryPlayList(nomPlayListAjout.getText());
+        IPlayList p = new BinaryPlayList(new PlayList(nomPlayListAjout.getText()));
         if (!getManager().ajouter(p)) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Erreur");
@@ -574,6 +577,13 @@ public class FXMLDocumentController implements Initializable {
         youTubeController=fxmloader.getController();
         Scene scene = new Scene(root);         
         youTubeStage.setScene(scene);
+        youTubeStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent we) {
+                youTubeStage.close();
+                System.out.println("Stage is closing");
+            }
+        });       
         youTubeStage.show();
         
         youTubeController.pathDownloadProperty().addListener(new ChangeListener() {

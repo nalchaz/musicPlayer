@@ -24,12 +24,13 @@ import lecteuraudio.metier.PlayList;
  * @author alexd
  */
 public class BinaryPlayList extends IPlayList implements  Externalizable {
-    private PlayList playlist= new PlayList();  
+    private IPlayList playlist=new PlayList();  
     
-    public BinaryPlayList(){}
+    public BinaryPlayList(){ 
+    }
     
-    public BinaryPlayList(String titre){ 
-        playlist.setTitre(titre);
+    public BinaryPlayList(IPlayList model){ 
+        playlist=model; 
     }
 
     @Override
@@ -56,7 +57,7 @@ public class BinaryPlayList extends IPlayList implements  Externalizable {
     public boolean ajouter(NoeudMusique nm){ 
         return playlist.ajouter(nm);
     }
-    
+
     @Override 
     public ObservableList<NoeudMusique> getPlayList(){ 
         return playlist.getPlayList(); 
