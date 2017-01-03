@@ -6,10 +6,13 @@
 package lecteuraudio.launcher;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import lecteuraudio.controller.FXMLDocumentController;
 import lecteuraudio.metier.Manager;
 import lecteuraudio.persistanceBin.BinaryDataManager;
@@ -34,22 +37,30 @@ public class LecteurAudio extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        charger(); 
-        FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/lecteuraudio/vue/FXMLDocument.fxml"));                
-        fxmlloader.setController(new FXMLDocumentController(manager)); 
+        charger();
+        FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/lecteuraudio/vue/FXMLDocument.fxml"));
+        fxmlloader.setController(new FXMLDocumentController(manager));
         Parent root = fxmlloader.load();
-        Scene scene = new Scene(root);       
+        Scene scene = new Scene(root);
         stage.setTitle("MusicPlayer");
         stage.setScene(scene);
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                stop();
+            }
+        });
         stage.show();
         
     }
+    
     
     
     @Override
     public void stop()
     {
         manager.sauver();
+        Platform.exit();
     }
     
     /**

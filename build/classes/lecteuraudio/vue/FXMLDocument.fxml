@@ -25,12 +25,6 @@
 <?import lecteuraudio.persistanceBin.*?>
 
 <BorderPane id="BorderPane" fx:id="borderPane" prefHeight="900.0" prefWidth="1200.0" stylesheets="@MediaPlayer.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" > 
-<fx:define>
-        <!-- définition de la racine -->
-        <BinaryPlayList fx:id="racine">
-            <titre>Racine</titre>
-        </BinaryPlayList>
-    </fx:define>
     
     <center>
       <!-- définition de la grille principale -->

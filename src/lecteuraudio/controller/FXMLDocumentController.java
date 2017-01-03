@@ -62,7 +62,6 @@ import lecteuraudio.metier.NoeudMusique;
 import lecteuraudio.metier.PlayList;
 import lecteuraudio.metier.PlayListMusiques;
 import lecteuraudio.modele.ManagedDownload;
-import lecteuraudio.modele.VideoToAudio;
 import lecteuraudio.persistanceBin.BinaryPlayList;
 
 /**
@@ -471,7 +470,9 @@ public class FXMLDocumentController implements Initializable {
     }   
 
     public void exit(){
-        youTubeStage.close();
+        if(youTubeStage!=null){
+            youTubeStage.close();
+        }
         Platform.exit();
     }
     
@@ -577,15 +578,18 @@ public class FXMLDocumentController implements Initializable {
         youTubeController=fxmloader.getController();
         Scene scene = new Scene(root);         
         youTubeStage.setScene(scene);
+        //
         youTubeStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent we) {
-                youTubeStage.close();
+
+                //Arreter les threads ici
                 System.out.println("Stage is closing");
             }
         });       
         youTubeStage.show();
         
+        //Récupère le chemin de la musique téléchargé quand il change
         youTubeController.pathDownloadProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue o, Object oldVal,
@@ -601,16 +605,12 @@ public class FXMLDocumentController implements Initializable {
                         
                         
 
-                        pathdownload=debutpath+".mp3";
+                        pathdownload=debutpath+".mp4";
                     }
                     catch(Exception e){
                         System.err.println(e.getMessage());
                     }
                 }
-                //Convertit le mp4 en mp3
-                VideoToAudio vta = new VideoToAudio();
-                vta.convertVideoToAudio(debutpath + ".mp4", debutpath + ".mp3");
-     
                 getManager().ajouterMusique(new File(pathdownload));
                 updateLayoutTreeView(rootItem, getManager().getRacine());
             }

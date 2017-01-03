@@ -117,7 +117,7 @@ public class ManagedDownload extends Thread {
                         }
                         //String s=String.format("Téléchargement de \"%s\": %.2f %s (%s)", dinfo.toString(),(dinfo.getCount() / (float) dinfo.getLength())*100, parts,
                                 //Utils.formatSpeed(speedInfo.getCurrentSpeed()));
-                        String s=String.format("Téléchargement : %.2f %s (%s)",(dinfo.getCount() / (float) dinfo.getLength())*100, parts,
+                        String s=String.format("Téléchargement : %.2f%s %s (%s)",(dinfo.getCount() / (float) dinfo.getLength())*100, "%", parts,
                                 Utils.formatSpeed(speedInfo.getCurrentSpeed()));
                         
                         Platform.runLater(new Runnable() {

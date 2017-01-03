@@ -8,6 +8,7 @@ package lecteuraudio.controller;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -70,6 +71,7 @@ public class YouTubeFXMLController implements Initializable {
         // binding sur l'url
         urlTextField.textProperty().bind(getWebEngine().locationProperty());
     }
+
 
     public void DirectDownload(String url) throws Exception {
 
