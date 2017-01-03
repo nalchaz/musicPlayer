@@ -4,12 +4,13 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TreeItem?>
 <?import javafx.scene.control.TreeView?>
@@ -20,9 +21,10 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
-<?import lecteuraudio.modele.*?>
 <?import lecteuraudio.metier.*?>
+<?import lecteuraudio.modele.*?>
 <?import lecteuraudio.persistanceBin.*?>
+<?import lecteuraudio.cellfactory.*?>
 
 <BorderPane id="BorderPane" fx:id="borderPane" prefHeight="900.0" prefWidth="1200.0" stylesheets="@MediaPlayer.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" > 
     
@@ -42,10 +44,6 @@
          <children>
              <!-- définition du TreeView et de son menu contextuel-->
              <TreeView fx:id="treeView" editable="true" onDragDropped="#onDragDroppedTree" onDragOver="#onDragOverTree" onMouseClicked="#onNoeudMusiqueChoisie" style="-fx-border-width: 1;" GridPane.rowIndex="1">
-               <cellFactory>
-                    <TreeItemCellFactory />
-                </cellFactory>
-                <TreeItem fx:id="rootItem" value="${controller.manager.racine}" />
                  <contextMenu>
                   <ContextMenu>
                     <items>
@@ -53,13 +51,15 @@
                       <MenuItem mnemonicParsing="false" onAction="#onSupprimerNoeudMusique" text="Supprimer" />
                     </items>
                   </ContextMenu>
-               </contextMenu>
-            </TreeView>
-            <ListView fx:id="listMusique" items="${listemusiques.playlist}" onDragDetected="#onDragDetected" onMouseClicked="#onMusiqueChoisie" style="-fx-border-width: 1;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
-               <cellFactory>
-                    <ListMusiqueCellFactory />
+                </contextMenu>
+                 <cellFactory>
+                    <TreeItemCellFactory />
                 </cellFactory>
-                <contextMenu>
+                
+                <TreeItem fx:id="rootItem" value="${controller.manager.racine}" />
+            </TreeView>
+            <TableView fx:id="tableView" nodeOrientation="LEFT_TO_RIGHT" GridPane.columnIndex="1" onMouseClicked="#onMusiqueChoisie" GridPane.columnSpan="2" GridPane.rowIndex="1">
+               <contextMenu>
                   <ContextMenu>
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#onCopier" text="Copier" />
@@ -67,7 +67,7 @@
                     </items>
                   </ContextMenu>
                </contextMenu>
-            </ListView>
+            </TableView>
 
             <StackPane style="-fx-border-width: 1;" GridPane.columnIndex="3" GridPane.rowIndex="1" />
             <StackPane>
@@ -152,6 +152,7 @@
                   </Button>
                </children>
             </StackPane>
+            
             
          </children>
       </GridPane>

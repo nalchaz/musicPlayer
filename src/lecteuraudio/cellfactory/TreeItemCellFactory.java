@@ -1,4 +1,4 @@
-package lecteuraudio.modele;
+package lecteuraudio.cellfactory;
 
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeView;
@@ -16,8 +16,10 @@ public class TreeItemCellFactory implements Callback<TreeView<NoeudMusique>, Tre
      * @param param le TreeView à mettre à jour
      * @return une cellule avec le bon format
      */
+    
     @Override
     public TreeCell<NoeudMusique> call(TreeView<NoeudMusique> param) {
         return new TreeItemCell();
     }
+
 }

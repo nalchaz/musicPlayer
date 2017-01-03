@@ -1,4 +1,4 @@
-package lecteuraudio.modele;
+package lecteuraudio.cellfactory;
 
 import javafx.scene.control.TreeCell;
 import javafx.scene.image.Image;
@@ -25,6 +25,7 @@ public class TreeItemCell extends TreeCell<NoeudMusique> {
             setGraphic(null);
             textProperty().unbind();
         }
+        
         if(item instanceof IMusique)
         {
             setText(item.getTitre());
@@ -34,6 +35,8 @@ public class TreeItemCell extends TreeCell<NoeudMusique> {
             src.setFitWidth(16);
             setGraphic(src);
         }
+        
+        
         if(item instanceof IPlayList)
         {
             setText(item.getTitre());
@@ -43,5 +46,6 @@ public class TreeItemCell extends TreeCell<NoeudMusique> {
             src.setFitWidth(16);
             setGraphic(src);
         }  
+        
     }
 }

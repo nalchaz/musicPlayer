@@ -58,6 +58,16 @@ public class BinaryMusique extends IMusique implements  Externalizable{
     }
     
     @Override
+    public String getDuree() {
+        return musique.getDuree(); 
+    }
+
+    @Override
+    public void setDuree(String duree) {
+        musique.setDuree(duree);
+    }
+    
+    @Override
     public StringProperty titreProperty(){
         return musique.titreProperty();
     }
@@ -68,10 +78,17 @@ public class BinaryMusique extends IMusique implements  Externalizable{
     }
 
     @Override
+    public StringProperty dureeProperty() {
+        return musique.dureeProperty();
+    }
+    
+    
+    @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeObject(getTitre());
         out.writeObject(getPath());
         out.writeObject(getAuteur());
+        out.writeObject(getDuree());
     }
 
     @Override
@@ -79,6 +96,9 @@ public class BinaryMusique extends IMusique implements  Externalizable{
         setTitre((String)in.readObject());
         setPath((String)in.readObject());
         setAuteur((String)in.readObject());
+        setDuree((String)in.readObject());
     }
+
+    
     
 }

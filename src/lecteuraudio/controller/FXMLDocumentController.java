@@ -46,18 +46,23 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lecteuraudio.metier.Lecteur;
 import lecteuraudio.metier.Manager;
+import lecteuraudio.metier.Musique;
 import lecteuraudio.metier.NoeudMusique;
 import lecteuraudio.metier.PlayList;
 import lecteuraudio.metier.PlayListMusiques;
@@ -80,7 +85,7 @@ public class FXMLDocumentController implements Initializable {
     private TextField nomPlayListAjout;
 
     @FXML
-    private ListView listMusique;
+    private TableView tableView=new TableView<IMusique>();;
     
 
     @FXML
@@ -167,16 +172,36 @@ public class FXMLDocumentController implements Initializable {
         //resélectionne le premier item pour mettre a jour l'affichage
         treeView.getSelectionModel().select(null);
         treeView.getSelectionModel().selectFirst();
+        
         updateTreeView(rootItem, getManager().getRacine());
         
-        listMusique.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        initializeTableView();
+        tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+    }
+    
+    /*
+    * Intitilisation de la zone central, la TableView
+    * @author nachazot1
+    */
+    public void initializeTableView(){
+        TableColumn<Musique,String> titre=new TableColumn<>("Titre");
+        titre.setCellValueFactory(new PropertyValueFactory("titre"));
+        titre.setPrefWidth(350);
+        TableColumn<Musique,String> auteur=new TableColumn<>("Auteur");
+        auteur.setCellValueFactory(new PropertyValueFactory("auteur"));
+        auteur.setPrefWidth(300);
+        TableColumn<Musique,String> duree=new TableColumn<>("Durée");
+        duree.setCellValueFactory(new PropertyValueFactory("duree"));
+        tableView.getColumns().addAll(titre,auteur,duree);  
+            
     }
     
     /*
     * Intitilisation du TreeView
     * @author nachazot1
     */
-    
+ 
     private void initializeTreeView()
     {
         //sélectionne le premier item
@@ -200,7 +225,7 @@ public class FXMLDocumentController implements Initializable {
         NoeudMusique noeud = getSelectedItemInTreeView((TreeItem<NoeudMusique>)newValue);
         //Affichage des musiques de la IPlayList dans la zone centrale
         if(noeud instanceof IPlayList){
-            listMusique.itemsProperty().bind(new PlayListMusiques((IPlayList)noeud).playlistProperty());
+            tableView.itemsProperty().bind(new PlayListMusiques((IPlayList)noeud).playlistProperty());
         }
     }
     
@@ -228,6 +253,7 @@ public class FXMLDocumentController implements Initializable {
 
         //ajoute des TreeItems pour chaque noeud du composite
         if (noeud instanceof IPlayList) {
+            
             for (NoeudMusique nm : ((IPlayList) noeud).getPlayList()) {
                 TreeItem<NoeudMusique> noeudItem = new TreeItem<>(nm);
                 item.getChildren().add(noeudItem);
@@ -235,6 +261,7 @@ public class FXMLDocumentController implements Initializable {
             }
         }
     }
+    
     /*Désélectionne puis reselectionne pour mettre à jour l'affichage de la zone centrale
     *Puis met à jour l'affichage du treeView
     *
@@ -356,7 +383,7 @@ public class FXMLDocumentController implements Initializable {
 
         if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {  //double clic gauche
             //Met la musique séléctionné dans musiqueView puis la joue
-            getManager().setNoeudCourant((IMusique)listMusique.getSelectionModel().getSelectedItem());
+            getManager().setNoeudCourant((IMusique)tableView.getSelectionModel().getSelectedItem());
             lec.setPlaylist(listecourante);
             lec.setMusiqueCourante(getManager().getNoeudCourant());
             lec.pause();
@@ -493,7 +520,7 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void onCopier(ActionEvent event) {
-        ObservableList list=listMusique.getSelectionModel().getSelectedItems();
+        ObservableList list=tableView.getSelectionModel().getSelectedItems();
         pressePapier=new ArrayList<>(list);
     }
 
@@ -564,7 +591,7 @@ public class FXMLDocumentController implements Initializable {
     private void onRech(ActionEvent event) {
         String recherche = zoneRech.getText();
         if (recherche != null && !"".equals(recherche)) {
-            listMusique.itemsProperty().bind(listemusiques.rechByString(recherche).playlistProperty());
+            tableView.itemsProperty().bind(listemusiques.rechByString(recherche).playlistProperty());
         }
     }
 

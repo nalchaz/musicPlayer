@@ -9,10 +9,14 @@ package lecteuraudio.modele;
 import java.io.File;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
+import java.util.Map;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.MapChangeListener;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import lecteuraudio.metier.IMusique;
@@ -89,16 +93,21 @@ public class GestionnaireImport {
         int taille = (int) f.getName().length() - 4;
         IMusique m = new BinaryMusique(new Musique("Artiste inconnu", f.getName().substring(0, taille), ("file:///" + System.getProperty("user.dir").replace("\\", "/") + "/Musiques/" + f.getName().replaceAll(" ", "%20"))));
         Media media = new Media(m.getPath());
-        media.getMetadata().addListener(new MapChangeListener<String, Object>() {
+
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        //Attendre que le mediaplayer soit pret pour récuperer les metadatas
+        mediaPlayer.setOnReady(new Runnable() {
             @Override
-            public void onChanged(MapChangeListener.Change<? extends String, ? extends Object> ch) {
-                if (ch.wasAdded()) {
-                    String artist=(String)media.getMetadata().get("artist");
-                    if(artist!=null)
-                        m.setAuteur(artist);
-                }
+            public void run() {
+                
+                m.setDuree(Utils.formatTime(media.getDuration()));
+                m.setAuteur((String)media.getMetadata().get("artist"));
+
             }
         });
+        
+
+       
 
         return racine.ajouter(m);
     }

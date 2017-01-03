@@ -17,8 +17,16 @@ import javafx.beans.property.StringProperty;
  */
 public class Musique extends IMusique{
     private String path;
-    private StringProperty auteurProperty=new SimpleStringProperty();    
     
+    private StringProperty auteurProperty=new SimpleStringProperty();     
+    public StringProperty auteurProperty(){return auteurProperty; }
+    public String getAuteur() {return auteurProperty.get();}
+    public void setAuteur(String auteur) {this.auteurProperty.set(auteur);}
+    
+    private StringProperty dureeProperty=new SimpleStringProperty(); 
+    public StringProperty dureeProperty(){return dureeProperty; }
+    public String getDuree() {return dureeProperty.get();}
+    public void setDuree(String duree) {this.dureeProperty.set(duree);}
     
     public Musique(){
         
@@ -28,20 +36,15 @@ public class Musique extends IMusique{
         this.auteurProperty.set(auteur); 
         this.titreProperty.set(titre);
         this.path=path; 
+    } 
+    
+    public Musique (String auteur, String titre, String path, String duree){
+        this.auteurProperty.set(auteur); 
+        this.titreProperty.set(titre);
+        this.path=path; 
     }  
     
-    @Override
-    public StringProperty auteurProperty(){
-        return auteurProperty; 
-    }
     
-    public String getAuteur() {
-        return auteurProperty.get();
-    }
-
-    public void setAuteur(String auteur) {
-        this.auteurProperty.set(auteur);
-    }
     
 
     public void setPath(String path){    

@@ -14,7 +14,10 @@ import javafx.beans.property.StringProperty;
 public abstract class IMusique extends NoeudMusique {
     public abstract String getAuteur();
     public abstract String getPath(); 
+    public abstract String getDuree(); 
     public abstract void setPath(String path);
     public abstract void setAuteur(String auteur); 
+    public abstract void setDuree(String duree);
     public abstract StringProperty auteurProperty();
+    public abstract StringProperty dureeProperty();
 }
