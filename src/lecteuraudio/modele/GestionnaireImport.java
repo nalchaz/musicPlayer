@@ -9,6 +9,7 @@ package lecteuraudio.modele;
 import java.io.File;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.Map;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -116,6 +117,17 @@ public class GestionnaireImport {
 
         Files.copy(source.toPath(), new File(destination).toPath());
 
+    }
+    
+    public void suppression (List<IMusique> musique){
+        for (IMusique m : musique){ 
+            for (File f : new File(repositoryPath).listFiles()){
+                String nom=f.getName().substring(0, f.getName().length()-4);
+                if (nom.equals(m.getTitre())){
+                    f.deleteOnExit();
+                }
+            }
+        }
     }
     
    

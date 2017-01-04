@@ -6,6 +6,7 @@
 package lecteuraudio.metier;
 
 import java.io.File;
+import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.stage.Window;
@@ -42,12 +43,21 @@ public class Manager {
     
     public void charger(){ 
         gesImp.ouverture();
-        //gesImp.importerRepertoireMusiques(getRacine());  
+        gesImp.importerRepertoireMusiques(getRacine());  
         datamanager.charger(getRacine());
     }
     
-    public void sauver(){ 
+    public void sauver(){  
         datamanager.sauver(getRacine());
+    }
+    
+    public void suppression(List<IMusique> m){
+        //On supprime la/les musique dans toutes les playlists 
+        for (IPlayList p : getRacine().getListPlayList()){ 
+            p.getPlayList().removeAll(m); 
+        }
+        //On supprime la/les musiques dans le dossier Musiques de l'appli
+        gesImp.suppression(m);
     }
     
     

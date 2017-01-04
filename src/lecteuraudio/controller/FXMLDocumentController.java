@@ -596,6 +596,21 @@ public class FXMLDocumentController implements Initializable {
                 tableView.itemsProperty().bind(listemusiques.playlistProperty());
         }
     }
+   
+    
+    @FXML 
+    private void onSupprimerMusique (){ 
+       List<IMusique> listeASuppr=(List<IMusique>)tableView.getSelectionModel().getSelectedItems();
+       TreeItem<NoeudMusique> playlistItem=treeView.getSelectionModel().getSelectedItem(); 
+       IPlayList playlist=(IPlayList)playlistItem.getValue(); 
+       playlist.getPlayList().removeAll(listeASuppr);
+       // Si on supprime dans la racine, on doit supprimer la musique dans le dossier Musiques et dans toutes les playlists 
+       if (playlist.getTitre().equals("Racine")){
+           getManager().suppression(listeASuppr);
+       }
+       updateLayoutTreeView(playlistItem, playlistItem.getValue());
+    }
+    
     @FXML
     private void onYoutube() throws Exception{
         
