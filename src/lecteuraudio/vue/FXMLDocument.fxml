@@ -43,7 +43,7 @@
         </rowConstraints>
          <children>
              <!-- définition du TreeView et de son menu contextuel-->
-             <TreeView fx:id="treeView" editable="true" onDragDropped="#onDragDroppedTree" onDragOver="#onDragOverTree" onMouseClicked="#onNoeudMusiqueChoisie" style="-fx-border-width: 1;" GridPane.rowIndex="1">
+             <TreeView fx:id="treeView" editable="true" onMouseClicked="#onNoeudMusiqueChoisie" style="-fx-border-width: 1;" GridPane.rowIndex="1">
                  <contextMenu>
                   <ContextMenu>
                     <items>
@@ -58,7 +58,7 @@
                 
                 <TreeItem fx:id="rootItem" value="${controller.manager.racine}" />
             </TreeView>
-            <TableView fx:id="tableView" nodeOrientation="LEFT_TO_RIGHT" GridPane.columnIndex="1" onMouseClicked="#onMusiqueChoisie" GridPane.columnSpan="2" GridPane.rowIndex="1">
+            <TableView fx:id="tableView" onDragDetected="#onDragDetected" nodeOrientation="LEFT_TO_RIGHT" GridPane.columnIndex="1" onMouseClicked="#onMusiqueChoisie" GridPane.columnSpan="2" GridPane.rowIndex="1">
                <contextMenu>
                   <ContextMenu>
                     <items>
