@@ -46,7 +46,7 @@
             <TitledPane alignment="CENTER" collapsible="false" maxHeight="1.7976931348623157E308" text="Playlist" textAlignment="CENTER" GridPane.rowIndex="1">
                <content>
                    <!-- définition du TreeView et de son menu contextuel-->
-                   <TreeView fx:id="treeView" editable="true" onDragDropped="#onDragDroppedTree" onDragOver="#onDragOverTree" onMouseClicked="#onNoeudMusiqueChoisie" style="-fx-border-width: 1;">
+                   <TreeView fx:id="treeView" editable="true" onMouseClicked="#onNoeudMusiqueChoisie" style="-fx-border-width: 1;">
                        <contextMenu>
                         <ContextMenu>
                           <items>
@@ -66,7 +66,7 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </TitledPane>
-            <TableView fx:id="tableView" editable="true" nodeOrientation="LEFT_TO_RIGHT" onMouseClicked="#onMusiqueChoisie" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+            <TableView fx:id="tableView" editable="true" onDragDetected="#onDragDetected" nodeOrientation="LEFT_TO_RIGHT" onMouseClicked="#onMusiqueChoisie" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                <contextMenu>
                   <ContextMenu>
                     <items>
