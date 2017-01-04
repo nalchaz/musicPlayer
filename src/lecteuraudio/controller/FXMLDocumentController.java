@@ -581,14 +581,27 @@ public class FXMLDocumentController implements Initializable {
         event.consume();
     }
 */
+    
     @FXML
     private void onRech(ActionEvent event) {
         String recherche = zoneRech.getText();
         if (recherche != null && !"".equals(recherche)) {
             tableView.itemsProperty().bind(listemusiques.rechByString(recherche).playlistProperty());
         }
+        else
+            tableView.itemsProperty().bind(listemusiques.playlistProperty());
     }
-
+    @FXML
+    private void onEnter(KeyEvent key) {
+        if (key.getCode().equals(KeyCode.ENTER)) {
+           String recherche = zoneRech.getText();
+            if (recherche != null && !"".equals(recherche)) {
+                tableView.itemsProperty().bind(listemusiques.rechByString(recherche).playlistProperty());
+            } 
+            else
+                tableView.itemsProperty().bind(listemusiques.playlistProperty());
+        }
+    }
     @FXML
     private void onYoutube() throws Exception{
         
