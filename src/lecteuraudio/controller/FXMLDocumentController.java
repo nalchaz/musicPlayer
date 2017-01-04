@@ -25,7 +25,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -40,7 +39,6 @@ import javafx.util.Duration;
 import lecteuraudio.metier.IMusique;
 import lecteuraudio.metier.IPlayList;
 import lecteuraudio.modele.Utils;
-import java.awt.Desktop;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -182,18 +180,14 @@ public class FXMLDocumentController implements Initializable {
     
     /*
     * Intitilisation de la zone central, la TableView
+    * Donne lesproperty à associer à chaque colonne de la TableView
     * @author nachazot1
     */
     public void initializeTableView(){
-        TableColumn<Musique,String> titre=new TableColumn<>("Titre");
-        titre.setCellValueFactory(new PropertyValueFactory("titre"));
-        titre.setPrefWidth(350);
-        TableColumn<Musique,String> auteur=new TableColumn<>("Auteur");
-        auteur.setCellValueFactory(new PropertyValueFactory("auteur"));
-        auteur.setPrefWidth(300);
-        TableColumn<Musique,String> duree=new TableColumn<>("Durée");
-        duree.setCellValueFactory(new PropertyValueFactory("duree"));
-        tableView.getColumns().addAll(titre,auteur,duree);  
+        
+        ((TableColumn<Musique,String>)tableView.getColumns().get(0)).setCellValueFactory(new PropertyValueFactory("titre"));
+        ((TableColumn<Musique,String>)tableView.getColumns().get(1)).setCellValueFactory(new PropertyValueFactory("auteur"));
+        ((TableColumn<Musique,String>)tableView.getColumns().get(2)).setCellValueFactory(new PropertyValueFactory("duree"));
             
     }
     
@@ -254,7 +248,7 @@ public class FXMLDocumentController implements Initializable {
         //ajoute des TreeItems pour chaque noeud du composite
         if (noeud instanceof IPlayList) {
             
-            for (NoeudMusique nm : ((IPlayList) noeud).getPlayList()) {
+            for (NoeudMusique nm : ((IPlayList) noeud).getListPlayList()) {
                 TreeItem<NoeudMusique> noeudItem = new TreeItem<>(nm);
                 item.getChildren().add(noeudItem);
                 updateTreeView(noeudItem, nm);

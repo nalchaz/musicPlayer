@@ -1,69 +1,70 @@
 #play {
-	
-	-fx-graphic: url("icon-play.png");
-	-fx-background-repeat: no-repeat;
- 	 -fx-background-position: center;
- 	 -fx-padding: 3px;
-         -fx-background-color: transparent; 
-         
+
+    -fx-graphic: url("icon-play.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-padding: 3px;
+    -fx-background-color: transparent; 
+
 }
 #play:hover {
-	
-	-fx-graphic: url("icon-hover-play.png");
-	-fx-background-repeat: no-repeat;
- 	 -fx-background-position: center;
- 	 -fx-padding: 3px;
-         -fx-background-color: transparent; 
+
+    -fx-graphic: url("icon-hover-play.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-padding: 3px;
+    -fx-background-color: transparent; 
 }
 
 #next {
-	
-	-fx-graphic: url("icon-next.png");
-	-fx-background-repeat: no-repeat;
- 	-fx-background-position: center;
- 	-fx-padding: 3px;
-        -fx-background-color: transparent; 
+    -fx-graphic: url("icon-next.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-padding: 3px;
+    -fx-background-color: transparent; 
 }
+
 #next:hover {
-	
-	-fx-graphic: url("icon-hover-next.png");
-	-fx-background-repeat: no-repeat;
- 	-fx-background-position: center;
- 	-fx-padding: 3px;
-        -fx-background-color: transparent; 
+    -fx-graphic: url("icon-hover-next.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-padding: 3px;
+    -fx-background-color: transparent; 
 }
+
 #previous {
-	
-	-fx-graphic: url("icon-previous.png");
-	-fx-background-repeat: no-repeat;
- 	 -fx-background-position: center;
- 	 -fx-padding: 3px;
-         -fx-background-color: transparent; 
+
+    -fx-graphic: url("icon-previous.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-padding: 3px;
+    -fx-background-color: transparent; 
 }
+
 #previous:hover {
-	
-	-fx-graphic: url("icon-hover-previous.png");
-	-fx-background-repeat: no-repeat;
- 	 -fx-background-position: center;
- 	 -fx-padding: 3px;
-         -fx-background-color: transparent; 
+
+    -fx-graphic: url("icon-hover-previous.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-padding: 3px;
+    -fx-background-color: transparent; 
 }
 #pause {
-	
-	-fx-graphic: url("icon-pause.png");
-	-fx-background-repeat: no-repeat;
- 	 -fx-background-position: center;
- 	 -fx-padding: 3px;
-         -fx-background-color: transparent; 
+
+    -fx-graphic: url("icon-pause.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-padding: 3px;
+    -fx-background-color: transparent; 
 }
 
 #pause:hover {
-	
-	-fx-graphic: url("icon-hover-pause.png");
-	-fx-background-repeat: no-repeat;
- 	 -fx-background-position: center;
- 	 -fx-padding: 3px;
-         -fx-background-color: transparent; 
+
+    -fx-graphic: url("icon-hover-pause.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-padding: 3px;
+    -fx-background-color: transparent; 
 }
 
 #mute {
@@ -110,9 +111,18 @@
 #youtube {
     -fx-background-color: darkgray;
     -fx-text-fill: #d01010;
-    
+
 }
 
 #youtube:hover {
     -fx-background-color: lightgray;
+}
+
+#zoneLecteur {
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+    -fx-border-color: gray;
+    -fx-border-radius: 10 10 10 10;
+    -fx-background-radius: 10 10 10 10;
+    -fx-background-color: #d0f3f8;
 }
