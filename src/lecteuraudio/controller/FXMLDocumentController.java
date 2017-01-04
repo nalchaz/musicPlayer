@@ -42,6 +42,7 @@ import lecteuraudio.modele.Utils;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.collections.FXCollections;
@@ -56,6 +57,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lecteuraudio.metier.Lecteur;
@@ -63,6 +68,7 @@ import lecteuraudio.metier.Manager;
 import lecteuraudio.metier.Musique;
 import lecteuraudio.metier.NoeudMusique;
 import lecteuraudio.metier.PlayList;
+import lecteuraudio.metier.IPlayList;
 import lecteuraudio.metier.PlayListMusiques;
 import lecteuraudio.modele.ManagedDownload;
 import lecteuraudio.persistanceBin.BinaryPlayList;
@@ -227,6 +233,8 @@ public class FXMLDocumentController implements Initializable {
     * Return la valeur du treeItem
     * @author nachazot1
     */
+    
+   
     
     private NoeudMusique getSelectedItemInTreeView(TreeItem<NoeudMusique> item)
     {
@@ -553,35 +561,21 @@ public class FXMLDocumentController implements Initializable {
     
 /*
     //private static final DataFormat musiqueDataFormat = new DataFormat("lecteuraudio.modele.IMusique");
+    @FXML */
     @FXML
     private void onDragDetected(MouseEvent event) {
-        IMusique dragged = (IMusique) listMusique.getSelectionModel().getSelectedItem();
-        Dragboard dragBoard = listMusique.startDragAndDrop(TransferMode.COPY);
+        List<IMusique> dragged = (List<IMusique>) tableView.getSelectionModel().getSelectedItems();
+        Dragboard dragBoard = tableView.startDragAndDrop(TransferMode.COPY);
         dragBoard.setDragView(new Text(dragged.toString()).snapshot(null, null), event.getX() / 100, event.getY() / 100);
         ClipboardContent content = new ClipboardContent();
         content.putString(dragged.toString());
-        //content.put(musiqueDataFormat,dragged);
         dragBoard.setContent(content);
 
         event.consume();
     }
-
-    private void onDragOverListIPlayList(DragEvent event) {
-        Dragboard db = event.getDragboard();
-        event.acceptTransferModes(TransferMode.COPY);
-        event.consume();
-    }
-
-    private void onDragDroppedListIPlayList(DragEvent event) {
-        Dragboard db = event.getDragboard();
-
-        //IMusique m=(IMusique)db.getContent(musiqueDataFormat);
-        //IPlayList tmp=(IPlayList)event.getGestureTarget();
-        event.setDropCompleted(true);
-        event.consume();
-    }
-*/
     
+
+
     @FXML
     private void onRech(ActionEvent event) {
         String recherche = zoneRech.getText();
@@ -651,16 +645,8 @@ public class FXMLDocumentController implements Initializable {
         });
     }
     
-    @FXML
-    private void onDragOverTree(DragEvent event) {
-    }
-    @FXML
-    private void onDragDroppedTree(DragEvent event) {
-    }
-    @FXML
-    private void onDragDetected(MouseEvent event) {
+   
     
-    }
     
 
 }

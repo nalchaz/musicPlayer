@@ -93,7 +93,6 @@ public class GestionnaireImport {
         int taille = (int) f.getName().length() - 4;
         IMusique m = new BinaryMusique(new Musique("Artiste inconnu", f.getName().substring(0, taille), ("file:///" + System.getProperty("user.dir").replace("\\", "/") + "/Musiques/" + f.getName().replaceAll(" ", "%20"))));
         Media media = new Media(m.getPath());
-
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         //Attendre que le mediaplayer soit pret pour récuperer les metadatas
         mediaPlayer.setOnReady(new Runnable() {
