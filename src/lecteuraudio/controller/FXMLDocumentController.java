@@ -5,7 +5,6 @@
  */
 package lecteuraudio.controller;
 
-import com.sun.org.apache.xpath.internal.compiler.OpCodes;
 import java.io.File;
 import java.net.URL;
 import java.util.Optional;
@@ -38,22 +37,18 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.util.Duration;
 import lecteuraudio.metier.IMusique;
-import lecteuraudio.metier.IPlayList;
 import lecteuraudio.modele.Utils;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -68,8 +63,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import javafx.util.Pair;
-import javax.activation.FileTypeMap;
 import lecteuraudio.metier.Lecteur;
 import lecteuraudio.metier.Manager;
 import lecteuraudio.metier.Musique;
@@ -77,7 +70,6 @@ import lecteuraudio.metier.NoeudMusique;
 import lecteuraudio.metier.PlayList;
 import lecteuraudio.metier.IPlayList;
 import lecteuraudio.metier.PlayListMusiques;
-import lecteuraudio.modele.ManagedDownload;
 import lecteuraudio.persistanceBin.BinaryPlayList;
 
 /**
@@ -87,28 +79,14 @@ import lecteuraudio.persistanceBin.BinaryPlayList;
  */
 public class FXMLDocumentController implements Initializable {
 
-    private ObjectProperty<Manager> manager;
-
-    public Manager getManager() {
-        return manager.get();
-    }
-
-    public void setManager(Manager value) {
-        manager.set(value);
-    }
-
-    public ObjectProperty<Manager> managerProperty() {
-        return manager;
-    }
-
-    @FXML
-    private TextField nomPlayListAjout;
-
-    @FXML
-    private TableView tableView = new TableView<IMusique>();
-    ;
     
 
+    /*********************************************************************************************************************
+        *                                             BOUTONS
+     *********************************************************************************************************************/
+    
+    //<editor-fold defaultstate="collapsed" desc="BOUTONS">
+    
     @FXML
     private Button play;
     @FXML
@@ -121,7 +99,28 @@ public class FXMLDocumentController implements Initializable {
     private Button ajoutPlayList;
     @FXML
     private Button rechButton;
+    
+    //</editor-fold>
+    
+    /*********************************************************************************************************************
+     *                                               TEXTFIELD
+     *********************************************************************************************************************/
+    
+    //<editor-fold defaultstate="collapsed" desc="TEXTFIELD">
+    @FXML
+    private TextField nomPlayListAjout;
 
+    @FXML
+    private TextField zoneRech;
+    
+    //</editor-fold>
+    
+    /*********************************************************************************************************************
+     *                                                 LABEL
+     *********************************************************************************************************************/
+    
+    //<editor-fold defaultstate="collapsed" desc="LABEL">
+    
     @FXML
     private Label titreMusique;
     @FXML
@@ -130,39 +129,66 @@ public class FXMLDocumentController implements Initializable {
     private Label tempsRestant;
     @FXML
     private Label auteur;
+    
+    //</editor-fold>
+
+    /*********************************************************************************************************************
+     *                                               CONTENEURS
+     *********************************************************************************************************************/
+    
+    //<editor-fold defaultstate="collapsed" desc="CONTENEURS">
 
     @FXML
     private BorderPane borderPane;
     @FXML
     private FlowPane zoneAjout;
-
-    @FXML
-    private ProgressBar progressbar;
-    @FXML
-    private Slider volumeSlider;
-
-    //Noeud sélectionné dans la TreeView
-    private final ObjectProperty<NoeudMusique> selectedNoeud = new SimpleObjectProperty<>();
-
-    public NoeudMusique getSelectedNoeud() {
-        return selectedNoeud.get();
-    }
-
-    public void setSelectedNoeud(NoeudMusique value) {
-        selectedNoeud.set(value);
-    }
-
-    public ObjectProperty<NoeudMusique> selectedNoeudProperty() {
-        return selectedNoeud;
-    }
-    
-    @FXML
-    private TextField zoneRech;
-
     @FXML
     private TreeItem<NoeudMusique> rootItem;
     @FXML
     private TreeView<NoeudMusique> treeView;
+    @FXML
+    private TableView tableView = new TableView<IMusique>();
+    
+    //</editor-fold>
+    
+    /*********************************************************************************************************************
+     *                                             LECTEURCONTROLS
+     *********************************************************************************************************************/
+    
+    //<editor-fold defaultstate="collapsed" desc="LECTEURCONTROLS">
+    @FXML
+    private ProgressBar progressbar;
+    @FXML
+    private Slider volumeSlider;
+    
+    private Lecteur lec = new Lecteur();
+    
+    //</editor-fold>
+    
+    /*********************************************************************************************************************
+     *                                                PROPERTY
+     *********************************************************************************************************************/
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY">
+    
+    private ObjectProperty<Manager> manager;
+    public Manager getManager() {return manager.get();}
+    public void setManager(Manager value) {manager.set(value);}
+    public ObjectProperty<Manager> managerProperty() {return manager;}
+    
+    //Noeud sélectionné dans la TreeView
+    private final ObjectProperty<NoeudMusique> selectedNoeud = new SimpleObjectProperty<>();
+    public NoeudMusique getSelectedNoeud() {return selectedNoeud.get();}
+    public void setSelectedNoeud(NoeudMusique value) {selectedNoeud.set(value);}
+    public ObjectProperty<NoeudMusique> selectedNoeudProperty() {return selectedNoeud;}
+    
+    //</editor-fold>
+
+    /*********************************************************************************************************************
+     *                                                 STAGE
+     *********************************************************************************************************************/
+    
+    //<editor-fold defaultstate="collapsed" desc="STAGE">
 
     //Fenetre YouTube
     private Stage youTubeStage;
@@ -172,12 +198,20 @@ public class FXMLDocumentController implements Initializable {
     private Stage modifStage;
     private ModificationController modifController;
 
+    //</editor-fold>
+    
+    /*********************************************************************************************************************
+     *                                             INITIALISATION
+     *********************************************************************************************************************/
+    
+    //<editor-fold defaultstate="collapsed" desc="INITIALISATION">
+    
     private ArrayList<NoeudMusique> pressePapier; //Utilisé pour le copié collé
 
     private IPlayList listecourante;
     private PlayListMusiques listemusiques; //Liste de musiques seulement
 
-    private Lecteur lec = new Lecteur();
+    
 
     public FXMLDocumentController(Manager manager) {
         this.manager = new SimpleObjectProperty<>(manager);
@@ -246,7 +280,13 @@ public class FXMLDocumentController implements Initializable {
         });
     }
 
- 
+    //</editor-fold>
+    
+    /*********************************************************************************************************************
+     *                                              MENU DU HAUT
+     *********************************************************************************************************************/
+    
+    //<editor-fold defaultstate="collapsed" desc="MENU DU HAUT">
     
     public void exit() {
         if (youTubeStage != null) {
@@ -269,12 +309,14 @@ public class FXMLDocumentController implements Initializable {
         }
 
     }
-    
+    //</editor-fold>
     
     /*********************************************************************************************************************
-     *                                   AJOUT PLAYLIST ZONE DU BAS
+     *                                        AJOUT PLAYLIST ZONE DU BAS
      *********************************************************************************************************************/
-
+    
+    //<editor-fold defaultstate="collapsed" desc="AJOUT PLAYLIST ZONE DU BAS">
+    
     //creerIPlayListDepuisView : validation apres la saisie d'une playlist, la rajoute dans la liste des playlist, affiche une fenetre d'erreur si le titre de la playlist existe deja
     private void creerPlaylistDepuisView() {
         IPlayList p = new BinaryPlayList(new PlayList(nomPlayListAjout.getText()));
@@ -311,10 +353,13 @@ public class FXMLDocumentController implements Initializable {
     private void onValidNomButton(ActionEvent event) {
         creerPlaylistDepuisView();
     }
+    //</editor-fold>
     
     /*********************************************************************************************************************
-     *                                       TREEVIEW ZONE GAUCHE
+     *                                          TREEVIEW ZONE GAUCHE
      *********************************************************************************************************************/
+    
+    //<editor-fold defaultstate="collapsed" desc="TREEVIEW ZONE GAUCHE">
     
     @FXML
     private void onNoeudMusiqueChoisie(MouseEvent event) {
@@ -422,11 +467,14 @@ public class FXMLDocumentController implements Initializable {
         treeView.getSelectionModel().select(null);
         treeView.getSelectionModel().select(item);
     }
-
+    //</editor-fold>
+    
     /*********************************************************************************************************************
-     *                                   MENU CONTEXTUEL ZONE GAUCHE
+     *                                        MENU CONTEXTUEL ZONE GAUCHE
      *********************************************************************************************************************/
 
+    //<editor-fold defaultstate="collapsed" desc="MENU CONTEXTUEL ZONE GAUCHE">
+    
     //onAjoutPlayList : affiche la zone permettant de saisir une nouvelle playlist à ajouter 
     @FXML
     private void onAjoutPlayList(ActionEvent event) {
@@ -460,9 +508,13 @@ public class FXMLDocumentController implements Initializable {
         }
     }
     
+    //</editor-fold>
+    
     /*********************************************************************************************************************
-     *                                         ZONE CENTRAL
+     *                                              ZONE CENTRAL
      *********************************************************************************************************************/
+    
+    //<editor-fold defaultstate="collapsed" desc="ZONE CENTRAL">
     
     /*
     * Intitilisation de la zone central, la TableView
@@ -497,9 +549,13 @@ public class FXMLDocumentController implements Initializable {
         }
     }
     
+    //</editor-fold>
+    
     /*********************************************************************************************************************
-     *                                   MENU CONTEXTUEL ZONE CENTRAL
+     *                                       MENU CONTEXTUEL ZONE CENTRAL
      *********************************************************************************************************************/
+    
+    //<editor-fold defaultstate="collapsed" desc="MENU CONTEXTUEL ZONE CENTRAL">
     
     /*
     *onModifier : ouvre une nouvelle fenetre permettant de modifier la musique séléctionné.
@@ -712,10 +768,13 @@ public class FXMLDocumentController implements Initializable {
         updateLayoutTreeView(playlistItem, playlistItem.getValue());
     }
     
+    //</editor-fold>
+    
     /*********************************************************************************************************************
-     *                                          LECTEUR MUSIQUE
+     *                                             LECTEUR MUSIQUE
      *********************************************************************************************************************/
     
+    //<editor-fold defaultstate="collapsed" desc="LECTEUR MUSIQUE">
     @FXML
     private void playPressed(ActionEvent event) {
 
@@ -782,9 +841,13 @@ public class FXMLDocumentController implements Initializable {
         }
     }
     
+    //</editor-fold>
+    
     /*********************************************************************************************************************
-     *                                          RECHERCHE
+     *                                               RECHERCHE
      *********************************************************************************************************************/
+    
+    //<editor-fold defaultstate="collapsed" desc="RECHERCHE">
     
     @FXML
     private void onRech(ActionEvent event) {
@@ -808,9 +871,14 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
+    //</editor-fold>
+    
     /*********************************************************************************************************************
-     *                                          IMPORT ET YOUTUBE
+     *                                            IMPORT ET YOUTUBE
      *********************************************************************************************************************/
+    
+    //<editor-fold defaultstate="collapsed" desc="IMPORT ET YOUTUBE">
+    
     @FXML
     private void importPressed(ActionEvent event) {
         if (getManager().chercherDisqueDur(borderPane.getScene().getWindow())) {
@@ -866,11 +934,13 @@ public class FXMLDocumentController implements Initializable {
 
     }
 
-    
+    //</editor-fold>
 
     /*********************************************************************************************************************
-     *                                          DRAG AND DROP
+     *                                              DRAG AND DROP
      *********************************************************************************************************************/
+    
+    //<editor-fold defaultstate="collapsed" desc="DRAG AND DROP">
     
     @FXML
     private void onDragDetected(MouseEvent event) {
@@ -934,5 +1004,5 @@ public class FXMLDocumentController implements Initializable {
         event.setDropCompleted(success);
         event.consume();
     }
-    
+    //</editor-fold>
 }
