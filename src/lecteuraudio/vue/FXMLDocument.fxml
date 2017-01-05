@@ -74,6 +74,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#onModifierIntelligent" text="Modification intelligente" />
                         <MenuItem mnemonicParsing="false" onAction="#onCopier" text="Copier" />
                         <MenuItem mnemonicParsing="false" onAction="#onColler" text="Coller" />
+                        <MenuItem mnemonicParsing="false" onAction="#onCreerPlayListDepuisSelection" text="Créer playlist à partir de la séléction" />
                         <MenuItem mnemonicParsing="false" onAction="#onSupprimerMusique" text="Supprimer" />
                     </items>
                   </ContextMenu>

@@ -5,6 +5,7 @@
  */
 package lecteuraudio.controller;
 
+import com.sun.org.apache.xpath.internal.compiler.OpCodes;
 import java.io.File;
 import java.net.URL;
 import java.util.Optional;
@@ -49,9 +50,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonBar;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -61,9 +64,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Pair;
 import javax.activation.FileTypeMap;
 import lecteuraudio.metier.Lecteur;
 import lecteuraudio.metier.Manager;
@@ -150,7 +155,7 @@ public class FXMLDocumentController implements Initializable {
     public ObjectProperty<NoeudMusique> selectedNoeudProperty() {
         return selectedNoeud;
     }
-
+    
     @FXML
     private TextField zoneRech;
 
@@ -178,6 +183,7 @@ public class FXMLDocumentController implements Initializable {
         this.manager = new SimpleObjectProperty<>(manager);
     }
 
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initializeTreeView();
@@ -198,22 +204,151 @@ public class FXMLDocumentController implements Initializable {
 
         initializeTableView();
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
     }
 
-    /*
-    * Intitilisation de la zone central, la TableView
-    * Donne lesproperty à associer à chaque colonne de la TableView
-    * @author nachazot1
-     */
-    public void initializeTableView() {
+   
 
-        ((TableColumn<Musique, String>) tableView.getColumns().get(0)).setCellValueFactory(new PropertyValueFactory("titre"));
-        ((TableColumn<Musique, String>) tableView.getColumns().get(1)).setCellValueFactory(new PropertyValueFactory("auteur"));
-        ((TableColumn<Musique, String>) tableView.getColumns().get(2)).setCellValueFactory(new PropertyValueFactory("duree"));
+    //methode en attendant d'arriver à utiliser les bindings fxml
+    private void bindings() {
+        //Binding sur le titre da la musique courante (musiqueView)
+        titreMusique.textProperty().bind(getManager().getNoeudCourant().titreProperty());
+        if (getManager().getNoeudCourant() instanceof IMusique) {
+            IMusique m = (IMusique) getManager().getNoeudCourant();
+            auteur.textProperty().bind(m.auteurProperty());
+        }
+        //Binding du Slider sur le volume du Lecteur
+        volumeSlider.valueProperty().addListener(new InvalidationListener() {
+            public void invalidated(Observable ov) {
+                if (volumeSlider.isValueChanging()) {
+                    lec.setVolume(volumeSlider.getValue() / 100.0);
+                }
+            }
+        });
 
+        //Binding des labels tempsEcoule, tempsRestant sur les valeur du mediaPlayer, ainsi que le binding de la progressBar
+        lec.currentTimeProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue o, Object oldVal, Object newVal) {
+                Duration current = lec.getCurrentTime();
+                Duration duration = lec.getTotalDuration();
+                tempsEcoule.textProperty().bind(new SimpleStringProperty(Utils.formatTime(current)));
+                tempsRestant.textProperty().bind(new SimpleStringProperty(Utils.formatTime(duration)));
+                progressbar.setProgress((current.toSeconds() / duration.toSeconds()));
+
+            }
+        });
+        //Si la musique est à la fin, jouer la prochaine musique du lecteur
+        lec.setOnEndOfMedia(new Runnable() {
+            public void run() {
+                getManager().setNoeudCourant(lec.next());
+                bindings();
+            }
+        });
     }
 
+ 
+    
+    public void exit() {
+        if (youTubeStage != null) {
+            youTubeStage.close();
+        }
+        Platform.exit();
+    }
+
+    @FXML
+    private void onExit(ActionEvent event) {
+        getManager().sauver();
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText(null);
+        alert.setContentText("Êtes-vous sûr de vouloir quitter ?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            exit();
+        }
+
+    }
+    
+    
+    /*********************************************************************************************************************
+     *                                   AJOUT PLAYLIST ZONE DU BAS
+     *********************************************************************************************************************/
+
+    //creerIPlayListDepuisView : validation apres la saisie d'une playlist, la rajoute dans la liste des playlist, affiche une fenetre d'erreur si le titre de la playlist existe deja
+    private void creerPlaylistDepuisView() {
+        IPlayList p = new BinaryPlayList(new PlayList(nomPlayListAjout.getText()));
+        if (!getManager().ajouter(p)) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Une playlist possède déja le nom \"" + p.getTitre() + "\".");
+            alert.showAndWait();
+        }
+        updateTreeView(rootItem, getManager().getRacine());
+        nomPlayListAjout.clear();
+        zoneAjout.setVisible(false);
+        ajoutPlayList.setVisible(true);
+    }
+    
+    //onAnnulerPlaylist : annule l'ajout d'une playlist, cache la zone permettant de saisir une nouvelle playlist à ajouter 
+    @FXML
+    private void onAnnulerPlaylist(ActionEvent event) {
+        nomPlayListAjout.clear();
+        zoneAjout.setVisible(false);
+        ajoutPlayList.setVisible(true);
+    }
+
+
+    @FXML
+    private void onValidNom(KeyEvent key) {
+        if (key.getCode().equals(KeyCode.ENTER)) {
+            creerPlaylistDepuisView();
+        }
+    }
+
+    @FXML
+    private void onValidNomButton(ActionEvent event) {
+        creerPlaylistDepuisView();
+    }
+    
+    /*********************************************************************************************************************
+     *                                       TREEVIEW ZONE GAUCHE
+     *********************************************************************************************************************/
+    
+    @FXML
+    private void onNoeudMusiqueChoisie(MouseEvent event) {
+        NoeudMusique nm = null;
+        if (treeView.getSelectionModel().getSelectedItem() != null) {
+            nm = treeView.getSelectionModel().getSelectedItem().getValue();
+        }
+
+        if (nm != null) {
+            if (nm instanceof IMusique) {
+                if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {  //double clic gauche
+                    //Met la musique séléctionné dans musiqueView puis la joue
+                    getManager().setNoeudCourant((IMusique) nm);
+                    lec.setPlaylist((IPlayList) treeView.getSelectionModel().getSelectedItem().getParent().getValue());
+                    lec.setMusiqueCourante(getManager().getNoeudCourant());
+                    lec.pause();
+                    if ("play".equals(play.getId())) {
+                        play.setId("pause");
+                    }
+                    lec.play(getManager().getNoeudCourant());
+
+                    lec.setVolume(volumeSlider.getValue());
+                    bindings();
+
+                } else {
+                    //Changement de node sur la zone centrale à implémenter
+                }
+            } else {
+                listecourante = (IPlayList) nm;
+                listemusiques = new PlayListMusiques(listecourante);
+            }
+        }
+    }
+    
     /*
     * Intitilisation du TreeView
     * @author nachazot1
@@ -288,161 +423,9 @@ public class FXMLDocumentController implements Initializable {
         treeView.getSelectionModel().select(item);
     }
 
-    //methode en attendant d'arriver à utiliser les bindings fxml
-    private void bindings() {
-        //Binding sur le titre da la musique courante (musiqueView)
-        titreMusique.textProperty().bind(getManager().getNoeudCourant().titreProperty());
-        if (getManager().getNoeudCourant() instanceof IMusique) {
-            IMusique m = (IMusique) getManager().getNoeudCourant();
-            auteur.textProperty().bind(m.auteurProperty());
-        }
-        //Binding du Slider sur le volume du Lecteur
-        volumeSlider.valueProperty().addListener(new InvalidationListener() {
-            public void invalidated(Observable ov) {
-                if (volumeSlider.isValueChanging()) {
-                    lec.setVolume(volumeSlider.getValue() / 100.0);
-                }
-            }
-        });
-
-        //Binding des labels tempsEcoule, tempsRestant sur les valeur du mediaPlayer, ainsi que le binding de la progressBar
-        lec.currentTimeProperty().addListener(new ChangeListener() {
-            @Override
-            public void changed(ObservableValue o, Object oldVal, Object newVal) {
-                Duration current = lec.getCurrentTime();
-                Duration duration = lec.getTotalDuration();
-                tempsEcoule.textProperty().bind(new SimpleStringProperty(Utils.formatTime(current)));
-                tempsRestant.textProperty().bind(new SimpleStringProperty(Utils.formatTime(duration)));
-                progressbar.setProgress((current.toSeconds() / duration.toSeconds()));
-
-            }
-        });
-        //Si la musique est à la fin, jouer la prochaine musique du lecteur
-        lec.setOnEndOfMedia(new Runnable() {
-            public void run() {
-                getManager().setNoeudCourant(lec.next());
-                bindings();
-            }
-        });
-    }
-
-    @FXML
-    private void importPressed(ActionEvent event) {
-        if (getManager().chercherDisqueDur(borderPane.getScene().getWindow())) {
-            updateLayoutTreeView(rootItem, getManager().getRacine());
-        }
-
-    }
-
-    @FXML
-    private void previousPressed(ActionEvent event) {
-
-        NoeudMusique nm = lec.precedent();
-        getManager().setNoeudCourant(nm);
-        if (nm == null) {
-            return;
-        }
-        if ("play".equals(play.getId())) {
-            play.setId("pause");
-        }
-        bindings();
-    }
-
-    @FXML
-    private void nextPressed(ActionEvent event) {
-
-        NoeudMusique nm = lec.next();
-        if (nm == null) {
-            return;
-        }
-        getManager().setNoeudCourant(nm);
-        if ("play".equals(play.getId())) {
-            play.setId("pause");
-        }
-        bindings();
-    }
-
-    @FXML
-    private void onNoeudMusiqueChoisie(MouseEvent event) {
-        NoeudMusique nm = null;
-        if (treeView.getSelectionModel().getSelectedItem() != null) {
-            nm = treeView.getSelectionModel().getSelectedItem().getValue();
-        }
-
-        if (nm != null) {
-            if (nm instanceof IMusique) {
-                if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {  //double clic gauche
-                    //Met la musique séléctionné dans musiqueView puis la joue
-                    getManager().setNoeudCourant((IMusique) nm);
-                    lec.setPlaylist((IPlayList) treeView.getSelectionModel().getSelectedItem().getParent().getValue());
-                    lec.setMusiqueCourante(getManager().getNoeudCourant());
-                    lec.pause();
-                    if ("play".equals(play.getId())) {
-                        play.setId("pause");
-                    }
-                    lec.play(getManager().getNoeudCourant());
-
-                    lec.setVolume(volumeSlider.getValue());
-                    bindings();
-
-                } else {
-                    //Changement de node sur la zone centrale à implémenter
-                }
-            } else {
-                listecourante = (IPlayList) nm;
-                listemusiques = new PlayListMusiques(listecourante);
-            }
-        }
-    }
-
-    @FXML
-    private void onMusiqueChoisie(MouseEvent event) {
-
-        if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {  //double clic gauche
-            //Met la musique séléctionné dans musiqueView puis la joue
-            getManager().setNoeudCourant((IMusique) tableView.getSelectionModel().getSelectedItem());
-            lec.setPlaylist(listecourante);
-            lec.setMusiqueCourante(getManager().getNoeudCourant());
-            lec.pause();
-            if ("play".equals(play.getId())) {
-                play.setId("pause");
-            }
-            lec.play(getManager().getNoeudCourant());
-
-            lec.setVolume(volumeSlider.getValue());
-            bindings();
-
-        }
-    }
-
-    @FXML
-    private void playPressed(ActionEvent event
-    ) {
-
-        if ("play".equals(play.getId())) {
-            if (lec.play() != null) {
-                play.setId("pause");
-            }
-        } else {
-            play.setId("play");
-            lec.pause();
-        }
-
-    }
-
-    //onMuteClic : mute si le lecteur est unmute, unmute si le lecteur est mute
-    @FXML
-    private void onMuteClic(ActionEvent event) {
-        if (!lec.isNull()) {
-            if (lec.isMute()) {
-                lec.setMute(false);
-                muteButton.setId("mute");
-            } else {
-                lec.setMute(true);
-                muteButton.setId("unmute");
-            }
-        }
-    }
+    /*********************************************************************************************************************
+     *                                   MENU CONTEXTUEL ZONE GAUCHE
+     *********************************************************************************************************************/
 
     //onAjoutPlayList : affiche la zone permettant de saisir une nouvelle playlist à ajouter 
     @FXML
@@ -450,15 +433,7 @@ public class FXMLDocumentController implements Initializable {
         zoneAjout.setVisible(true);
         ajoutPlayList.setVisible(false);
     }
-
-    //onAnnulerPlaylist : annule l'ajout d'une playlist, cache la zone permettant de saisir une nouvelle playlist à ajouter 
-    @FXML
-    private void onAnnulerPlaylist(ActionEvent event) {
-        nomPlayListAjout.clear();
-        zoneAjout.setVisible(false);
-        ajoutPlayList.setVisible(true);
-    }
-
+    
     //onSupprimerNoeudMusique : Supprime un noeud, affiche une fenetre de dialogue permettant de confirmer
     @FXML
     private void onSupprimerNoeudMusique(ActionEvent event) {
@@ -484,57 +459,48 @@ public class FXMLDocumentController implements Initializable {
             updateLayoutTreeView(item.getParent(), item.getParent().getValue());
         }
     }
+    
+    /*********************************************************************************************************************
+     *                                         ZONE CENTRAL
+     *********************************************************************************************************************/
+    
+    /*
+    * Intitilisation de la zone central, la TableView
+    * Donne lesproperty à associer à chaque colonne de la TableView
+    * @author nachazot1
+     */
+    public void initializeTableView() {
 
-    //creerIPlayListDepuisView : validation apres la saisie d'une playlist, la rajoute dans la liste des playlist, affiche une fenetre d'erreur si le titre de la playlist existe deja
-    private void creerPlaylistDepuisView() {
-        IPlayList p = new BinaryPlayList(new PlayList(nomPlayListAjout.getText()));
-        if (!getManager().ajouter(p)) {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setHeaderText(null);
-            alert.setContentText("Une playlist possède déja le nom \"" + p.getTitre() + "\".");
-            alert.showAndWait();
-        }
-        updateTreeView(rootItem, getManager().getRacine());
-        nomPlayListAjout.clear();
-        zoneAjout.setVisible(false);
-        ajoutPlayList.setVisible(true);
+        ((TableColumn<Musique, String>) tableView.getColumns().get(0)).setCellValueFactory(new PropertyValueFactory("titre"));
+        ((TableColumn<Musique, String>) tableView.getColumns().get(1)).setCellValueFactory(new PropertyValueFactory("auteur"));
+        ((TableColumn<Musique, String>) tableView.getColumns().get(2)).setCellValueFactory(new PropertyValueFactory("duree"));
+
     }
-
+    
     @FXML
-    private void onValidNom(KeyEvent key) {
-        if (key.getCode().equals(KeyCode.ENTER)) {
-            creerPlaylistDepuisView();
+    private void onMusiqueChoisie(MouseEvent event) {
+
+        if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {  //double clic gauche
+            //Met la musique séléctionné dans musiqueView puis la joue
+            getManager().setNoeudCourant((IMusique) tableView.getSelectionModel().getSelectedItem());
+            lec.setPlaylist(listecourante);
+            lec.setMusiqueCourante(getManager().getNoeudCourant());
+            lec.pause();
+            if ("play".equals(play.getId())) {
+                play.setId("pause");
+            }
+            lec.play(getManager().getNoeudCourant());
+
+            lec.setVolume(volumeSlider.getValue());
+            bindings();
+
         }
     }
-
-    @FXML
-    private void onValidNomButton(ActionEvent event) {
-        creerPlaylistDepuisView();
-    }
-
-    public void exit() {
-        if (youTubeStage != null) {
-            youTubeStage.close();
-        }
-        Platform.exit();
-    }
-
-    @FXML
-    private void onExit(ActionEvent event) {
-        getManager().sauver();
-        Alert alert = new Alert(AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation");
-        alert.setHeaderText(null);
-        alert.setContentText("Êtes-vous sûr de vouloir quitter ?");
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK) {
-            exit();
-        }
-
-    }
-
+    
+    /*********************************************************************************************************************
+     *                                   MENU CONTEXTUEL ZONE CENTRAL
+     *********************************************************************************************************************/
+    
     /*
     *onModifier : ouvre une nouvelle fenetre permettant de modifier la musique séléctionné.
      */
@@ -671,7 +637,141 @@ public class FXMLDocumentController implements Initializable {
             updateLayoutTreeView(playlist, playlist.getValue());
         }
     }
+    
+    /*
+    * onCreerPlayListDepuisSelection : créer une playlist à partir des musiques séléctionnés dans la tableview.
+    * Ouvre une boite de dialogue pour demander le nom de la playlist
+    * Gere les erreurs sous forme d'alert.
+    */
+    @FXML
+    private void onCreerPlayListDepuisSelection(ActionEvent event) {
+        ObservableList list = tableView.getSelectionModel().getSelectedItems();
+        
+        if(list.size()==0) return;
+        GridPane gridPane = new GridPane(); 
+        gridPane.setHgap(6); 
+        gridPane.setVgap(6); 
+        TextField playlistfield = new TextField();
+        gridPane.add(playlistfield, 1, 0); 
+        playlistfield.setPromptText("Playlist"); 
+        Dialog<String> dialog = new Dialog(); 
+        dialog.setTitle("Playlist"); 
+        dialog.setHeaderText("Veuillez saisir le nom de la playlist :");
+        dialog.getDialogPane().setContent(gridPane);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
+        // Conversion du résultat lors de la validation du dialogue, null si c'est annulé.
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                return playlistfield.getText();
+            }
+            return null;
+        });
+        // On place le focus sur le champ de saisie. 
+        Platform.runLater(() -> playlistfield.requestFocus());
+        
+        // Le bouton OK reste désactivé tant que l'identifiant n'est pas correct. 
+        Node okButton = dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.setDisable(true);
+        playlistfield.textProperty().addListener((observable, oldValue, newValue) -> {
+            okButton.setDisable(newValue.trim().isEmpty());
+        });
+
+        Optional<String> result=dialog.showAndWait();
+        if(result==null) return;
+        IPlayList newplaylist=new BinaryPlayList(new PlayList(result.get()));
+        
+        for(Object m : list){
+            newplaylist.ajouter((IMusique)m);
+        }
+        if(getManager().ajouter(newplaylist)){
+            updateLayoutTreeView(rootItem, rootItem.getValue());
+            rootItem.setExpanded(true);
+            treeView.getSelectionModel().selectLast();
+        }
+        else{
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("PlayList déja existante");
+            alert.setContentText("La playlist " + newplaylist.getTitre() + " existe déja.");
+            alert.showAndWait();
+        }
+        
+    }
+    
+    
+    @FXML
+    private void onSupprimerMusique() {
+        List<IMusique> listeASuppr = (List<IMusique>) tableView.getSelectionModel().getSelectedItems();
+        TreeItem<NoeudMusique> playlistItem = treeView.getSelectionModel().getSelectedItem();
+        IPlayList playlist = (IPlayList) playlistItem.getValue();
+        playlist.getPlayList().removeAll(listeASuppr);
+        // Si on supprime dans la racine, on doit supprimer la musique dans le dossier Musiques et dans toutes les playlists 
+        if (playlist.getTitre().equals("Racine")) {
+            getManager().suppression(listeASuppr);
+        }
+        updateLayoutTreeView(playlistItem, playlistItem.getValue());
+    }
+    
+    /*********************************************************************************************************************
+     *                                          LECTEUR MUSIQUE
+     *********************************************************************************************************************/
+    
+    @FXML
+    private void playPressed(ActionEvent event) {
+
+        if ("play".equals(play.getId())) {
+            if (lec.play() != null) {
+                play.setId("pause");
+            }
+        } else {
+            play.setId("play");
+            lec.pause();
+        }
+
+    }
+
+    @FXML
+    private void previousPressed(ActionEvent event) {
+
+        NoeudMusique nm = lec.precedent();
+        getManager().setNoeudCourant(nm);
+        if (nm == null) {
+            return;
+        }
+        if ("play".equals(play.getId())) {
+            play.setId("pause");
+        }
+        bindings();
+    }
+
+    @FXML
+    private void nextPressed(ActionEvent event) {
+
+        NoeudMusique nm = lec.next();
+        if (nm == null) {
+            return;
+        }
+        getManager().setNoeudCourant(nm);
+        if ("play".equals(play.getId())) {
+            play.setId("pause");
+        }
+        bindings();
+    }
+    
+    //onMuteClic : mute si le lecteur est unmute, unmute si le lecteur est mute
+    @FXML
+    private void onMuteClic(ActionEvent event) {
+        if (!lec.isNull()) {
+            if (lec.isMute()) {
+                lec.setMute(false);
+                muteButton.setId("mute");
+            } else {
+                lec.setMute(true);
+                muteButton.setId("unmute");
+            }
+        }
+    }
+    
     @FXML
     private void OnProgressBar(MouseEvent event) {
         if (progressbar != null && !lec.isNull()) {
@@ -681,22 +781,11 @@ public class FXMLDocumentController implements Initializable {
             progressbar.setProgress(event.getX() / progressbar.getWidth());
         }
     }
-
-    /*
-    //private static final DataFormat musiqueDataFormat = new DataFormat("lecteuraudio.modele.IMusique");
-    @FXML */
-    @FXML
-    private void onDragDetected(MouseEvent event) {
-        List<IMusique> dragged = (List<IMusique>) tableView.getSelectionModel().getSelectedItems();
-        Dragboard dragBoard = tableView.startDragAndDrop(TransferMode.COPY);
-        dragBoard.setDragView(new Text(dragged.toString()).snapshot(null, null), event.getX() / 100, event.getY() / 100);
-        ClipboardContent content = new ClipboardContent();
-        content.putString(dragged.toString());
-        dragBoard.setContent(content);
-
-        event.consume();
-    }
-
+    
+    /*********************************************************************************************************************
+     *                                          RECHERCHE
+     *********************************************************************************************************************/
+    
     @FXML
     private void onRech(ActionEvent event) {
         String recherche = zoneRech.getText();
@@ -719,19 +808,17 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
+    /*********************************************************************************************************************
+     *                                          IMPORT ET YOUTUBE
+     *********************************************************************************************************************/
     @FXML
-    private void onSupprimerMusique() {
-        List<IMusique> listeASuppr = (List<IMusique>) tableView.getSelectionModel().getSelectedItems();
-        TreeItem<NoeudMusique> playlistItem = treeView.getSelectionModel().getSelectedItem();
-        IPlayList playlist = (IPlayList) playlistItem.getValue();
-        playlist.getPlayList().removeAll(listeASuppr);
-        // Si on supprime dans la racine, on doit supprimer la musique dans le dossier Musiques et dans toutes les playlists 
-        if (playlist.getTitre().equals("Racine")) {
-            getManager().suppression(listeASuppr);
+    private void importPressed(ActionEvent event) {
+        if (getManager().chercherDisqueDur(borderPane.getScene().getWindow())) {
+            updateLayoutTreeView(rootItem, getManager().getRacine());
         }
-        updateLayoutTreeView(playlistItem, playlistItem.getValue());
-    }
 
+    }
+    
     @FXML
     private void onYoutube() throws Exception {
 
@@ -779,6 +866,24 @@ public class FXMLDocumentController implements Initializable {
 
     }
 
+    
+
+    /*********************************************************************************************************************
+     *                                          DRAG AND DROP
+     *********************************************************************************************************************/
+    
+    @FXML
+    private void onDragDetected(MouseEvent event) {
+        List<IMusique> dragged = (List<IMusique>) tableView.getSelectionModel().getSelectedItems();
+        Dragboard dragBoard = tableView.startDragAndDrop(TransferMode.COPY);
+        dragBoard.setDragView(new Text(dragged.toString()).snapshot(null, null), event.getX() / 100, event.getY() / 100);
+        ClipboardContent content = new ClipboardContent();
+        content.putString(dragged.toString());
+        dragBoard.setContent(content);
+
+        event.consume();
+    }
+    
     @FXML
     private void onDragOver(DragEvent event) {
         Dragboard db = event.getDragboard();
@@ -829,5 +934,5 @@ public class FXMLDocumentController implements Initializable {
         event.setDropCompleted(success);
         event.consume();
     }
-
+    
 }
