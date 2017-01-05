@@ -38,12 +38,12 @@ public class Manager {
     }
     
     public void setDataManager (IDataManager m){ 
-        datamanager=m ;
+        datamanager=m;
     }
     
     public void charger(){ 
         gesImp.ouverture();
-        gesImp.importerRepertoireMusiques(getRacine());  
+        //gesImp.importerRepertoireMusiques(getRacine());  
         datamanager.charger(getRacine());
     }
     

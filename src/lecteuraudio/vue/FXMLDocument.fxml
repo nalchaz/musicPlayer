@@ -66,10 +66,11 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </TitledPane>
-            <TableView fx:id="tableView" editable="true" onDragDetected="#onDragDetected" nodeOrientation="LEFT_TO_RIGHT" onMouseClicked="#onMusiqueChoisie" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+            <TableView fx:id="tableView" editable="true" nodeOrientation="LEFT_TO_RIGHT" onDragDetected="#onDragDetected" onMouseClicked="#onMusiqueChoisie" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                <contextMenu>
                   <ContextMenu>
                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#onModifier" text="Modifier" />
                       <MenuItem mnemonicParsing="false" onAction="#onCopier" text="Copier" />
                       <MenuItem mnemonicParsing="false" onAction="#onColler" text="Coller" />
                       <MenuItem mnemonicParsing="false" onAction="#onSupprimerMusique" text="Supprimer" />
@@ -118,7 +119,7 @@
                <children>
                   <StackPane id="zoneLecteur" maxHeight="80.0" maxWidth="500.0" minHeight="50.0" minWidth="500.0" prefHeight="50.0" prefWidth="500.0" StackPane.alignment="CENTER">
                      <children>
-                        <Label fx:id="titreMusique" text="Titre" StackPane.alignment="BOTTOM_CENTER" >
+                        <Label fx:id="titreMusique" text="Titre" StackPane.alignment="BOTTOM_CENTER">
                            <StackPane.margin>
                               <Insets bottom="45.0" />
                            </StackPane.margin>

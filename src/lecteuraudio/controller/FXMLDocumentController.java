@@ -143,7 +143,12 @@ public class FXMLDocumentController implements Initializable {
    
     //Fenetre YouTube
     private Stage youTubeStage;
-   
+    private YouTubeFXMLController youTubeController;
+    
+    //Fenetre de modification
+    private Stage modifStage;
+    private ModificationController modifController;
+    
     private ArrayList<NoeudMusique> pressePapier; //Utilisé pour le copié collé
     
     private IPlayList listecourante;
@@ -152,7 +157,7 @@ public class FXMLDocumentController implements Initializable {
     
     private Lecteur lec=new Lecteur();
     
-    private YouTubeFXMLController youTubeController;
+    
     
     public FXMLDocumentController (Manager manager){
         this.manager=new SimpleObjectProperty<>(manager);
@@ -520,6 +525,43 @@ public class FXMLDocumentController implements Initializable {
 
     }
 
+    /*
+    *onModifier : ouvre une nouvelle fenetre permettant de modifier la musique séléctionné.
+    */
+    @FXML
+    private void onModifier(ActionEvent event) throws Exception {
+        ObservableList list=tableView.getSelectionModel().getSelectedItems();
+        if(list.size() > 1 || list.isEmpty()){
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Vous devez séléctionner un seul élément à modifier.");
+        }
+        else{  
+            modifStage=new Stage();
+            modifStage.setTitle("Modification");
+            FXMLLoader fxmloader = new FXMLLoader(getClass().getResource("/lecteuraudio/vue/modificationFXML.fxml"));
+
+            Parent root = fxmloader.load();
+            modifController=fxmloader.getController();
+            modifController.setMusique((IMusique)list.get(0));
+            Scene scene = new Scene(root);         
+            modifStage.setScene(scene);
+            modifStage.showAndWait();
+            if(modifController.isNewVal()){
+                ((IMusique)tableView.getSelectionModel().getSelectedItems().get(0)).setAuteur(modifController.getAuteur());
+                ((IMusique)tableView.getSelectionModel().getSelectedItems().get(0)).setTitre(modifController.getTitre());
+            }
+            
+
+            
+            
+            
+        }
+            
+
+    }
+    
     @FXML
     private void onCopier(ActionEvent event) {
         ObservableList list=tableView.getSelectionModel().getSelectedItems();
