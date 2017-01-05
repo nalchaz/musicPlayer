@@ -96,18 +96,11 @@ public class GestionnaireImport {
         Media media = new Media(m.getPath());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         //Attendre que le mediaplayer soit pret pour récuperer les metadatas
-        mediaPlayer.setOnReady(new Runnable() {
-            @Override
-            public void run() {
-                
-                m.setDuree(Utils.formatTime(media.getDuration()));
-                m.setAuteur((String)media.getMetadata().get("artist"));
-
-            }
-        });
         
-
-       
+        mediaPlayer.setOnReady(() -> {
+            m.setDuree(Utils.formatTime(media.getDuration()));
+            m.setAuteur((String)media.getMetadata().get("artist"));
+        });
 
         return racine.ajouter(m);
     }
@@ -119,11 +112,15 @@ public class GestionnaireImport {
 
     }
     
+    /*
+    *suppression : supprime toutes les musiques de la List. Les supprime du dossier "Musiques" à la fermeture de l'application.
+    */
     public void suppression (List<IMusique> musique){
         for (IMusique m : musique){ 
             for (File f : new File(repositoryPath).listFiles()){
-                String nom=f.getName().substring(0, f.getName().length()-4);
-                if (nom.equals(m.getTitre())){
+                String nom=f.getPath();
+                String con=m.getPath().substring(m.getPath().indexOf("Musiques")+9,m.getPath().length());
+                if (nom.replaceAll(" ", "%20").contains(m.getPath().substring(m.getPath().indexOf("Musiques")+9,m.getPath().length()))){
                     f.deleteOnExit();
                 }
             }

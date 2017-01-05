@@ -73,8 +73,18 @@ public class Manager {
         return gesImp.chercherDisqueDur(getRacine(), window);
     }
     
-    public void ajouterMusique(File f) {
-        gesImp.ajouterMusique(f, getRacine());
+    public boolean copierDansRepository(File f){
+        try{
+            gesImp.copierDansRepository(f);
+            return true;
+        }
+        catch(Exception e){
+            return false;
+        }
+    }
+    
+    public boolean ajouterMusique(File f) {
+        return gesImp.ajouterMusique(f, getRacine());
     }
     
 }
