@@ -53,13 +53,16 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -211,8 +214,8 @@ public class FXMLDocumentController implements Initializable {
     private IPlayList listecourante;
     private PlayListMusiques listemusiques; //Liste de musiques seulement
 
+    private boolean onProgressMoving=false; //Permet de savoir si la souris se situe au dessus de la progress bar
     
-
     public FXMLDocumentController(Manager manager) {
         this.manager = new SimpleObjectProperty<>(manager);
     }
@@ -221,18 +224,20 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initializeTreeView();
+        
+        //resélectionne le premier item pour mettre a jour l'affichage
+        treeView.getSelectionModel().select(null);
+        treeView.getSelectionModel().selectFirst();
+        
         ObjectBinding<NoeudMusique> ob = Bindings.createObjectBinding(
                 () -> treeView.getSelectionModel().getSelectedItem().getValue(),
                 treeView.getSelectionModel().selectedItemProperty());
+        
         selectedNoeudProperty().bind(ob);
 
         //Initialisation des listes
         listecourante = getManager().getRacine();
         listemusiques = new PlayListMusiques(listecourante);
-
-        //resélectionne le premier item pour mettre a jour l'affichage
-        treeView.getSelectionModel().select(null);
-        treeView.getSelectionModel().selectFirst();
 
         updateTreeView(rootItem, getManager().getRacine());
 
@@ -242,14 +247,9 @@ public class FXMLDocumentController implements Initializable {
 
    
 
-    //methode en attendant d'arriver à utiliser les bindings fxml
+    //Initialise les bindings sur les property du lecteur qui ne sont pas fait dans le FXML, utilisé aux appelles des fonctions onMusiqueChoisie, .
     private void bindings() {
-        //Binding sur le titre da la musique courante (musiqueView)
-        titreMusique.textProperty().bind(getManager().getNoeudCourant().titreProperty());
-        if (getManager().getNoeudCourant() instanceof IMusique) {
-            IMusique m = (IMusique) getManager().getNoeudCourant();
-            auteur.textProperty().bind(m.auteurProperty());
-        }
+
         //Binding du Slider sur le volume du Lecteur
         volumeSlider.valueProperty().addListener(new InvalidationListener() {
             public void invalidated(Observable ov) {
@@ -265,10 +265,12 @@ public class FXMLDocumentController implements Initializable {
             public void changed(ObservableValue o, Object oldVal, Object newVal) {
                 Duration current = lec.getCurrentTime();
                 Duration duration = lec.getTotalDuration();
-                tempsEcoule.textProperty().bind(new SimpleStringProperty(Utils.formatTime(current)));
+                
                 tempsRestant.textProperty().bind(new SimpleStringProperty(Utils.formatTime(duration)));
-                progressbar.setProgress((current.toSeconds() / duration.toSeconds()));
-
+                if(!onProgressMoving){
+                    tempsEcoule.textProperty().bind(new SimpleStringProperty(Utils.formatTime(current)));
+                    progressbar.setProgress((current.toSeconds() / duration.toSeconds()));
+                }
             }
         });
         //Si la musique est à la fin, jouer la prochaine musique du lecteur
@@ -320,19 +322,58 @@ public class FXMLDocumentController implements Initializable {
     //creerIPlayListDepuisView : validation apres la saisie d'une playlist, la rajoute dans la liste des playlist, affiche une fenetre d'erreur si le titre de la playlist existe deja
     private void creerPlaylistDepuisView() {
         IPlayList p = new BinaryPlayList(new PlayList(nomPlayListAjout.getText()));
-        if (!getManager().ajouter(p)) {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Erreur");
+        if (!getSelectedNoeud().getTitre().equals("Racine")) {   // Si la playlist choisi n'est pas la playlist racine :
+            Alert alert = new Alert(AlertType.NONE);
+            alert.setTitle("Choix");
             alert.setHeaderText(null);
-            alert.setContentText("Une playlist possède déja le nom \"" + p.getTitre() + "\".");
-            alert.showAndWait();
+            alert.setContentText("Voulez vous ajouter la playlist \"" + nomPlayListAjout.getText() + "\" à la Racine, ou à la playlist \"" + getSelectedNoeud().getTitre() + "\" ?");
+            ButtonType racineButton = new ButtonType("Racine");
+            ButtonType playlistButton = new ButtonType(getSelectedNoeud().getTitre());
+            alert.getButtonTypes().addAll(racineButton, playlistButton, ButtonType.CANCEL);
+            Optional result = alert.showAndWait();
+            if (result.get() == racineButton) {
+                if (!getManager().ajouter(p)) {
+                    alert.setAlertType(AlertType.ERROR);
+                    alert.setTitle("Erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Une playlist possède déja le nom \"" + p.getTitre() + "\".");
+                    alert.showAndWait();
+                }
+                else treeView.getSelectionModel().selectLast();
+            } else if (result.get() == playlistButton) {
+                if (!((IPlayList) getSelectedNoeud()).ajouter(p)) {
+                    alert.setAlertType(AlertType.ERROR);
+                    alert.setTitle("Erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Une playlist possède déja le nom \"" + p.getTitre() + "\".");
+                    alert.showAndWait();
+                }
+                else treeView.getSelectionModel().selectLast();
+            }
+        }
+        else{   // Si la playlist choisi est la playlist racine :
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Choix");
+            alert.setHeaderText(null);
+            alert.setContentText("Voulez vous ajouter la playlist \"" + nomPlayListAjout.getText() + "\" à la Racine ?");
+            Optional result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                if (!getManager().ajouter(p)) {
+                    alert.setAlertType(AlertType.ERROR);
+                    alert.setTitle("Erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Une playlist possède déja le nom \"" + p.getTitre() + "\".");
+                    alert.showAndWait();
+                }
+                else treeView.getSelectionModel().selectLast();
+            }
         }
         updateTreeView(rootItem, getManager().getRacine());
         nomPlayListAjout.clear();
         zoneAjout.setVisible(false);
         ajoutPlayList.setVisible(true);
     }
-    
+
     //onAnnulerPlaylist : annule l'ajout d'une playlist, cache la zone permettant de saisir une nouvelle playlist à ajouter 
     @FXML
     private void onAnnulerPlaylist(ActionEvent event) {
@@ -340,7 +381,6 @@ public class FXMLDocumentController implements Initializable {
         zoneAjout.setVisible(false);
         ajoutPlayList.setVisible(true);
     }
-
 
     @FXML
     private void onValidNom(KeyEvent key) {
@@ -544,7 +584,9 @@ public class FXMLDocumentController implements Initializable {
             lec.play(getManager().getNoeudCourant());
 
             lec.setVolume(volumeSlider.getValue());
-            bindings();
+            
+            bindings();   
+            
 
         }
     }
@@ -800,7 +842,7 @@ public class FXMLDocumentController implements Initializable {
         if ("play".equals(play.getId())) {
             play.setId("pause");
         }
-        bindings();
+        bindings(); 
     }
 
     @FXML
@@ -814,7 +856,7 @@ public class FXMLDocumentController implements Initializable {
         if ("play".equals(play.getId())) {
             play.setId("pause");
         }
-        bindings();
+        bindings(); 
     }
     
     //onMuteClic : mute si le lecteur est unmute, unmute si le lecteur est mute
@@ -831,16 +873,45 @@ public class FXMLDocumentController implements Initializable {
         }
     }
     
+    
+    
     @FXML
     private void OnProgressBar(MouseEvent event) {
-        if (progressbar != null && !lec.isNull()) {
-            double d = event.getX();
-            Duration newDuration = new Duration(event.getX() / progressbar.getWidth() * lec.getTotalDuration().toMillis());
-            lec.seek(newDuration);
-            progressbar.setProgress(event.getX() / progressbar.getWidth());
+        if (event.getButton() == MouseButton.PRIMARY && lec.getMusiqueCourante()!=null) {
+            if (progressbar != null && !lec.isNull()) {
+                double d = event.getX();
+                Duration newDuration = new Duration(event.getX() / progressbar.getWidth() * lec.getTotalDuration().toMillis());
+                lec.seek(newDuration);
+                progressbar.setProgress(event.getX() / progressbar.getWidth());
+            }
+            bindings();
         }
     }
     
+    @FXML
+    private void onProgressBarMoved(MouseEvent event) {
+        if (lec.getMusiqueCourante()!=null) {
+            if (progressbar != null && !lec.isNull()) {
+                onProgressMoving=true;
+                Duration duration = lec.getTotalDuration();
+                //Affiche le temps correspondant a la position du curseur sur la progressBar
+                tempsEcoule.textProperty().bind(new SimpleStringProperty(Utils.formatTime(new Duration((event.getX()/progressbar.getWidth())*duration.toMillis())))); 
+                progressbar.setId("progressBarHover");
+                progressbar.setProgress(event.getX() / progressbar.getWidth());
+            }
+        }
+    }
+    
+    @FXML
+    private void onProgressBarExited(MouseEvent event) {
+        if (lec.getMusiqueCourante() != null) {
+            if (progressbar != null && !lec.isNull()) {
+                onProgressMoving = false;
+                progressbar.setId("progressBar");
+                bindings();
+            }
+        }
+    }
     //</editor-fold>
     
     /*********************************************************************************************************************

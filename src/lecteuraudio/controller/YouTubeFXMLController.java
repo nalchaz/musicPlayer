@@ -45,12 +45,11 @@ public class YouTubeFXMLController implements Initializable {
     private TextField urlTextField;
     @FXML
     private Label downloadStatus;
-    
+    @FXML
+    private ProgressBar downloadProgress;
     
     
     private final ObjectProperty<WebEngine> webengineProperty = new SimpleObjectProperty<>();
-    @FXML
-    private ProgressBar downloadProgress;
     public WebEngine getWebEngine() { return webengineProperty.get(); }
     public void setWebEngine(WebEngine value) { webengineProperty.set(value); }
     public ObjectProperty<WebEngine> webengineProperty() { return webengineProperty; }

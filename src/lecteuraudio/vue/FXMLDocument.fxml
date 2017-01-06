@@ -19,6 +19,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
@@ -50,8 +51,19 @@
                        <contextMenu>
                         <ContextMenu>
                           <items>
-                            <MenuItem mnemonicParsing="false" onAction="#onAjoutPlayList" text="Ajouter" />
-                            <MenuItem mnemonicParsing="false" onAction="#onSupprimerNoeudMusique" text="Supprimer" />
+                            <MenuItem mnemonicParsing="false" onAction="#onAjoutPlayList">
+                                 <graphic>
+                                    <HBox>
+                                       <children>
+                                          <Label text="Ajouter à " />
+                                          <Label text="${controller.selectedNoeud.titre}" />
+                                       </children>
+                                    </HBox>
+                                 </graphic></MenuItem>
+                            <MenuItem mnemonicParsing="false" onAction="#onSupprimerNoeudMusique">
+                                 <graphic>
+                                    <Label text="Supprimer" />
+                                 </graphic></MenuItem>
                           </items>
                         </ContextMenu>
                       </contextMenu>
@@ -121,12 +133,12 @@
                <children>
                   <StackPane id="zoneLecteur" maxHeight="80.0" maxWidth="500.0" minHeight="50.0" minWidth="500.0" prefHeight="50.0" prefWidth="500.0" StackPane.alignment="CENTER">
                      <children>
-                        <Label fx:id="titreMusique" text="Titre" StackPane.alignment="BOTTOM_CENTER">
+                        <Label fx:id="titreMusique" text="${controller.manager.noeudCourant.titre}" StackPane.alignment="BOTTOM_CENTER">
                            <StackPane.margin>
                               <Insets bottom="45.0" />
                            </StackPane.margin>
                         </Label>
-                        <Label fx:id="auteur" text="Auteur" StackPane.alignment="BOTTOM_CENTER">
+                        <Label fx:id="auteur" text="${controller.manager.noeudCourant.auteur}" StackPane.alignment="BOTTOM_CENTER">
                            <StackPane.margin>
                               <Insets bottom="25.0" />
                            </StackPane.margin>
@@ -141,7 +153,7 @@
                                     <Font size="12.0" />
                                  </font>
                               </Label>
-                              <ProgressBar fx:id="progressbar" maxHeight="10.0" minHeight="10.0" onMouseClicked="#OnProgressBar" prefHeight="10.0" prefWidth="360.0" progress="0.0" />
+                              <ProgressBar id="progressBar" fx:id="progressbar" blendMode="MULTIPLY" cache="true" maxHeight="10.0" minHeight="10.0" onMouseClicked="#OnProgressBar" onMouseMoved="#onProgressBarMoved" onMouseExited="#onProgressBarExited" prefHeight="10.0" prefWidth="360.0" progress="0.0" />
                               <Label fx:id="tempsRestant" text="Temps restant">
                                  <font>
                                     <Font size="12.0" />
