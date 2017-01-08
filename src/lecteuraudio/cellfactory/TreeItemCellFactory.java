@@ -33,16 +33,18 @@ public class TreeItemCellFactory implements Callback<TreeView<NoeudMusique>, Tre
     @Override
     public TreeCell<NoeudMusique> call(TreeView<NoeudMusique> param) {
         TreeItemCell treeItem=new TreeItemCell();
-        treeItem.setOnDragDropped(e->{onDragDropped(e);});
+        treeItem.setOnDragDropped(e->{onDragDropped(e,treeItem);});
         treeItem.setOnDragOver(e->{onDragOver(treeItem,e);});
         treeItem.setOnDragExited(e->{onDragExited(treeItem);});
         return treeItem;
     }
     
-    private void onDragDropped(DragEvent event) {
+    private void onDragDropped(DragEvent event,TreeItemCell treeItem) {
         if (((TreeItemCell)event.getGestureTarget()).getItem() instanceof IPlayList ){
             ((IPlayList)((TreeItemCell)event.getGestureTarget()).getItem()).getPlayList().addAll((List<IMusique>)((TableView)event.getGestureSource()).getSelectionModel().getSelectedItems());
+            treeItem.getTreeView().getSelectionModel().select(treeItem.getTreeItem());
             event.setDropCompleted(true);
+            
         }       
         event.consume();
     }
@@ -60,5 +62,6 @@ public class TreeItemCellFactory implements Callback<TreeView<NoeudMusique>, Tre
         treeItem.setBorder(Border.EMPTY);
        
     }
+    
 
 }

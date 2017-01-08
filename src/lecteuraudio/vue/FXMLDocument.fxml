@@ -47,7 +47,7 @@
             <TitledPane alignment="CENTER" collapsible="false" maxHeight="1.7976931348623157E308" text="Playlist" textAlignment="CENTER" GridPane.rowIndex="1">
                <content>
                    <!-- définition du TreeView et de son menu contextuel-->
-                   <TreeView fx:id="treeView" editable="true" onMouseClicked="#onNoeudMusiqueChoisie" style="-fx-border-width: 1;"  onDragDone="#onDragDone">
+                   <TreeView fx:id="treeView" editable="true" onMouseClicked="#onNoeudMusiqueChoisie" style="-fx-border-width: 1;"  >
                        <contextMenu>
                         <ContextMenu>
                           <items>

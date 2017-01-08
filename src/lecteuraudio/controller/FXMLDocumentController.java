@@ -1024,10 +1024,6 @@ public class FXMLDocumentController implements Initializable {
         event.consume();
     }
     
-    @FXML 
-    private void onDragDone (DragEvent event){ 
-        updateLayoutTreeView((TreeItem<NoeudMusique>)event.getGestureTarget(),((TreeItem<NoeudMusique>)event.getGestureTarget()).getValue() );
-    }
     
     @FXML
     private void onDragOver(DragEvent event) {
