@@ -34,7 +34,7 @@ public class BinaryPlayList extends IPlayList implements  Externalizable {
     }
 
     @Override
-    public ArrayList<IPlayList> getListPlayList() {
+    public List<IPlayList> getListPlayList() {
         return playlist.getListPlayList(); 
     }
 

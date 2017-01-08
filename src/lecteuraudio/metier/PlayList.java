@@ -7,6 +7,7 @@ package lecteuraudio.metier;
 
 
 import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
@@ -74,8 +75,8 @@ public class PlayList extends IPlayList{
     }
     
     @Override
-    public ArrayList<IPlayList> getListPlayList(){
-        ArrayList<IPlayList> list=new ArrayList();
+    public List<IPlayList> getListPlayList(){
+        List<IPlayList> list=new ArrayList();
         for(NoeudMusique m : playlist){
             if(m instanceof IPlayList){
                 list.add((IPlayList)m);
@@ -83,6 +84,8 @@ public class PlayList extends IPlayList{
         }
         return list;
     }
+    
+  
 
     
     

@@ -83,7 +83,6 @@ import lecteuraudio.persistanceBin.BinaryPlayList;
 public class FXMLDocumentController implements Initializable {
 
     
-
     /*********************************************************************************************************************
         *                                             BOUTONS
      *********************************************************************************************************************/
@@ -480,7 +479,7 @@ public class FXMLDocumentController implements Initializable {
     }
 
     //Met a jour le treeView à partir d'un noeud
-    private void updateTreeView(TreeItem<NoeudMusique> item, NoeudMusique noeud) {
+    private  void updateTreeView(TreeItem<NoeudMusique> item, NoeudMusique noeud) {
         //vide le TreeItem
         item.getChildren().clear();
 
@@ -499,7 +498,7 @@ public class FXMLDocumentController implements Initializable {
     *Puis met à jour l'affichage du treeView
     *
      */
-    private void updateLayoutTreeView(TreeItem<NoeudMusique> item, NoeudMusique noeud) {
+    private  void updateLayoutTreeView(TreeItem<NoeudMusique> item, NoeudMusique noeud) {
 
         //Met à jour l'affichage du treeView
         updateTreeView(item, noeud);
@@ -1025,6 +1024,11 @@ public class FXMLDocumentController implements Initializable {
         event.consume();
     }
     
+    @FXML 
+    private void onDragDone (DragEvent event){ 
+        updateLayoutTreeView((TreeItem<NoeudMusique>)event.getGestureTarget(),((TreeItem<NoeudMusique>)event.getGestureTarget()).getValue() );
+    }
+    
     @FXML
     private void onDragOver(DragEvent event) {
         Dragboard db = event.getDragboard();
@@ -1035,6 +1039,8 @@ public class FXMLDocumentController implements Initializable {
         }
 
     }
+    
+   
 
     /*
     *onDragDropped : Permet de déposer des fichiers audio venant de l'ordinateur

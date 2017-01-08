@@ -15,7 +15,7 @@ import javafx.collections.ObservableList;
  * @author alexd
  */
 public abstract class IPlayList extends NoeudMusique {
-    public abstract ArrayList<IPlayList> getListPlayList();
+    public abstract List<IPlayList> getListPlayList();
     public abstract boolean ajouter(NoeudMusique nm);
     public abstract ObservableList<NoeudMusique> getPlayList();
     public abstract boolean isEmpty(); 

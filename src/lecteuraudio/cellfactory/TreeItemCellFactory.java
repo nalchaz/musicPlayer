@@ -58,6 +58,7 @@ public class TreeItemCellFactory implements Callback<TreeView<NoeudMusique>, Tre
     
     private void onDragExited (TreeItemCell treeItem){ 
         treeItem.setBorder(Border.EMPTY);
+       
     }
 
 }

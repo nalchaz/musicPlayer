@@ -47,7 +47,7 @@
             <TitledPane alignment="CENTER" collapsible="false" maxHeight="1.7976931348623157E308" text="Playlist" textAlignment="CENTER" GridPane.rowIndex="1">
                <content>
                    <!-- définition du TreeView et de son menu contextuel-->
-                   <TreeView fx:id="treeView" editable="true" onMouseClicked="#onNoeudMusiqueChoisie" style="-fx-border-width: 1;">
+                   <TreeView fx:id="treeView" editable="true" onMouseClicked="#onNoeudMusiqueChoisie" style="-fx-border-width: 1;"  onDragDone="#onDragDone">
                        <contextMenu>
                         <ContextMenu>
                           <items>
@@ -71,14 +71,14 @@
                           <TreeItemCellFactory />
                       </cellFactory>
                       
-                      <TreeItem fx:id="rootItem" value="${controller.manager.racine}" />
+                      <TreeItem fx:id="rootItem" value="${controller.manager.racine}"  />
                   </TreeView>
                </content>
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </TitledPane>
-            <TableView fx:id="tableView" editable="true" nodeOrientation="LEFT_TO_RIGHT" onDragDetected="#onDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" onMouseClicked="#onMusiqueChoisie" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+            <TableView fx:id="tableView"   editable="true" nodeOrientation="LEFT_TO_RIGHT" onDragDetected="#onDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" onMouseClicked="#onMusiqueChoisie" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                <contextMenu>
                   <ContextMenu>
                     <items>
