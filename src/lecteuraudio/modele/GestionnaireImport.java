@@ -7,6 +7,7 @@ package lecteuraudio.modele;
 
 
 import java.io.File;
+import java.io.FileFilter;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.util.List;
@@ -18,6 +19,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import lecteuraudio.metier.IMusique;
@@ -73,7 +75,7 @@ public class GestionnaireImport {
                 return true;
             } catch (FileAlreadyExistsException e) {
                 if(!ajouterMusique(fichier, racine)){
-                    dialogueErreurFichierExistant();
+                    dialogueErreurFichierExistant(fichier.getName().substring(0, fichier.getName().length()-4));
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -82,10 +84,10 @@ public class GestionnaireImport {
         return false;
     }   
     
-    private void dialogueErreurFichierExistant() {
+    private void dialogueErreurFichierExistant(String nom) {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("Erreur");
-        alert.setContentText("Musique déjà importée");
+        alert.setContentText(nom+" déjà importé");
         alert.showAndWait();
 
     }
@@ -125,6 +127,31 @@ public class GestionnaireImport {
                 }
             }
         }
+    }
+    
+    public boolean chercherDisqueDurRep(IPlayList racine, Window window) {
+
+        DirectoryChooser dirChooser = new DirectoryChooser();
+        dirChooser.setTitle("Open Resource File");
+
+        File rep = dirChooser.showDialog(window);
+        if (rep != null) {
+
+            for (File f : rep.listFiles(new MusiqueFileFilter())) {
+                try {
+                    copierDansRepository(f);
+                    ajouterMusique(f, racine);
+                } catch (FileAlreadyExistsException e) {
+                    if (!ajouterMusique(f, racine)) {
+                        dialogueErreurFichierExistant(f.getName().substring(0, f.getName().length()-4));
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+            return true;
+        }
+        return false;
     }
     
    

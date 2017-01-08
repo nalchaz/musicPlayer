@@ -215,7 +215,16 @@
                         <Insets right="40.0" />
                      </FlowPane.margin>
                   </Button>
+                  <Button id="import" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#importDirectoryPressed" text="Importer un répertoire">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <FlowPane.margin>
+                        <Insets right="40.0" />
+                     </FlowPane.margin>
+                  </Button>
                </children>
+               
             </FlowPane>
             <FlowPane fx:id="zoneAjout" visible="false">
                <children>

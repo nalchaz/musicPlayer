@@ -957,6 +957,13 @@ public class FXMLDocumentController implements Initializable {
 
     }
     
+    @FXML 
+    private void importDirectoryPressed(ActionEvent event){ 
+        if (getManager().chercherDisqueDurRep(borderPane.getScene().getWindow())) {
+            updateLayoutTreeView(rootItem, getManager().getRacine());
+        }
+    }
+    
     @FXML
     private void onYoutube() throws Exception {
 

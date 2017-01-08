@@ -78,6 +78,10 @@ public class Manager {
         return gesImp.chercherDisqueDur(getRacine(), window);
     }
     
+    public boolean chercherDisqueDurRep(Window window){
+        return gesImp.chercherDisqueDurRep(getRacine(), window);
+    }
+    
     public boolean copierDansRepository(File f){
         try{
             gesImp.copierDansRepository(f);
