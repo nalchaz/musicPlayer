@@ -51,16 +51,16 @@ public class Manager {
         datamanager.sauver(getRacine());
     }
     
-    private void suppressionAutresPlayLists(List<IMusique> m, IPlayList courante){ 
+    private void suppressionDansAutresPlayLists(List<IMusique> m, IPlayList courante){ 
         for (IPlayList p : courante.getListPlayList()){
             p.getPlayList().removeAll(m); 
-            suppressionAutresPlayLists(m,p); 
+            suppressionDansAutresPlayLists(m,p); 
         }
     }
     
     public void suppression(List<IMusique> m){
         //On supprime la/les musique dans toutes les playlists 
-        suppressionAutresPlayLists(m,getRacine()); 
+        suppressionDansAutresPlayLists(m,getRacine()); 
         //On supprime la/les musiques dans le dossier Musiques de l'appli
         gesImp.suppression(m);
     }
