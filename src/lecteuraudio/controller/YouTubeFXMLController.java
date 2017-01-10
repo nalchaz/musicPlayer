@@ -80,6 +80,7 @@ public class YouTubeFXMLController implements Initializable {
         downloadStatus.textProperty().bind(managerDownload.downloadStatusProperty());
         downloadProgress.progressProperty().bind(managerDownload.progressProperty());
         managerDownload.start();
+        //Appelle la méthode changed quand le path du téléchargement est appellé, verifie qu'il n'est pas vide
         managerDownload.pathDownloadProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue o, Object oldVal,

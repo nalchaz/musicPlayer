@@ -7,8 +7,6 @@ package lecteuraudio.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
@@ -18,7 +16,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import lecteuraudio.metier.IMusique;
-import lecteuraudio.metier.NoeudMusique;
 
 /**
  * FXML Controller class

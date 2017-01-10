@@ -519,6 +519,10 @@ public class FXMLDocumentController implements Initializable {
     private void onAjoutPlayList(ActionEvent event) {
         zoneAjout.setVisible(true);
         ajoutPlayList.setVisible(false);
+        
+        zoneAjout.requestFocus();
+
+        
     }
     
     //onSupprimerNoeudMusique : Supprime un noeud, affiche une fenetre de dialogue permettant de confirmer
@@ -609,6 +613,7 @@ public class FXMLDocumentController implements Initializable {
             alert.setTitle("Erreur");
             alert.setHeaderText(null);
             alert.setContentText("Vous devez séléctionner un seul élément à modifier.");
+            alert.showAndWait();
         } else {
             modifStage = new Stage();
             modifStage.setTitle("Modification");
@@ -629,11 +634,33 @@ public class FXMLDocumentController implements Initializable {
 
     }
 
+    
     /*
-    *onModifierIntelligent : cherche le titre et l'auteur dans un titre composé d'une musique.
+    *modificationInteligente : cherche le titre et l'auteur dans un titre composé d'une musique.
     * Gere les erreurs grace à des alerts.
-     */
+    */
+    private IMusique modificationInteligente(IMusique musique, String separateur){
+        IMusique newmusique = musique;
+        int index = musique.getTitre().indexOf(separateur);
+        int indexsuiv = index + separateur.length();
+        
+        if(index==-1){
+            return null;
+        }
+        else{
+            String newauteur = musique.getTitre().substring(0, index);
+            String newtitre = musique.getTitre().substring(indexsuiv, musique.getTitre().length());
 
+            newmusique.setTitre(newtitre);
+            newmusique.setAuteur(newauteur);
+            
+        }
+        return musique;
+    }
+    
+    /*
+    *onModifierIntelligent : Gere les erreurs de la modification grace à des alerts.
+    */
     @FXML
     private void onModifierIntelligent(ActionEvent event) throws Exception {
         ObservableList list = tableView.getSelectionModel().getSelectedItems();
@@ -644,6 +671,8 @@ public class FXMLDocumentController implements Initializable {
         boolean titreEtAuteurIndeterminable = true;
         for (Object m : list) {
             IMusique musique = (IMusique) m;
+            
+            //Verifie que la musique n'a pas déja un titre
             if (musique.getAuteur() != null && !musique.getAuteur().equals("") && !musique.getAuteur().equals("Artiste inconnu")) {
                 if (musiquePossedeDejaAuteurAffichage) {
                     Alert alert = new Alert(AlertType.INFORMATION);
@@ -654,17 +683,18 @@ public class FXMLDocumentController implements Initializable {
 
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.get() == stopAffich) {
+                        //Si l'utilisateur ne veut plus afficher ce message, la varibale passe à false et l'alert n'est plus affichée
                         musiquePossedeDejaAuteurAffichage = false;
                     }
                 }
                 continue;
             }
-            int index = musique.getTitre().indexOf(" - ");
-            int indexsuiv = index + 3;
-            if (index == -1) {
-                index = musique.getTitre().indexOf("-");
-                indexsuiv = index + 1;
-                if (index == -1) {
+            //Essaie de trouver un titre et un auteur séparés par " - "
+            IMusique newmusique=modificationInteligente(musique, " - ");
+            if (newmusique == null) {
+                //Essaie de trouver un titre et un auteur séparés par "-"
+                newmusique=modificationInteligente(musique, "-");
+                if (newmusique == null) {
 
                     if (titreEtAuteurIndeterminable) {
                         Alert alert = new Alert(AlertType.INFORMATION);
@@ -675,25 +705,25 @@ public class FXMLDocumentController implements Initializable {
 
                         Optional<ButtonType> result = alert.showAndWait();
                         if (result.get() == stopAffich) {
+                            //Si l'utilisateur ne veut plus afficher ce message, la varibale passe à false et l'alert n'est plus affichée
                             titreEtAuteurIndeterminable = false;
                         }
                     }
                     continue;
                 }
+                
             }
-            String auteur = musique.getTitre().substring(0, index);
-            String titre = musique.getTitre().substring(indexsuiv, musique.getTitre().length());
-
+            
             Alert alert = new Alert(AlertType.CONFIRMATION);
             alert.setHeaderText(null);
             alert.setTitle("Confirmation");
             alert.setAlertType(AlertType.CONFIRMATION);
-            alert.setContentText("Titre : \"" + titre + "\"\nAuteur : \"" + auteur + "\"\nValidez-vous la modification ?");
+            alert.setContentText("Titre : \"" + newmusique.getTitre() + "\"\nAuteur : \"" + newmusique.getAuteur() + "\"\nValidez-vous la modification ?");
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
-                ((IMusique) m).setTitre(titre);
-                ((IMusique) m).setAuteur(auteur);
+                ((IMusique) musique).setTitre(newmusique.getTitre());
+                ((IMusique) musique).setAuteur(newmusique.getAuteur());
             }
         }
 
@@ -887,10 +917,16 @@ public class FXMLDocumentController implements Initializable {
         }
     }
     
+    // Permet de connaitre la valeur de la progressBar avant le hover
+    private double progressSauv = -1;
+    
     @FXML
     private void onProgressBarMoved(MouseEvent event) {
         if (lec.getMusiqueCourante()!=null) {
             if (progressbar != null && !lec.isNull()) {
+                if(!lec.isPlaying() && progressSauv==-1){
+                    progressSauv=progressbar.getProgress();
+                }
                 onProgressMoving=true;
                 Duration duration = lec.getTotalDuration();
                 //Affiche le temps correspondant a la position du curseur sur la progressBar
@@ -907,6 +943,10 @@ public class FXMLDocumentController implements Initializable {
             if (progressbar != null && !lec.isNull()) {
                 onProgressMoving = false;
                 progressbar.setId("progressBar");
+                if(!lec.isPlaying()){
+                    progressbar.setProgress(progressSauv);
+                }
+                progressSauv=-1;
                 bindings();
             }
         }
@@ -974,13 +1014,12 @@ public class FXMLDocumentController implements Initializable {
         youTubeController = fxmloader.getController();
         Scene scene = new Scene(root);
         youTubeStage.setScene(scene);
-        //
+        
         youTubeStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent we) {
-
-                //Arreter les threads ici
-                System.out.println("Stage is closing");
+                //Femre la fenetre youTube
+                youTubeController.getWebEngine().load(null);
             }
         });
         youTubeStage.show();
@@ -991,6 +1030,12 @@ public class FXMLDocumentController implements Initializable {
             public void changed(ObservableValue o, Object oldVal,
                     Object newVal) {
                 String pathdownload = youTubeController.getpathDownload();
+                
+                /*Les fichiers téléchargés peuvent etre de deux formes : soit un seul fichier avec un nom normal, soit deux fichier : 
+                * - nomdufichier.video.mp4
+                * - nomdufichier.audio.mp4
+                * On doit donc vérifier le nom du fichier, et modifier son nom ainsi que supprimer la video si nécéssaire
+                */
                 File f = new File(pathdownload);
                 String debutpath = pathdownload.substring(0, pathdownload.length() - 4);
                 if (!f.exists()) {

@@ -47,7 +47,7 @@
             <TitledPane alignment="CENTER" collapsible="false" maxHeight="1.7976931348623157E308" text="Playlist" textAlignment="CENTER" GridPane.rowIndex="1">
                <content>
                    <!-- définition du TreeView et de son menu contextuel-->
-                   <TreeView fx:id="treeView" editable="true" onMouseClicked="#onNoeudMusiqueChoisie" style="-fx-border-width: 1;"  >
+                   <TreeView fx:id="treeView" editable="true" onMouseClicked="#onNoeudMusiqueChoisie" style="-fx-border-width: 1;">
                        <contextMenu>
                         <ContextMenu>
                           <items>
@@ -71,14 +71,14 @@
                           <TreeItemCellFactory />
                       </cellFactory>
                       
-                      <TreeItem fx:id="rootItem" value="${controller.manager.racine}"  />
+                      <TreeItem fx:id="rootItem" value="${controller.manager.racine}" />
                   </TreeView>
                </content>
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </TitledPane>
-            <TableView fx:id="tableView"   editable="true" nodeOrientation="LEFT_TO_RIGHT" onDragDetected="#onDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" onMouseClicked="#onMusiqueChoisie" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+            <TableView fx:id="tableView" editable="true" nodeOrientation="LEFT_TO_RIGHT" onDragDetected="#onDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" onMouseClicked="#onMusiqueChoisie" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                <contextMenu>
                   <ContextMenu>
                     <items>
@@ -153,7 +153,7 @@
                                     <Font size="12.0" />
                                  </font>
                               </Label>
-                              <ProgressBar id="progressBar" fx:id="progressbar" blendMode="MULTIPLY" cache="true" maxHeight="10.0" minHeight="10.0" onMouseClicked="#OnProgressBar" onMouseMoved="#onProgressBarMoved" onMouseExited="#onProgressBarExited" prefHeight="10.0" prefWidth="360.0" progress="0.0" />
+                              <ProgressBar id="progressBar" fx:id="progressbar" blendMode="MULTIPLY" cache="true" maxHeight="10.0" minHeight="10.0" onMouseClicked="#OnProgressBar" onMouseExited="#onProgressBarExited" onMouseMoved="#onProgressBarMoved" prefHeight="10.0" prefWidth="360.0" progress="0.0" />
                               <Label fx:id="tempsRestant" text="Temps restant">
                                  <font>
                                     <Font size="12.0" />
@@ -199,7 +199,10 @@
             <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Button fx:id="ajoutPlayList" mnemonicParsing="false" onAction="#onAjoutPlayList" text="+" />
+            <Button fx:id="ajoutPlayList" mnemonicParsing="false" onAction="#onAjoutPlayList" text="+">
+               <GridPane.margin>
+                  <Insets left="5.0" />
+               </GridPane.margin></Button>
             <FlowPane alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowSpan="2">
                <children>
                   <Button id="youtube" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#onYoutube" text="Youtube">
@@ -244,12 +247,15 @@
                   <Insets top="5.0" />
                </padding>
                <GridPane.margin>
-                  <Insets left="35.0" />
+                  <Insets left="5.0" />
                </GridPane.margin>
             </FlowPane>
             <StackPane alignment="CENTER_LEFT" GridPane.rowIndex="1">
                <children>
-                  <Button mnemonicParsing="false" onAction="#onSupprimerNoeudMusique" prefWidth="31.0" text="-" />
+                  <Button mnemonicParsing="false" onAction="#onSupprimerNoeudMusique" prefWidth="31.0" text="-">
+                     <StackPane.margin>
+                        <Insets left="5.0" />
+                     </StackPane.margin></Button>
                </children>
             </StackPane>
          </children>

@@ -17,12 +17,9 @@ import com.github.axet.vget.info.VGetParser;
 import com.github.axet.vget.info.VideoFileInfo;
 import com.github.axet.vget.info.VideoInfo;
 import com.github.axet.vget.vhs.YouTubeMPGParser;
-import com.github.axet.vget.vhs.YouTubeParser;
 import com.github.axet.wget.SpeedInfo;
-import com.github.axet.wget.info.DownloadInfo;
 import com.github.axet.wget.info.DownloadInfo.Part;
 import com.github.axet.wget.info.DownloadInfo.Part.States;
-import com.github.axet.wget.info.ex.DownloadInterruptedError;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -175,7 +172,7 @@ public class ManagedDownload extends Thread {
             VGetParser user = null;
 
             // create proper html parser depends on url
-            user = VGet.parser(web);
+            VGet.parser(web);
 
             // download limited video quality from youtube
             //user = new YouTubeQParser(YoutubeQuality.p480);
