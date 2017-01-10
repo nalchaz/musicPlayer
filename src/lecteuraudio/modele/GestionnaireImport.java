@@ -22,7 +22,6 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
-import lecteuraudio.metier.FabriqueMusique;
 import lecteuraudio.metier.IMusique;
 import lecteuraudio.metier.Musique;
 import lecteuraudio.metier.IPlayList;
@@ -95,7 +94,7 @@ public class GestionnaireImport {
 
     public boolean ajouterMusique(File f, IPlayList racine) {
         int taille = (int) f.getName().length() - 4;
-        IMusique m = FabriqueMusique.creerMusique("Artiste inconnu", f.getName().substring(0, taille), ("file:///" + System.getProperty("user.dir").replace("\\", "/") + "/Musiques/" + f.getName().replaceAll(" ", "%20")));
+        IMusique m = new Musique("Artiste inconnu", f.getName().substring(0, taille), ("file:///" + System.getProperty("user.dir").replace("\\", "/") + "/Musiques/" + f.getName().replaceAll(" ", "%20")));
         Media media = new Media(m.getPath());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         //Attendre que le mediaplayer soit pret pour récuperer les metadatas

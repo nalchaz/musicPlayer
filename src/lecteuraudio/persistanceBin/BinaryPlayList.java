@@ -11,9 +11,11 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
+import lecteuraudio.metier.IMusique;
 import lecteuraudio.metier.NoeudMusique;
 import lecteuraudio.metier.IPlayList;
 import lecteuraudio.metier.NoeudMusique;
@@ -23,7 +25,7 @@ import lecteuraudio.metier.PlayList;
  *
  * @author alexd
  */
-public class BinaryPlayList extends IPlayList implements  Externalizable {
+public class BinaryPlayList extends IPlayList implements Externalizable {
     private IPlayList playlist=new PlayList();  
     
     public BinaryPlayList(){ 
@@ -78,11 +80,20 @@ public class BinaryPlayList extends IPlayList implements  Externalizable {
         return playlist.playlistProperty() ; 
     }
     
+    @Override 
+    public List<IMusique> getListMusique(){ 
+        return playlist.getListMusique(); 
+    }
+    
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        List<NoeudMusique> liste= new ArrayList<>(getPlayList()); 
+        List<IPlayList> listePlay= new ArrayList<>(getListPlayList());
+        List<IMusique> listeMusique=new ArrayList<>(getListMusique()); 
+        List<BinaryPlayList> listePlayLists = listePlay.stream().map(n -> new BinaryPlayList(n)).collect(Collectors.toList());
+        List<BinaryMusique> listeMusiques = listeMusique.stream().map(n -> new BinaryMusique(n)).collect(Collectors.toList());
         out.writeObject(getTitre());
-        out.writeObject(liste);
+        out.writeObject(listeMusiques);
+        out.writeObject(listePlayLists);
     }
 
     
@@ -92,6 +103,10 @@ public class BinaryPlayList extends IPlayList implements  Externalizable {
         setTitre((String)in.readObject()); 
         List<NoeudMusique> liste=(ArrayList)in.readObject(); 
         for (NoeudMusique nm : liste){
+            ajouter(nm); 
+        }
+        List<NoeudMusique> listeP=(ArrayList)in.readObject(); 
+        for (NoeudMusique nm : listeP){
             ajouter(nm); 
         }
     }

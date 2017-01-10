@@ -66,7 +66,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import lecteuraudio.metier.FabriquePlayList;
 import lecteuraudio.metier.Lecteur;
 import lecteuraudio.metier.Manager;
 import lecteuraudio.metier.Musique;
@@ -321,7 +320,7 @@ public class FXMLDocumentController implements Initializable {
     
     //creerIPlayListDepuisView : validation apres la saisie d'une playlist, la rajoute dans la liste des playlist, affiche une fenetre d'erreur si le titre de la playlist existe deja
     private void creerPlaylistDepuisView() {
-        IPlayList p = FabriquePlayList.creerPlayList(nomPlayListAjout.getText());
+        IPlayList p = new PlayList(nomPlayListAjout.getText());
         if (!getSelectedNoeud().getTitre().equals("Racine")) {   // Si la playlist choisi n'est pas la playlist racine :
             Alert alert = new Alert(AlertType.NONE);
             alert.setTitle("Choix");
