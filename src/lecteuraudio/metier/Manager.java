@@ -28,17 +28,19 @@ public class Manager {
     public void setNoeudCourant(NoeudMusique noeud) { this.noeudCourant.set(noeud);}
     
 
-    private ObjectProperty<IPlayList> racine=new SimpleObjectProperty<>(new BinaryPlayList(new PlayList("Racine")));
+    private ObjectProperty<IPlayList> racine=new SimpleObjectProperty<>(new PlayList("Racine"));;
     public ObjectProperty<IPlayList> racineProperty (){  return racine;   }
     public IPlayList getRacine (){return racine.get(); }
         
     
-    public Manager (){ 
+    public Manager (IDataManager datamanager){ 
+        setDataManager(datamanager); 
         gesImp= new GestionnaireImport(); 
+        
     }
     
-    public void setDataManager (IDataManager m){ 
-        datamanager=m;
+    private void setDataManager (IDataManager m){ 
+        datamanager=m; 
     }
     
     public void charger(){ 

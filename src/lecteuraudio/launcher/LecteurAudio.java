@@ -16,6 +16,7 @@ import javafx.stage.WindowEvent;
 import lecteuraudio.controller.FXMLDocumentController;
 import lecteuraudio.metier.Manager;
 import lecteuraudio.persistanceBin.BinaryDataManager;
+import lecteuraudio.persistancetexte.TextDataManager;
 
 /**
  *
@@ -26,9 +27,7 @@ public class LecteurAudio extends Application {
     private Manager manager;
     
     private void charger (){ 
-        manager=new Manager(); 
-        // A améliorer, le passage en texte doit seulement dépandre de la classe du datamanager. Pour passer en texte : TextDataManager ici, Musique dans GestionnaireImport, PlayList dans "creerPlayListDepuisView dans controller
-        manager.setDataManager(new BinaryDataManager());
+        manager=new Manager(new BinaryDataManager());   
         manager.charger();
     }
     

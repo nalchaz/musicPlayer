@@ -21,6 +21,7 @@ public abstract class IPlayList extends NoeudMusique {
     public abstract boolean isEmpty(); 
     public abstract void supprimer(NoeudMusique m);     
     public abstract ListProperty<NoeudMusique> playlistProperty();
+    public abstract List<IMusique> getListMusique(); 
 
     
 }

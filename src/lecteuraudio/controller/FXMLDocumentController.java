@@ -320,7 +320,7 @@ public class FXMLDocumentController implements Initializable {
     
     //creerIPlayListDepuisView : validation apres la saisie d'une playlist, la rajoute dans la liste des playlist, affiche une fenetre d'erreur si le titre de la playlist existe deja
     private void creerPlaylistDepuisView() {
-        IPlayList p = new BinaryPlayList(new PlayList(nomPlayListAjout.getText()));
+        IPlayList p = new PlayList(nomPlayListAjout.getText());
         if (!getSelectedNoeud().getTitre().equals("Racine")) {   // Si la playlist choisi n'est pas la playlist racine :
             Alert alert = new Alert(AlertType.NONE);
             alert.setTitle("Choix");

@@ -85,6 +85,17 @@ public class PlayList extends IPlayList{
         return list;
     }
     
+    @Override 
+    public List<IMusique> getListMusique(){
+        List<IMusique> list=new ArrayList();
+        for(NoeudMusique m : playlist){
+            if(m instanceof IMusique){
+                list.add((IMusique)m);
+            }
+        }
+        return list;
+    }
+    
   
 
     
