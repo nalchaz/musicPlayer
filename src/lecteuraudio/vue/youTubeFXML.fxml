@@ -9,11 +9,12 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.web.WebView?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@MediaPlayer.css" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lecteuraudio.controller.YouTubeFXMLController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="@MediaPlayer.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lecteuraudio.controller.YouTubeFXMLController">
    <bottom>
       <GridPane BorderPane.alignment="CENTER">
          <BorderPane.margin>
@@ -27,16 +28,17 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <FlowPane alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
+            <FlowPane alignment="CENTER_RIGHT" hgap="20.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
                <children>
-                  <Button fx:id="download" id="youtube" mnemonicParsing="false" onAction="#onDownload" text="Télécharger">
+                  <Button id="youtube" fx:id="downloadFromNav" layoutX="235.0" layoutY="45.0" mnemonicParsing="false" onAction="#onDownloadFromNav" text="Télécharger depuis navigateur" />
+                  <Button id="youtube" fx:id="download" mnemonicParsing="false" onAction="#onDownload" text="Télécharger">
                      <FlowPane.margin>
-                        <Insets right="20.0" />
+                        <Insets />
                      </FlowPane.margin>
                   </Button>
                   <Button fx:id="cancel" mnemonicParsing="false" onAction="#onCancel" text="Quitter">
                      <FlowPane.margin>
-                        <Insets left="20.0" />
+                        <Insets />
                      </FlowPane.margin>
                   </Button>
                </children>
@@ -67,15 +69,23 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <WebView fx:id="webView" prefHeight="200.0" prefWidth="200.0" />
+            <WebView fx:id="webView" prefHeight="200.0" prefWidth="200.0">
+               <GridPane.margin>
+                  <Insets left="5.0" right="5.0" />
+               </GridPane.margin></WebView>
          </children>
       </GridPane>
    </center>
    <top>
-      <TextField fx:id="urlTextField" BorderPane.alignment="CENTER">
+      <HBox spacing="10.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
          </BorderPane.margin>
-      </TextField>
+         <children>
+            <Button fx:id="precedentWeb" disable="true" mnemonicParsing="false" onAction="#onPrecedentWeb" text="&lt;-" />
+            <Button fx:id="nextWeb" disable="true" mnemonicParsing="false" onAction="#onNextWeb" text="-&gt;" />
+            <TextField fx:id="urlTextField" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
    </top>
 </BorderPane>

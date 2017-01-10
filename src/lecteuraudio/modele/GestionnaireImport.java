@@ -12,11 +12,13 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.MapChangeListener;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.DirectoryChooser;
@@ -34,6 +36,9 @@ import lecteuraudio.persistanceBin.BinaryMusique;
 public class GestionnaireImport {
     
     private String repositoryPath=System.getProperty("user.dir")+"/Musiques";
+    
+    //Permet de savoir si les erreurs sous forme d'alert doivent etre affichés
+    boolean affErreur=true;
     
     public String getRepositoryPath (){
         return repositoryPath;
@@ -88,7 +93,12 @@ public class GestionnaireImport {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("Erreur");
         alert.setContentText(nom+" déjà importé");
-        alert.showAndWait();
+        ButtonType stopAffich=new ButtonType("Ne plus afficher");
+        alert.getButtonTypes().add(stopAffich);
+        Optional result=alert.showAndWait();
+        if(result.get()==stopAffich){
+            affErreur=false;
+        }
 
     }
 
@@ -142,15 +152,17 @@ public class GestionnaireImport {
                     copierDansRepository(f);
                     ajouterMusique(f, racine);
                 } catch (FileAlreadyExistsException e) {
-                    if (!ajouterMusique(f, racine)) {
+                    if (!ajouterMusique(f, racine) && affErreur) {
                         dialogueErreurFichierExistant(f.getName().substring(0, f.getName().length()-4));
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
+            affErreur=true;
             return true;
         }
+        affErreur=true;
         return false;
     }
     

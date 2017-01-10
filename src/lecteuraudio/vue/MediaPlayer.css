@@ -162,3 +162,11 @@
     -fx-background-radius: 2;
     -fx-padding: 0em;
 }
+
+#numberCol, #dureeCol{
+    -fx-alignment: center;
+}
+
+#titreCol, #auteurCol, #numberCol, #dureeCol{
+    -fx-font-weight: bold;
+}

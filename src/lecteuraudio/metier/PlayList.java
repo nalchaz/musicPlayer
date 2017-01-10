@@ -36,9 +36,18 @@ public class PlayList extends IPlayList{
     public boolean ajouter(NoeudMusique m) {
 
         for (NoeudMusique nm : playlist) {
-            if (nm.getTitre().equals(m.getTitre())) {
-                return false;
-            }            
+            if(m instanceof IPlayList || m instanceof PlayList){
+                if (nm.getTitre().equals(m.getTitre())) {
+                    return false;
+                } 
+            }
+            else{
+                IMusique inm=(IMusique)nm;
+                IMusique im=(IMusique)m;
+                if (inm.getPath().equals(im.getPath())) {
+                    return false;
+                }
+            }
         }
                 
                 playlist.add(m);

@@ -5,7 +5,9 @@
  */
 package lecteuraudio.controller;
 
+import java.awt.Desktop;
 import java.io.File;
+import java.net.URI;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -66,6 +68,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import lecteuraudio.cellfactory.NumberColCellFactory;
+import lecteuraudio.cellfactory.NumberColCellValueFactory;
 import lecteuraudio.metier.Lecteur;
 import lecteuraudio.metier.Manager;
 import lecteuraudio.metier.Musique;
@@ -566,10 +570,13 @@ public class FXMLDocumentController implements Initializable {
      */
     public void initializeTableView() {
 
-        ((TableColumn<Musique, String>) tableView.getColumns().get(0)).setCellValueFactory(new PropertyValueFactory("titre"));
-        ((TableColumn<Musique, String>) tableView.getColumns().get(1)).setCellValueFactory(new PropertyValueFactory("auteur"));
+        ((TableColumn<Musique, String>) tableView.getColumns().get(1)).setCellValueFactory(new PropertyValueFactory("titre"));
+        ((TableColumn<Musique, String>) tableView.getColumns().get(3)).setCellValueFactory(new PropertyValueFactory("auteur"));
         ((TableColumn<Musique, String>) tableView.getColumns().get(2)).setCellValueFactory(new PropertyValueFactory("duree"));
-
+        //NumberCol fabrique des index pour chaque cellule
+        TableColumn<IMusique, IMusique> numberCol=(TableColumn<IMusique, IMusique>) tableView.getColumns().get(0);
+        numberCol.setCellValueFactory(new NumberColCellValueFactory());
+        numberCol.setCellFactory(new NumberColCellFactory());
     }
     
     @FXML
@@ -829,14 +836,26 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void onSupprimerMusique() {
         List<IMusique> listeASuppr = (List<IMusique>) tableView.getSelectionModel().getSelectedItems();
+        if(listeASuppr.isEmpty())
+            return;
         TreeItem<NoeudMusique> playlistItem = treeView.getSelectionModel().getSelectedItem();
         IPlayList playlist = (IPlayList) playlistItem.getValue();
-        playlist.getPlayList().removeAll(listeASuppr);
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText(null);
+        if(listeASuppr.size()>1)
+            alert.setContentText("Êtes-vous sûr de vouloir supprimer "+listeASuppr.size()+" éléments ?");
+        else if(listeASuppr.size()==1)
+            alert.setContentText("Êtes-vous sûr de vouloir supprimer "+listeASuppr.get(0).getTitre()+" ?");
+        Optional result=alert.showAndWait();
+        if(result.get()==ButtonType.OK){
+            playlist.getPlayList().removeAll(listeASuppr);
         // Si on supprime dans la racine, on doit supprimer la musique dans le dossier Musiques et dans toutes les playlists 
-        if (playlist.getTitre().equals("Racine")) {
-            getManager().suppression(listeASuppr);
+            if (playlist.getTitre().equals("Racine")) {
+                getManager().suppression(listeASuppr);
+            }
+            updateLayoutTreeView(playlistItem, playlistItem.getValue());
         }
-        updateLayoutTreeView(playlistItem, playlistItem.getValue());
     }
     
     //</editor-fold>
@@ -902,7 +921,9 @@ public class FXMLDocumentController implements Initializable {
         }
     }
     
-    
+    // Permet de connaitre la valeur de la progressBar et du temps écoulé avant le hover
+    private double progressSauv = -1;
+    private Duration tempsSauv;
     
     @FXML
     private void OnProgressBar(MouseEvent event) {
@@ -910,15 +931,17 @@ public class FXMLDocumentController implements Initializable {
             if (progressbar != null && !lec.isNull()) {
                 double d = event.getX();
                 Duration newDuration = new Duration(event.getX() / progressbar.getWidth() * lec.getTotalDuration().toMillis());
+                tempsSauv=newDuration;
                 lec.seek(newDuration);
-                progressbar.setProgress(event.getX() / progressbar.getWidth());
+                progressSauv=event.getX() / progressbar.getWidth();
+                progressbar.setProgress(progressSauv);
+                
             }
             bindings();
         }
     }
     
-    // Permet de connaitre la valeur de la progressBar avant le hover
-    private double progressSauv = -1;
+    
     
     @FXML
     private void onProgressBarMoved(MouseEvent event) {
@@ -926,6 +949,7 @@ public class FXMLDocumentController implements Initializable {
             if (progressbar != null && !lec.isNull()) {
                 if(!lec.isPlaying() && progressSauv==-1){
                     progressSauv=progressbar.getProgress();
+                    tempsSauv=lec.getCurrentTime();
                 }
                 onProgressMoving=true;
                 Duration duration = lec.getTotalDuration();
@@ -945,6 +969,9 @@ public class FXMLDocumentController implements Initializable {
                 progressbar.setId("progressBar");
                 if(!lec.isPlaying()){
                     progressbar.setProgress(progressSauv);
+                    Duration duration = lec.getTotalDuration();
+                    tempsEcoule.textProperty().bind(new SimpleStringProperty(Utils.formatTime(tempsSauv))); 
+
                 }
                 progressSauv=-1;
                 bindings();
@@ -990,10 +1017,13 @@ public class FXMLDocumentController implements Initializable {
     //<editor-fold defaultstate="collapsed" desc="IMPORT ET YOUTUBE">
     
     @FXML
-    private void importPressed(ActionEvent event) {
+    private void importPressed(ActionEvent event) throws Exception{
+
+        
         if (getManager().chercherDisqueDur(borderPane.getScene().getWindow())) {
             updateLayoutTreeView(rootItem, getManager().getRacine());
         }
+        
 
     }
     
@@ -1018,7 +1048,7 @@ public class FXMLDocumentController implements Initializable {
         youTubeStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent we) {
-                //Femre la fenetre youTube
+                //Ferme la fenetre youTube
                 youTubeController.getWebEngine().load(null);
             }
         });
@@ -1030,12 +1060,13 @@ public class FXMLDocumentController implements Initializable {
             public void changed(ObservableValue o, Object oldVal,
                     Object newVal) {
                 String pathdownload = youTubeController.getpathDownload();
-                
+               
                 /*Les fichiers téléchargés peuvent etre de deux formes : soit un seul fichier avec un nom normal, soit deux fichier : 
                 * - nomdufichier.video.mp4
                 * - nomdufichier.audio.mp4
                 * On doit donc vérifier le nom du fichier, et modifier son nom ainsi que supprimer la video si nécéssaire
                 */
+                
                 File f = new File(pathdownload);
                 String debutpath = pathdownload.substring(0, pathdownload.length() - 4);
                 if (!f.exists()) {
@@ -1053,7 +1084,7 @@ public class FXMLDocumentController implements Initializable {
                 updateLayoutTreeView(rootItem, getManager().getRacine());
             }
         });
-
+      
     }
 
     //</editor-fold>
@@ -1066,14 +1097,16 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void onDragDetected(MouseEvent event) {
-        List<IMusique> dragged = (List<IMusique>) tableView.getSelectionModel().getSelectedItems();
-        Dragboard dragBoard = tableView.startDragAndDrop(TransferMode.COPY);
-        dragBoard.setDragView(new Text(dragged.toString()).snapshot(null, null), event.getX() / 100, event.getY() / 100);
-        ClipboardContent content = new ClipboardContent();
-        content.putString(dragged.toString());
-        dragBoard.setContent(content);
+        if(event.getSceneY()>150){ // Ne pas commencer de drag quand on essaye de redimensionner les colonnes
+            List<IMusique> dragged = (List<IMusique>) tableView.getSelectionModel().getSelectedItems();
+            Dragboard dragBoard = tableView.startDragAndDrop(TransferMode.COPY);
+            dragBoard.setDragView(new Text("  " + dragged.size() + " :" + dragged.toString()).snapshot(null, null), event.getX() / 100, event.getY() / 100);
+            ClipboardContent content = new ClipboardContent();
+            content.putString(dragged.toString());
+            dragBoard.setContent(content);
 
-        event.consume();
+            event.consume();
+        }
     }
     
     

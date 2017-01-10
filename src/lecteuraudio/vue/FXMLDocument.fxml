@@ -77,8 +77,11 @@
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
+               <GridPane.margin>
+                  <Insets left="5.0" />
+               </GridPane.margin>
             </TitledPane>
-            <TableView fx:id="tableView" editable="true" nodeOrientation="LEFT_TO_RIGHT" onDragDetected="#onDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" onMouseClicked="#onMusiqueChoisie" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+            <TableView fx:id="tableView" editable="true" nodeOrientation="LEFT_TO_RIGHT" onDragDetected="#onDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" onMouseClicked="#onMusiqueChoisie" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
                <contextMenu>
                   <ContextMenu>
                     <items>
@@ -95,10 +98,14 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
                <columns>
-                  <TableColumn fx:id="titreCol" minWidth="-1.0" prefWidth="-1.0" text="Titre" />
-                  <TableColumn fx:id="auteurCol" minWidth="-1.0" prefWidth="-1.0" text="Auteur" />
-                  <TableColumn fx:id="dureeCol" minWidth="-1.0" prefWidth="-1.0" text="Durée" />
+                  <TableColumn id="numberCol" fx:id="numCol" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" sortable="false" />
+                  <TableColumn id="titreCol" fx:id="titreCol1" minWidth="-1.0" prefWidth="-1.0" text="Titre" />
+                  <TableColumn id="dureeCol" fx:id="dureeCol" maxWidth="80.0" minWidth="80.0" text="Durée" />
+                  <TableColumn id="auteurCol" fx:id="auteurCol" minWidth="-1.0" prefWidth="-1.0" text="Auteur" />
                </columns>
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
             </TableView>
 
             <StackPane style="-fx-border-width: 1;" GridPane.columnIndex="3" GridPane.rowIndex="1" />
