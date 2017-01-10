@@ -157,8 +157,13 @@ public class TextDataManager implements IDataManager {
         }
             File f = new File(repositoryPlayLists+"/TouteslesPlayLists.txt");
             try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(f)))){
-                for (IPlayList p : racine.getListPlayList()){ 
-                    ajouterPlayListaFichier(p,pw,1); 
+                for (NoeudMusique nm : racine.getPlayList()){ 
+                    if (nm instanceof IPlayList){
+                        ajouterPlayListaFichier((IPlayList)nm,pw,1);
+                    }
+                    else {
+                        pw.println(nm.getTitre());
+                    }
                 }
             } 
             catch (Exception e) {
