@@ -38,6 +38,7 @@ import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import lecteuraudio.metier.ManagedDownload;
+import lecteuraudio.metier.Manager;
 import lecteuraudio.metier.NoeudMusique;
 
 /**
@@ -68,12 +69,13 @@ public class YouTubeFXMLController implements Initializable {
     private ProgressBar downloadProgress;
     
     
-    private final ObjectProperty<WebEngine> webengineProperty = new SimpleObjectProperty<>();
+    
     @FXML
-    private ChoiceBox<?> listChoice;
+    private ChoiceBox<String> listChoice;
     @FXML
     private Button recupButton;
-   
+    
+    private final ObjectProperty<WebEngine> webengineProperty = new SimpleObjectProperty<>();
     public WebEngine getWebEngine() { return webengineProperty.get(); }
     public void setWebEngine(WebEngine value) { webengineProperty.set(value); }
     public ObjectProperty<WebEngine> webengineProperty() { return webengineProperty; }
@@ -88,6 +90,11 @@ public class YouTubeFXMLController implements Initializable {
     public void setlistDownloadNav(ListProperty<String> list) {this.listDownloadNav.set(list);}
     public ListProperty<String> listDownloadNavProperty() { return listDownloadNav ; }
     
+    private Manager manager;
+    
+    public void setManager(Manager manager){
+        this.manager=manager;
+    }
     /**
      * Initializes the controller class.
      */
@@ -205,7 +212,10 @@ public class YouTubeFXMLController implements Initializable {
         int currentIndex=history.getCurrentIndex();
         String titre=entryList.get(currentIndex).getTitle();
         if(titre.contains(" - YouTube")){
-            titre=titre.substring(0, titre.indexOf(" - YouTube"));
+            titre=titre.substring(0, titre.indexOf(" - YouTube"))+".mp3";
+            titre=titre.replace("|", "");
+            titre=titre.replace("(Official video) ", "");
+            
             return titre;
         }
         return null;
@@ -218,7 +228,8 @@ public class YouTubeFXMLController implements Initializable {
             Desktop.getDesktop().browse(new URI("www.youtubeinmp3.com/fetch/?video="+urlTextField.getText()));
             listDownloadNav.add(getTitrePageCourante());
             listChoice.setDisable(false);
-            //listChoice.itemsProperty().bind(getlistDownloadNav());
+            recupButton.setDisable(false);
+            listChoice.itemsProperty().bind(listDownloadNavProperty());
         } 
         else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -231,6 +242,18 @@ public class YouTubeFXMLController implements Initializable {
 
     @FXML
     private void onRecupButton(ActionEvent event) {
+        String path=listChoice.getSelectionModel().getSelectedItem();
+        String home = System.getProperty("user.home");
+        File file = new File(home+"/Downloads/" + path); 
+        if(file.exists()){
+            manager.copierDansRepository(file);
+            setpathDownload(file.getPath());
+            listDownloadNav.remove(listChoice.getSelectionModel().getSelectedItem());
+            if(listDownloadNav.isEmpty()){
+            listChoice.setDisable(true);
+            recupButton.setDisable(true);
+            }
+        }
     }
     
 }

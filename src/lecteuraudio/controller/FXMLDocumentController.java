@@ -1042,6 +1042,7 @@ public class FXMLDocumentController implements Initializable {
         FXMLLoader fxmloader = new FXMLLoader(getClass().getResource("/lecteuraudio/vue/youTubeFXML.fxml"));
         Parent root = fxmloader.load();
         youTubeController = fxmloader.getController();
+        youTubeController.setManager(getManager());
         Scene scene = new Scene(root);
         youTubeStage.setScene(scene);
         
@@ -1066,25 +1067,28 @@ public class FXMLDocumentController implements Initializable {
                 * - nomdufichier.audio.mp4
                 * On doit donc vérifier le nom du fichier, et modifier son nom ainsi que supprimer la video si nécéssaire
                 */
-                
                 File f = new File(pathdownload);
-                String debutpath = pathdownload.substring(0, pathdownload.length() - 4);
-                if (!f.exists()) {
-                    try {
-                        Files.deleteIfExists(new File(debutpath + ".video.mp4").toPath());
-                        Files.copy(new File(debutpath + ".audio.mp4").toPath(), new File(debutpath + ".mp4").toPath());
-                        Files.delete(new File(debutpath + ".audio.mp4").toPath());
+                if (pathdownload.substring(pathdownload.length() - 4, pathdownload.length()).equals(".mp4")) {
 
-                        pathdownload = debutpath + ".mp4";
-                    } catch (Exception e) {
-                        System.err.println(e.getMessage());
+                    String debutpath = pathdownload.substring(0, pathdownload.length() - 4);
+                    if (!f.exists()) {
+                        try {
+                            Files.deleteIfExists(new File(debutpath + ".video.mp4").toPath());
+                            Files.copy(new File(debutpath + ".audio.mp4").toPath(), new File(debutpath + ".mp4").toPath());
+                            Files.delete(new File(debutpath + ".audio.mp4").toPath());
+
+                            pathdownload = debutpath + ".mp4";
+                        } catch (Exception e) {
+                            System.err.println(e.getMessage());
+                        }
                     }
                 }
                 getManager().ajouterMusique(new File(pathdownload));
                 updateLayoutTreeView(rootItem, getManager().getRacine());
+
             }
         });
-      
+
     }
 
     //</editor-fold>
