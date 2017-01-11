@@ -8,14 +8,10 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="lecteurAudio.jar" size="93887" download="eager" />
+    <jar href="lecteurAudio.jar" size="93867" download="eager" />
     <jar href="lib\commons-io-2.5.jar" size="208700" download="eager" />
     <jar href="lib\commons-lang3-3.5.jar" size="479881" download="eager" />
     <jar href="lib\gson-2.8.0.jar" size="231952" download="eager" />
-    <jar href="lib\httpclient-4.5.2.jar" size="736658" download="eager" />
-    <jar href="lib\httpclient-win-4.5.2.jar" size="17362" download="eager" />
-    <jar href="lib\httpcore-4.4.4.jar" size="326724" download="eager" />
-    <jar href="lib\java-json.jar" size="84697" download="eager" />
     <jar href="lib\jsoup-1.10.1.jar" size="345536" download="eager" />
     <jar href="lib\threads-0.0.14.jar" size="13669" download="eager" />
     <jar href="lib\vget-1.2.4.jar" size="62701" download="eager" />

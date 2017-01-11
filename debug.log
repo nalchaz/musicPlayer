@@ -28,3 +28,6 @@
 [0110/174923:ERROR:file_io_win.cc(163)] CreateFile C:\Program Files (x86)\settings.dat: Accès refusé. (0x5)
 [0110/174923:ERROR:registration_protocol_win.cc(82)] TransactNamedPipe: Le canal de communication a été fermé. (0x6D)
 [0110/174923:ERROR:file_io_win.cc(163)] CreateFile C:\Program Files (x86)\settings.dat: Accès refusé. (0x5)
+[0111/102954:ERROR:file_io_win.cc(163)] CreateFile C:\Program Files (x86)\settings.dat: Accès refusé. (0x5)
+[0111/102954:ERROR:registration_protocol_win.cc(82)] TransactNamedPipe: Le canal de communication a été fermé. (0x6D)
+[0111/102954:ERROR:file_io_win.cc(163)] CreateFile C:\Program Files (x86)\settings.dat: Accès refusé. (0x5)

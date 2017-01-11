@@ -12,6 +12,7 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import lecteuraudio.persistanceBin.BinaryPlayList;
 
 /**
  *
@@ -36,12 +37,12 @@ public class PlayList extends IPlayList{
     public boolean ajouter(NoeudMusique m) {
 
         for (NoeudMusique nm : playlist) {
-            if(m instanceof IPlayList || m instanceof PlayList){
+            if(m instanceof IPlayList && nm instanceof IPlayList){
                 if (nm.getTitre().equals(m.getTitre())) {
                     return false;
                 } 
             }
-            else{
+            else if(m instanceof IMusique && nm instanceof IMusique){
                 IMusique inm=(IMusique)nm;
                 IMusique im=(IMusique)m;
                 if (inm.getPath().equals(im.getPath())) {
@@ -50,7 +51,7 @@ public class PlayList extends IPlayList{
             }
         }
                 
-                playlist.add(m);
+        playlist.add(m);
         return true; 
     }
     
