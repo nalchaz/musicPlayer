@@ -4,24 +4,31 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/metier/IMusique.java</file>
-            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/persistanceBin/BinaryDataManager.java</file>
-            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/modele/GestionnaireImport.java</file>
+            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/metier/Musique.java</file>
             <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/metier/NoeudMusique.java</file>
-            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/modele/ManagedDownload.java</file>
-            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/cellfactory/TreeItemCell.java</file>
             <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/persistanceBin/BinaryPlayList.java</file>
-            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/controller/YouTubeFXMLController.java</file>
+            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/metier/GestionnaireImport.java</file>
             <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/metier/IPlayList.java</file>
-            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/vue/MediaPlayer.css</file>
             <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/controller/ModificationController.java</file>
-            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/vue/youTubeFXML.fxml</file>
+            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/launcher/LecteurAudio.java</file>
             <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/metier/PlayList.java</file>
-            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/vue/FXMLDocument.fxml</file>
-            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/metier/Lecteur.java</file>
+            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/metier/MusiqueFileFilter.java</file>
             <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/cellfactory/TreeItemCellFactory.java</file>
-            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/vue/modificationFXML.fxml</file>
             <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/controller/FXMLDocumentController.java</file>
             <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/metier/Manager.java</file>
+            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/persistanceBin/BinaryDataManager.java</file>
+            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/metier/Utils.java</file>
+            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/cellfactory/TreeItemCell.java</file>
+            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/metier/ManagedDownload.java</file>
+            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/controller/YouTubeFXMLController.java</file>
+            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/vue/MediaPlayer.css</file>
+            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/persistancetexte/TextDataManager.java</file>
+            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/metier/PlayListMusiques.java</file>
+            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/vue/youTubeFXML.fxml</file>
+            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/vue/FXMLDocument.fxml</file>
+            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/metier/IDataManager.java</file>
+            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/metier/Lecteur.java</file>
+            <file>file:/C:/Users/nahel/Desktop/Cours/javaProj/musicplayer/src/lecteuraudio/vue/modificationFXML.fxml</file>
         </group>
     </open-files>
 </project-private>

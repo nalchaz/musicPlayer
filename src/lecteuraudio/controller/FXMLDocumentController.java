@@ -647,7 +647,7 @@ public class FXMLDocumentController implements Initializable {
     * Gere les erreurs grace à des alerts.
     */
     private IMusique modificationInteligente(IMusique musique, String separateur){
-        IMusique newmusique = musique;
+        IMusique newmusique = new Musique(musique.getAuteur(),musique.getTitre(),musique.getPath());
         int index = musique.getTitre().indexOf(separateur);
         int indexsuiv = index + separateur.length();
         
@@ -662,7 +662,7 @@ public class FXMLDocumentController implements Initializable {
             newmusique.setAuteur(newauteur);
             
         }
-        return musique;
+        return newmusique;
     }
     
     /*
@@ -835,7 +835,18 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void onSupprimerMusique() {
-        List<IMusique> listeASuppr = (List<IMusique>) tableView.getSelectionModel().getSelectedItems();
+        
+        List<IMusique> listeSuppr = (List<IMusique>) tableView.getSelectionModel().getSelectedItems();
+        String message="";
+        //Utilisation d'une arrayList pour pouvoir enlever le musique entrain d'etre joué
+        ArrayList<IMusique> listeASuppr=new ArrayList(listeSuppr);
+        
+        if(getManager().getNoeudCourant()!=null)
+            if(listeASuppr.contains((IMusique)getManager().getNoeudCourant())){
+                listeASuppr.remove((IMusique)getManager().getNoeudCourant());
+                message="\nLa musique "+getManager().getNoeudCourant().getTitre()+" ne sera pas supprimé (Musique en cours)";
+            }
+        
         if(listeASuppr.isEmpty())
             return;
         TreeItem<NoeudMusique> playlistItem = treeView.getSelectionModel().getSelectedItem();
@@ -846,9 +857,10 @@ public class FXMLDocumentController implements Initializable {
         if(listeASuppr.size()>1)
             alert.setContentText("Êtes-vous sûr de vouloir supprimer "+listeASuppr.size()+" éléments ?");
         else if(listeASuppr.size()==1)
-            alert.setContentText("Êtes-vous sûr de vouloir supprimer "+listeASuppr.get(0).getTitre()+" ?");
+            alert.setContentText("Êtes-vous sûr de vouloir supprimer "+listeASuppr.get(0).getTitre()+" ?"+message);
         Optional result=alert.showAndWait();
         if(result.get()==ButtonType.OK){
+            
             playlist.getPlayList().removeAll(listeASuppr);
         // Si on supprime dans la racine, on doit supprimer la musique dans le dossier Musiques et dans toutes les playlists 
             if (playlist.getTitre().equals("Racine")) {

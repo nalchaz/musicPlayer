@@ -133,7 +133,7 @@ public class GestionnaireImport {
                 String nom=f.getPath();
                 String con=m.getPath().substring(m.getPath().indexOf("Musiques")+9,m.getPath().length());
                 if (nom.replaceAll(" ", "%20").contains(m.getPath().substring(m.getPath().indexOf("Musiques")+9,m.getPath().length()))){
-                    f.deleteOnExit();
+                    f.delete();
                 }
             }
         }

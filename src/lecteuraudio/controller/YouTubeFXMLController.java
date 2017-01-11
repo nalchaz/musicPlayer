@@ -213,8 +213,9 @@ public class YouTubeFXMLController implements Initializable {
         String titre=entryList.get(currentIndex).getTitle();
         if(titre.contains(" - YouTube")){
             titre=titre.substring(0, titre.indexOf(" - YouTube"))+".mp3";
-            titre=titre.replace("|", "");
-            titre=titre.replace("(Official video) ", "");
+            
+            //ICI UTILISER UNE REGEX
+            titre=titre.replace("(Official video)", "").replace("&", "et").replaceAll("[|\"+'/]", "");
             
             return titre;
         }
@@ -225,8 +226,10 @@ public class YouTubeFXMLController implements Initializable {
     private void onDownloadFromNav(ActionEvent event) throws Exception {
         
         if(urlTextField.getText().contains("https://www.youtube.com/watch")){
-            Desktop.getDesktop().browse(new URI("www.youtubeinmp3.com/fetch/?video="+urlTextField.getText()));
-            listDownloadNav.add(getTitrePageCourante());
+            String path="www.youtubeinmp3.com/fetch/?video="+urlTextField.getText()+"&title="+getTitrePageCourante();
+            Desktop.getDesktop().browse(new URI(path.replaceAll(" ", "%20")));
+            if(!listDownloadNav.contains(getTitrePageCourante()))
+                listDownloadNav.add(getTitrePageCourante());
             listChoice.setDisable(false);
             recupButton.setDisable(false);
             listChoice.itemsProperty().bind(listDownloadNavProperty());
