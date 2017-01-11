@@ -39,7 +39,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.util.Duration;
 import lecteuraudio.metier.IMusique;
-import lecteuraudio.modele.Utils;
+import lecteuraudio.metier.Utils;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;

@@ -13,7 +13,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import lecteuraudio.metier.IPlayList;
 import lecteuraudio.metier.NoeudMusique;
-import lecteuraudio.modele.IDataManager;
+import lecteuraudio.metier.IDataManager;
 
 /**
  *

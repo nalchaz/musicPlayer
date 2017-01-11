@@ -55,6 +55,7 @@ public class Musique extends IMusique{
         this.auteurProperty.set(auteur); 
         this.titreProperty.set(titre);
         this.path=path; 
+        setDuree(duree);
     }  
     
     

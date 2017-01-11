@@ -13,7 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import lecteuraudio.metier.IPlayList;
-import lecteuraudio.modele.IDataManager;
+import lecteuraudio.metier.IDataManager;
 import lecteuraudio.metier.Musique;
 import lecteuraudio.metier.NoeudMusique;
 import lecteuraudio.metier.PlayList;
@@ -172,7 +172,7 @@ public class TextDataManager implements IDataManager {
         
     }
 
-    public void ajouterPlayListaFichier(IPlayList p,PrintWriter pw, int nb) {
+    private void ajouterPlayListaFichier(IPlayList p,PrintWriter pw, int nb) {
         pw.println(nb+":p"+p.getTitre()); 
         for (NoeudMusique nm : p.getPlayList()){
             if (nm instanceof Musique){

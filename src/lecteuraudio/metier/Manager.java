@@ -10,8 +10,6 @@ import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.stage.Window;
-import lecteuraudio.modele.GestionnaireImport;
-import lecteuraudio.modele.IDataManager;
 import lecteuraudio.persistanceBin.BinaryPlayList;
 
 /**
@@ -21,7 +19,8 @@ import lecteuraudio.persistanceBin.BinaryPlayList;
 public class Manager {
     
     private GestionnaireImport gesImp; 
-    private IDataManager datamanager;     
+    private IDataManager datamanager;   
+    
     private ObjectProperty noeudCourant = new SimpleObjectProperty();
     public ObjectProperty noeudCourantProperty() { return noeudCourant;}
     public NoeudMusique getNoeudCourant() { return (NoeudMusique) noeudCourant.get();}

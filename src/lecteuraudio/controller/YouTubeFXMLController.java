@@ -14,17 +14,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
@@ -32,8 +37,8 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import lecteuraudio.metier.ManagedDownload;
 import lecteuraudio.metier.NoeudMusique;
-import lecteuraudio.modele.ManagedDownload;
 
 /**
  * FXML Controller class
@@ -64,6 +69,10 @@ public class YouTubeFXMLController implements Initializable {
     
     
     private final ObjectProperty<WebEngine> webengineProperty = new SimpleObjectProperty<>();
+    @FXML
+    private ChoiceBox<?> listChoice;
+    @FXML
+    private Button recupButton;
    
     public WebEngine getWebEngine() { return webengineProperty.get(); }
     public void setWebEngine(WebEngine value) { webengineProperty.set(value); }
@@ -73,7 +82,12 @@ public class YouTubeFXMLController implements Initializable {
     public StringProperty pathDownloadProperty(){return pathDownloadProperty; }
     public String getpathDownload() {return pathDownloadProperty.get();}
     public void setpathDownload(String titre) {this.pathDownloadProperty.set(titre);}
-
+    
+    private  ListProperty<String> listDownloadNav= new SimpleListProperty<>(FXCollections.observableArrayList());
+    public ObservableList<String> getlistDownloadNav() {return listDownloadNav.get(); }   
+    public void setlistDownloadNav(ListProperty<String> list) {this.listDownloadNav.set(list);}
+    public ListProperty<String> listDownloadNavProperty() { return listDownloadNav ; }
+    
     /**
      * Initializes the controller class.
      */
@@ -185,10 +199,38 @@ public class YouTubeFXMLController implements Initializable {
         
     }
 
+    private String getTitrePageCourante(){
+        final WebHistory history=getWebEngine().getHistory();
+        ObservableList<WebHistory.Entry> entryList=history.getEntries();
+        int currentIndex=history.getCurrentIndex();
+        String titre=entryList.get(currentIndex).getTitle();
+        if(titre.contains(" - YouTube")){
+            titre=titre.substring(0, titre.indexOf(" - YouTube"));
+            return titre;
+        }
+        return null;
+    }
+    
     @FXML
     private void onDownloadFromNav(ActionEvent event) throws Exception {
         
-        Desktop.getDesktop().browse(new URI("www.youtubeinmp3.com/fetch/?video="+urlTextField.getText()));
+        if(urlTextField.getText().contains("https://www.youtube.com/watch")){
+            Desktop.getDesktop().browse(new URI("www.youtubeinmp3.com/fetch/?video="+urlTextField.getText()));
+            listDownloadNav.add(getTitrePageCourante());
+            listChoice.setDisable(false);
+            //listChoice.itemsProperty().bind(getlistDownloadNav());
+        } 
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Musique introuvable");
+            alert.setContentText("La musique à télécharger est introuvable.");
+            alert.showAndWait();
+        }
+        
+    }
+
+    @FXML
+    private void onRecupButton(ActionEvent event) {
     }
     
 }

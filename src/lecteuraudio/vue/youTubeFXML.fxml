@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.TextField?>
@@ -12,6 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="@MediaPlayer.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lecteuraudio.controller.YouTubeFXMLController">
@@ -21,14 +23,15 @@
             <Insets right="40.0" />
          </BorderPane.margin>
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="30.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0" />
             <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <FlowPane alignment="CENTER_RIGHT" hgap="20.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
+            <FlowPane alignment="CENTER_RIGHT" hgap="20.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2">
                <children>
                   <Button id="youtube" fx:id="downloadFromNav" layoutX="235.0" layoutY="45.0" mnemonicParsing="false" onAction="#onDownloadFromNav" text="Télécharger depuis navigateur" />
                   <Button id="youtube" fx:id="download" mnemonicParsing="false" onAction="#onDownload" text="Télécharger">
@@ -57,6 +60,19 @@
                   </ProgressBar>
                </children>
             </StackPane>
+            <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="TOP">
+               <GridPane.margin>
+                  <Insets right="10.0" top="15.0" />
+               </GridPane.margin>
+               <children>
+                  <ChoiceBox fx:id="listChoice" disable="true" prefWidth="150.0">
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </ChoiceBox>
+                  <Button fx:id="recupButton" alignment="CENTER" disable="true" mnemonicParsing="false" onAction="#onRecupButton" text="Récuperer" />
+               </children>
+            </VBox>
          </children>
       </GridPane>
    </bottom>
