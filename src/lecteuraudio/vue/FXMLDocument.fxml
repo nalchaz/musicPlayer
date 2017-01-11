@@ -99,9 +99,9 @@
                </columnResizePolicy>
                <columns>
                   <TableColumn id="numberCol" fx:id="numCol" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" sortable="false" />
-                  <TableColumn id="titreCol" fx:id="titreCol1" minWidth="-1.0" prefWidth="-1.0" text="Titre" />
+                  <TableColumn id="titreCol" fx:id="titreCol1" minWidth="10.0" prefWidth="-1.0" text="Titre" />
                   <TableColumn id="dureeCol" fx:id="dureeCol" maxWidth="80.0" minWidth="80.0" text="Durée" />
-                  <TableColumn id="auteurCol" fx:id="auteurCol" minWidth="-1.0" prefWidth="-1.0" text="Auteur" />
+                  <TableColumn id="auteurCol" fx:id="auteurCol" minWidth="10.0" prefWidth="-1.0" text="Auteur" />
                </columns>
                <GridPane.margin>
                   <Insets right="5.0" />
